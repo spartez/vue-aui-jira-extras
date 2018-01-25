@@ -35,6 +35,7 @@
     "rollup-plugin-vue": "^3.0.0",
     "vue": "^2.5.13",
     "vue-aui": "^0.15.11",
-    "vue-template-compiler": "^2.5.13"
+    "vue-template-compiler": "^2.5.13",
+    "webpack-merge": "^4.1.1"
   }
 }

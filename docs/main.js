@@ -1,10 +1,13 @@
-import Vue from 'vue'
+import Vue from 'vue';
+import VueAui from 'vue-aui';
+import VueAuiJiraExtras from '../src/vue-aui-jira-extras';
+
+Vue.use(VueAui);
+Vue.use(VueAuiJiraExtras);
 
 import App from './App.vue';
-import VueAuiJiraExtras from '../src/vue-aui-jira-extras';
 
 new Vue({
     el: '#app',
     render: h => h(App),
-    components: {App},
 });

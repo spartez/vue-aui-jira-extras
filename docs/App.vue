@@ -17,7 +17,9 @@
             <div class="aui-page-panel">
                 <div class="aui-page-panel-inner">
                     <section class="aui-page-panel-content">
-                        <h2>Hello vue</h2>
+                        <h2>Jira Project Picker</h2>
+
+                        <va-project-picker placeholder="Select a project..."></va-project-picker>
                     </section>
                 </div>
             </div>
