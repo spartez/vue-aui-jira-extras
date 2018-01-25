@@ -4,8 +4,8 @@
   "description": "vue-aui companion library with Jira related components.",
   "main": "dist/vue-aui-jira-extras.js",
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
+    "build": "rollup -c --environment 'NODE_ENV:production'",
+    "dev": "rollup -c -w --environment 'NODE_ENV:dev'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -36,6 +36,7 @@
     "vue": "^2.5.13",
     "vue-aui": "^0.15.11",
     "vue-template-compiler": "^2.5.13",
-    "webpack-merge": "^4.1.1"
+    "webpack-merge": "^4.1.1",
+    "process": "latest"
   }
 }

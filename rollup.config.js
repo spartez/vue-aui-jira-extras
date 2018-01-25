@@ -1,4 +1,5 @@
 import merge from 'webpack-merge'
+import process from 'process'
 
 import commonjs from "rollup-plugin-commonjs";
 import resolve from "rollup-plugin-node-resolve";
@@ -14,7 +15,7 @@ const commonConfig = {
         resolve(),
         commonjs(),
         replace({
-            'process.env.NODE_ENV': JSON.stringify('production')
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         }),
     ]
 };
