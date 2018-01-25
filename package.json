@@ -5,6 +5,7 @@
   "main": "dist/vue-aui-jira-extras.js",
   "scripts": {
     "build": "rollup -c",
+    "dev": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/spartez/vue-aui-jira-extras/issues"
   },
-  "homepage": "https://github.com/spartez/vue-aui-jira-extras#readme"
+  "homepage": "https://github.com/spartez/vue-aui-jira-extras#readme",
+  "devDependencies": {
+    "rollup-plugin-serve": "^0.4.2"
+  }
 }

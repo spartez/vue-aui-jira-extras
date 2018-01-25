@@ -1,1 +1,3 @@
-document.write("Hello from js")
+import VueAuiJiraExtras from '../vue-aui-jira-extras'
+
+document.write(VueAuiJiraExtras)

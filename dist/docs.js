@@ -1,3 +1,5 @@
 'use strict';
 
-document.write("Hello from js");
+var VueAuiJiraExtras = ['jira-extras']
+
+document.write(VueAuiJiraExtras);
