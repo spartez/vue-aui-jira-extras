@@ -1,0 +1,27 @@
+{
+  "name": "vue-aui-jira-extras",
+  "version": "0.1.0",
+  "description": "vue-aui companion library with Jira related components.",
+  "main": "dist/vue-aui-jira-extras.js",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spartez/vue-aui-jira-extras.git"
+  },
+  "keywords": [
+    "atlassian",
+    "aui",
+    "jira",
+    "vue",
+    "wrapper"
+  ],
+  "author": "Damian Skrodzki",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/spartez/vue-aui-jira-extras/issues"
+  },
+  "homepage": "https://github.com/spartez/vue-aui-jira-extras#readme"
+}
