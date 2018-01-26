@@ -11,7 +11,8 @@ import pkg from './package.json';
 
 const commonConfig = {
     plugins: [
-        vue(),
+        // TODO bundle css into js for production
+        vue({css: './dist//vue-bundle.css'}),
         resolve(),
         commonjs(),
         replace({
