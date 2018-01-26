@@ -1,22 +1,19 @@
 import * as JiraCloudApi from './JiraCloudApi'
 import * as JiraServerApi from './JiraServerApi'
-import * as JiraDocsMocks from './JiraDocsMocks'
+import * as JiraMocksApi from './JiraMocksApi'
 
-const isDocs = process.env.NODE_ENV === 'dev';
-const isCloud = window.AP && AP.jira && AP.user;
-const isServer = !isDocs && !isCloud;
-
-function makeApi() {
-    if (isDocs) {
-        return JiraDocsMocks;
-    } else if (isCloud) {
-        return JiraCloudApi
-    } else if (isServer) {
-        return JiraServerApi
+export function detectApi() {
+    if (process.env.NODE_ENV === 'dev') {
+        return JiraMocksApi;
+    } else if (window.AP && AP.jira && AP.user) {
+        return JiraCloudApi;
+    } else if (window.JIRA && JIRA.API) {
+        return JiraServerApi;
     }
+    return JiraMocksApi;
 }
 
-const api = makeApi();
+let api = detectApi();
 
 export function getProjects() {
     return api.get('/rest/api/2/project');
