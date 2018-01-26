@@ -1,5 +1,6 @@
 <template>
     <aui-select2-single v-if="!multiple"
+                        :disabled="disabled"
                         :value="value"
                         :placeholder="placeholder"
                         :query="queryValues"
@@ -16,6 +17,7 @@
         </span>
     </aui-select2-single>
     <aui-select2-multi v-else
+                       :disabled="disabled"
                        :value="value"
                        :placeholder="placeholder"
                        :query="queryValues"
@@ -34,14 +36,15 @@
 </template>
 
 <script>
+    import find from 'lodash/find'
     // TODO add recently accessed section
-    // TODO Move to squared avatars (border-radius 3px) and support them in vue-aui
 
     export default {
         props: {
+            disabled: Boolean,
+            multiple: Boolean,
             placeholder: String,
-            value: [String, Array],
-            multiple: Boolean
+            value: [String, Array]
         },
 
         methods: {
@@ -76,8 +79,8 @@
                 if (element.val()) {
                     const projectIds = element.val().split(',');
                     this.$jira.getProjects().then(projects => {
-                        const projectItems = projects
-                            .filter(project => projectIds.indexOf(project.id) >= 0)
+                        const projectItems = projectIds
+                            .map(projectId => find(projects, {id: projectId}))
                             .map(project => this.mapProjectToProjectOption(project));
                         callback(projectItems)
                     })
