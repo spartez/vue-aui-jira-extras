@@ -10904,6 +10904,8 @@ var ProjectPicker = {render: function(){var _vm=this;var _h=_vm.$createElement;v
                         .map(project => this.mapProjectToProjectOption(project));
                     callback(projectItems);
                 });
+            } else {
+                callback([]);
             }
         }
     }
@@ -10953,7 +10955,9 @@ var VueAuiJiraExtras = {
 
 
 
-var App = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"page"}},[_vm._m(0),_vm._v(" "),_c('section',[_c('div',{staticClass:"aui-page-panel"},[_c('div',{staticClass:"aui-page-panel-inner"},[_c('section',{staticClass:"aui-page-panel-content"},[_c('h2',[_vm._v("Jira Project Picker")]),_vm._v(" "),_c('p',[_c('va-project-picker',{attrs:{"placeholder":"Select a project..."},model:{value:(_vm.projectId),callback:function ($$v) {_vm.projectId=$$v;},expression:"projectId"}})],1),_vm._v(" "),_c('form',{staticClass:"aui"},[_c('va-project-picker',{attrs:{"multiple":"multiple","placeholder":"Select a project..."},model:{value:(_vm.projectIds),callback:function ($$v) {_vm.projectIds=$$v;},expression:"projectIds"}})],1)])])])])])},staticRenderFns: [function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('header',{attrs:{"id":"header","role":"banner"}},[_c('nav',{staticClass:"aui-header aui-dropdown2-trigger-group",attrs:{"role":"navigation"}},[_c('div',{staticClass:"aui-header-inner"},[_c('div',{staticClass:"aui-header-primary"},[_c('h1',{staticClass:"aui-header-logo",attrs:{"id":"logo"}},[_c('a',{attrs:{"href":"http://example.com/"}},[_c('span',{staticClass:"aui-header-logo-device"},[_vm._v("AUI")])])]),_vm._v(" "),_c('ul',{staticClass:"aui-nav"},[_c('li',[_c('a',{attrs:{"href":"http://example.com/"}},[_vm._v("Nav")])])])])])])])}],
+
+
+var App = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"page"}},[_vm._m(0),_vm._v(" "),_c('section',[_c('div',{staticClass:"aui-page-panel"},[_c('div',{staticClass:"aui-page-panel-inner"},[_c('section',{staticClass:"aui-page-panel-content"},[_c('h2',[_vm._v("Jira Project Picker")]),_vm._v(" "),_c('p',[_c('va-project-picker',{attrs:{"placeholder":"Select a project..."},model:{value:(_vm.projectId),callback:function ($$v) {_vm.projectId=$$v;},expression:"projectId"}}),_vm._v(" "),_c('aui-button',{attrs:{"type":"link"},on:{"click":function($event){_vm.projectId = undefined;}}},[_vm._v("Clear")])],1),_vm._v(" "),_c('form',{staticClass:"aui"},[_c('va-project-picker',{attrs:{"multiple":"multiple","placeholder":"Select a project..."},model:{value:(_vm.projectIds),callback:function ($$v) {_vm.projectIds=$$v;},expression:"projectIds"}})],1),_vm._v(" "),_c('aui-button',{attrs:{"type":"link"},on:{"click":function($event){_vm.projectIds = [];}}},[_vm._v("Clear")])],1)])])])])},staticRenderFns: [function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('header',{attrs:{"id":"header","role":"banner"}},[_c('nav',{staticClass:"aui-header aui-dropdown2-trigger-group",attrs:{"role":"navigation"}},[_c('div',{staticClass:"aui-header-inner"},[_c('div',{staticClass:"aui-header-primary"},[_c('h1',{staticClass:"aui-header-logo",attrs:{"id":"logo"}},[_c('a',{attrs:{"href":"http://example.com/"}},[_c('span',{staticClass:"aui-header-logo-device"},[_vm._v("AUI")])])]),_vm._v(" "),_c('ul',{staticClass:"aui-nav"},[_c('li',[_c('a',{attrs:{"href":"http://example.com/"}},[_vm._v("Nav")])])])])])])])}],
     data() {
         return {
             projectId: "10706",

@@ -3826,6 +3826,8 @@ var ProjectPicker = {render: function(){var _vm=this;var _h=_vm.$createElement;v
                         .map(project => this.mapProjectToProjectOption(project));
                     callback(projectItems);
                 });
+            } else {
+                callback([]);
             }
         }
     }
