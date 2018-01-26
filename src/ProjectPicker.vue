@@ -1,20 +1,36 @@
 <template>
-    <aui-select2-single
-            :value="value"
-            :placeholder="placeholder"
-            :query="queryValues"
-            :init-selection="initialValue"
-            @input="$emit('input', $event)"
+    <aui-select2-single v-if="!multiple"
+                        :value="value"
+                        :placeholder="placeholder"
+                        :query="queryValues"
+                        :init-selection="initialValue"
+                        @input="$emit('input', $event)"
     >
-    <span slot="formatSelection" slot-scope="option">
-        <aui-avatar squared size="xsmall" :src="option.data.avatarUrls['48x48']"/>
-        {{option.data.name}}
-    </span>
-        <span slot="formatResult" slot-scope="option">
-        <aui-avatar squared size="xsmall" :src="option.data.avatarUrls['48x48']" class="result-project"/>
-        {{option.data.name}}
-    </span>
+        <span slot="formatSelection" slot-scope="option">
+            <aui-avatar squared size="xsmall" :src="option.data.avatarUrls['48x48']"/>
+            {{option.data.name}}
+        </span>
+        <span slot="formatResult" slot-scope="option" class="result-project">
+            <aui-avatar squared size="xsmall" :src="option.data.avatarUrls['48x48']" class="result-project-avatar"/>
+            <span class="result-project-name">{{option.data.name}}</span>
+        </span>
     </aui-select2-single>
+    <aui-select2-multi v-else
+                       :value="value"
+                       :placeholder="placeholder"
+                       :query="queryValues"
+                       :init-selection="initialValues"
+                       @input="$emit('input', $event)"
+    >
+        <span slot="formatSelection" slot-scope="option">
+            <aui-avatar squared size="xsmall" :src="option.data.avatarUrls['48x48']"/>
+            {{option.data.name}}
+        </span>
+        <span slot="formatResult" slot-scope="option" class="result-project">
+            <aui-avatar squared size="xsmall" :src="option.data.avatarUrls['48x48']" class="result-project-avatar"/>
+            <span class="result-project-name">{{option.data.name}}</span>
+        </span>
+    </aui-select2-multi>
 </template>
 
 <script>
@@ -24,7 +40,8 @@
     export default {
         props: {
             placeholder: String,
-            value: String
+            value: [String, Array],
+            multiple: Boolean
         },
 
         methods: {
@@ -54,6 +71,17 @@
                         callback(this.mapProjectToProjectOption(project))
                     })
                 }
+            },
+            initialValues(element, callback) {
+                if (element.val()) {
+                    const projectIds = element.val().split(',');
+                    this.$jira.getProjects().then(projects => {
+                        const projectItems = projects
+                            .filter(project => projectIds.indexOf(project.id) >= 0)
+                            .map(project => this.mapProjectToProjectOption(project));
+                        callback(projectItems)
+                    })
+                }
             }
         }
     }
@@ -61,6 +89,17 @@
 
 <style scoped>
     .result-project {
+        align-items: center;
+        display: flex;
+        padding: 3px 2px;
+    }
+
+    .result-project-avatar {
         margin-right: 5px;
+    }
+
+    .result-project-name {
+        text-overflow: ellipsis;
+        overflow-y: hidden;
     }
 </style>

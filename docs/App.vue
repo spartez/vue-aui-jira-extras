@@ -19,8 +19,13 @@
                     <section class="aui-page-panel-content">
                         <h2>Jira Project Picker</h2>
                         <p>
-                            <va-project-picker v-model="projectId" placeholder="Select a project..."></va-project-picker>
+                            <va-project-picker v-model="projectId"
+                                               placeholder="Select a project..."></va-project-picker>
                         </p>
+                        <form class="aui">
+                            <va-project-picker multiple v-model="projectIds"
+                                               placeholder="Select a project..."></va-project-picker>
+                        </form>
                     </section>
                 </div>
             </div>
@@ -31,7 +36,10 @@
 <script>
     export default {
         data() {
-            return {projectId: "10706"}
+            return {
+                projectId: "10706",
+                projectIds: ["10705"]
+            }
         }
     }
 </script>
