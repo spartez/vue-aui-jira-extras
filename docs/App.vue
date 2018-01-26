@@ -21,11 +21,13 @@
                         <p>
                             <va-project-picker v-model="projectId"
                                                placeholder="Select a project..."></va-project-picker>
+                            <aui-button type="link" @click="projectId = undefined">Clear</aui-button>
                         </p>
                         <form class="aui">
                             <va-project-picker multiple v-model="projectIds"
                                                placeholder="Select a project..."></va-project-picker>
                         </form>
+                        <aui-button type="link" @click="projectIds = []">Clear</aui-button>
                     </section>
                 </div>
             </div>

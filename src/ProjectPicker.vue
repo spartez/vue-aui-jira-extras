@@ -84,6 +84,8 @@
                             .map(project => this.mapProjectToProjectOption(project));
                         callback(projectItems)
                     })
+                } else {
+                    callback([])
                 }
             }
         }
