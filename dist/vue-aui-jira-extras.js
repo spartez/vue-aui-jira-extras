@@ -93,25 +93,20 @@ function get$2(url, payload) {
 }
 
 
-var JiraDocsMocks = Object.freeze({
+var JiraMocksApi = Object.freeze({
 	get: get$2
 });
 
-const isDocs = "dev" === 'dev';
-const isCloud = window.AP && AP.jira && AP.user;
-const isServer = !isDocs && !isCloud;
-
-function makeApi() {
-    if (isDocs) {
-        return JiraDocsMocks;
-    } else if (isCloud) {
-        return JiraCloudApi
-    } else if (isServer) {
-        return JiraServerApi
+function detectApi() {
+    if (window.AP && AP.jira && AP.user) {
+        return JiraCloudApi;
+    } else if (window.JIRA && JIRA.API) {
+        return JiraServerApi;
     }
+    return JiraMocksApi;
 }
 
-const api = makeApi();
+let api = detectApi();
 
 function getProjects() {
     return api.get('/rest/api/2/project');
@@ -122,17 +117,55 @@ function getProject(projectKeyOrId) {
 }
 
 var JiraApi = Object.freeze({
+	detectApi: detectApi,
 	getProjects: getProjects,
 	getProject: getProject
 });
 
+(function(){ if(typeof document !== 'undefined'){ var head=document.head||document.getElementsByTagName('head')[0], style=document.createElement('style'), css=" .result-project[data-v-48769a5e] { align-items: center; display: flex; padding: 3px 2px; } .result-project-avatar[data-v-48769a5e] { margin-right: 5px; } .result-project-name[data-v-48769a5e] { text-overflow: ellipsis; overflow-y: hidden; } "; style.type='text/css'; if (style.styleSheet){ style.styleSheet.cssText = css; } else { style.appendChild(document.createTextNode(css)); } head.appendChild(style); } })();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // TODO add recently accessed section
 // TODO Move to squared avatars (border-radius 3px) and support them in vue-aui
 
-var ProjectPicker = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('aui-select2-single',{attrs:{"value":_vm.value,"placeholder":_vm.placeholder,"query":_vm.queryValues,"init-selection":_vm.initialValue},on:{"input":function($event){_vm.$emit('input', $event);}},scopedSlots:_vm._u([{key:"formatSelection",fn:function(option){return _c('span',{},[_c('aui-avatar',{attrs:{"squared":"","size":"xsmall","src":option.data.avatarUrls['48x48']}}),_vm._v(" "+_vm._s(option.data.name)+" ")],1)}},{key:"formatResult",fn:function(option){return _c('span',{},[_c('aui-avatar',{staticClass:"result-project",attrs:{"squared":"","size":"xsmall","src":option.data.avatarUrls['48x48']}}),_vm._v(" "+_vm._s(option.data.name)+" ")],1)}}])})},staticRenderFns: [],_scopeId: 'data-v-48769a5e',
+var ProjectPicker = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (!_vm.multiple)?_c('aui-select2-single',{attrs:{"value":_vm.value,"placeholder":_vm.placeholder,"query":_vm.queryValues,"init-selection":_vm.initialValue},on:{"input":function($event){_vm.$emit('input', $event);}},scopedSlots:_vm._u([{key:"formatSelection",fn:function(option){return _c('span',{},[_c('aui-avatar',{attrs:{"squared":"","size":"xsmall","src":option.data.avatarUrls['48x48']}}),_vm._v(" "+_vm._s(option.data.name)+" ")],1)}},{key:"formatResult",fn:function(option){return _c('span',{staticClass:"result-project"},[_c('aui-avatar',{staticClass:"result-project-avatar",attrs:{"squared":"","size":"xsmall","src":option.data.avatarUrls['48x48']}}),_vm._v(" "),_c('span',{staticClass:"result-project-name"},[_vm._v(_vm._s(option.data.name))])],1)}}])}):_c('aui-select2-multi',{attrs:{"value":_vm.value,"placeholder":_vm.placeholder,"query":_vm.queryValues,"init-selection":_vm.initialValues},on:{"input":function($event){_vm.$emit('input', $event);}},scopedSlots:_vm._u([{key:"formatSelection",fn:function(option){return _c('span',{},[_c('aui-avatar',{attrs:{"squared":"","size":"xsmall","src":option.data.avatarUrls['48x48']}}),_vm._v(" "+_vm._s(option.data.name)+" ")],1)}},{key:"formatResult",fn:function(option){return _c('span',{staticClass:"result-project"},[_c('aui-avatar',{staticClass:"result-project-avatar",attrs:{"squared":"","size":"xsmall","src":option.data.avatarUrls['48x48']}}),_vm._v(" "),_c('span',{staticClass:"result-project-name"},[_vm._v(_vm._s(option.data.name))])],1)}}])})},staticRenderFns: [],_scopeId: 'data-v-48769a5e',
     props: {
         placeholder: String,
-        value: String
+        value: [String, Array],
+        multiple: Boolean
     },
 
     methods: {
@@ -160,6 +193,17 @@ var ProjectPicker = {render: function(){var _vm=this;var _h=_vm.$createElement;v
             if (element.val()) {
                 this.$jira.getProject(element.val()).then(project => {
                     callback(this.mapProjectToProjectOption(project));
+                });
+            }
+        },
+        initialValues(element, callback) {
+            if (element.val()) {
+                const projectIds = element.val().split(',');
+                this.$jira.getProjects().then(projects => {
+                    const projectItems = projects
+                        .filter(project => projectIds.indexOf(project.id) >= 0)
+                        .map(project => this.mapProjectToProjectOption(project));
+                    callback(projectItems);
                 });
             }
         }
