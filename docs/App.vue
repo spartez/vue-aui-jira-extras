@@ -18,8 +18,9 @@
                 <div class="aui-page-panel-inner">
                     <section class="aui-page-panel-content">
                         <h2>Jira Project Picker</h2>
-
-                        <va-project-picker placeholder="Select a project..."></va-project-picker>
+                        <p>
+                            <va-project-picker v-model="projectId" placeholder="Select a project..."></va-project-picker>
+                        </p>
                     </section>
                 </div>
             </div>
@@ -28,5 +29,9 @@
 </template>
 
 <script>
-    export default {}
+    export default {
+        data() {
+            return {projectId: "10706"}
+        }
+    }
 </script>

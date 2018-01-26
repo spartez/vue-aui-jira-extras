@@ -1,36 +1,60 @@
 <template>
     <aui-select2-single
+            :value="value"
             :placeholder="placeholder"
             :query="queryValues"
             :init-selection="initialValue"
-    />
+            @input="$emit('input', $event)"
+    >
+    <span slot="formatSelection" slot-scope="option">
+        <aui-avatar size="xsmall" :src="option.data.avatarUrls['48x48']"></aui-avatar>
+        {{option.data.name}}
+    </span>
+        <span slot="formatResult" slot-scope="option">
+        <aui-avatar size="xsmall" :src="option.data.avatarUrls['48x48']"></aui-avatar>
+        {{option.data.name}}
+    </span>
+    </aui-select2-single>
 </template>
 
 <script>
-    import {getProjects} from './api/JiraApi'
+    import {getProjects, getProject} from './api/JiraApi'
+
+    // TODO add recently accessed section
+    // TODO Move to squared avatars (border-radius 3px) and support them in vue-aui
 
     export default {
         props: {
             placeholder: String,
+            value: String
         },
 
         methods: {
+            mapProjectToProjectOption(project) {
+                return {
+                    id: project.id,
+                    text: `${project.name} (${project.key})`,
+                    data: project
+                }
+            },
+
             queryValues(query) {
                 if (query.term === undefined) {
                 } else {
                     getProjects().then(projects => {
                         const projectItems = projects
-                            .filter(project => project.key === query.term.toUpperCase()|| project.name.toUpperCase().indexOf(query.term.toUpperCase()) >= 0)
-                            .map(project => ({id: project.id, text: `${project.name} (${project.key})`}));
+                            .filter(project => project.key === query.term.toUpperCase() || project.name.toUpperCase().indexOf(query.term.toUpperCase()) >= 0)
+                            .map(project => this.mapProjectToProjectOption(project));
                         query.callback({results: projectItems})
                     })
                 }
             },
 
             initialValue(element, callback) {
-                // TODO
-                if (element.val() === "initialValue") {
-                    setTimeout(() => callback({id: "initialValue", text: "Initial Value"}), 300)
+                if (element.val()) {
+                    getProject(element.val()).then(project => {
+                        callback(this.mapProjectToProjectOption(project))
+                    })
                 }
             }
         }
