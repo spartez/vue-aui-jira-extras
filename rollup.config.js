@@ -21,29 +21,40 @@ const commonConfig = {
     ]
 };
 
-export default [
-    merge({
-        input: './src/vue-aui-jira-extras.js',
-        output: [{
-            file: pkg.main,
-            format: 'cjs'
-        }]
-    }, commonConfig),
-    merge({
-        input: './docs/main.js',
-        output: [{
-            file: './dist/docs.js',
-            format: 'cjs'
-        }],
-        plugins: [
-            serve({
-                open: true,
-                contentBase: [
-                    "./dist",
-                    "./node_modules/@atlassian/aui/dist",
-                    "./node_modules/jquery/dist",
-                ]
-            }),
-        ]
-    }, commonConfig)
-]
+
+let libraryConfig = merge({
+    input: './src/vue-aui-jira-extras.js',
+    output: [{
+        file: pkg.main,
+        format: 'cjs'
+    }]
+}, commonConfig);
+
+let docsConfig = merge({
+    input: './docs/main.js',
+    output: [{
+        file: './dist/docs.js',
+        format: 'cjs'
+    }],
+}, commonConfig);
+
+if (process.env.NODE_ENV === 'dev') {
+    docsConfig.plugins.push(
+        serve({
+            open: true,
+            contentBase: [
+                "./dist",
+                "./node_modules/@atlassian/aui/dist",
+                "./node_modules/jquery/dist",
+            ]
+        })
+    )
+}
+
+let rollupConfig = [
+    libraryConfig,
+    docsConfig
+];
+
+
+export default rollupConfig
