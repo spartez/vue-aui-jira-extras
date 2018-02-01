@@ -12,6 +12,7 @@
 * [ ] User picker
 * [ ] Issue type picker
 * [ ] Issue picker
+* [ ] Group picker
 
 
 ## Requirements
