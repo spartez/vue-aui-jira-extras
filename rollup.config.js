@@ -6,6 +6,7 @@ import resolve from "rollup-plugin-node-resolve";
 import serve from "rollup-plugin-serve";
 import replace from "rollup-plugin-replace";
 import vue from "rollup-plugin-vue";
+import babel from 'rollup-plugin-babel';
 
 import pkg from './package.json';
 
@@ -16,6 +17,9 @@ const commonConfig = {
         }),
         resolve(),
         commonjs(),
+        babel({
+            exclude: 'node_modules/**'
+        }),
         replace({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         }),
@@ -25,18 +29,17 @@ const commonConfig = {
 
 let libraryConfig = merge({
     input: './src/vue-aui-jira-extras.js',
-    output: [{
-        file: pkg.main,
-        format: 'cjs'
-    }]
+    output: [
+        {file: pkg.main, format: 'cjs'},
+        {file: pkg.module, format: 'es'}
+    ]
 }, commonConfig);
 
 let docsConfig = merge({
     input: './docs/main.js',
-    output: [{
-        file: './dist/docs.js',
-        format: 'cjs'
-    }],
+    output: [
+        {file: './dist/docs.js', format: 'cjs'},
+    ],
 }, commonConfig);
 
 if (process.env.NODE_ENV === 'dev') {
