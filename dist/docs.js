@@ -10819,7 +10819,7 @@ var find = _createFind(findIndex_1);
 
 var find_1 = find;
 
-(function(){ if(typeof document !== 'undefined'){ var head=document.head||document.getElementsByTagName('head')[0], style=document.createElement('style'), css=" .result-project[data-v-48769a5e] { align-items: center; display: flex; padding: 3px 2px; } .result-project-avatar[data-v-48769a5e] { margin-right: 5px; } .result-project-name[data-v-48769a5e] { text-overflow: ellipsis; overflow-y: hidden; } "; style.type='text/css'; if (style.styleSheet){ style.styleSheet.cssText = css; } else { style.appendChild(document.createTextNode(css)); } head.appendChild(style); } })();
+(function(){ if(typeof document !== 'undefined'){ var head=document.head||document.getElementsByTagName('head')[0], style=document.createElement('style'), css=" .result-project[data-v-48769a5e] { align-items: center; display: flex; padding: 3px 2px; } .result-project-avatar[data-v-48769a5e] { margin-right: 5px; } .result-project-name[data-v-48769a5e] { text-overflow: ellipsis; overflow: hidden; } "; style.type='text/css'; if (style.styleSheet){ style.styleSheet.cssText = css; } else { style.appendChild(document.createTextNode(css)); } head.appendChild(style); } })();
 
 
 
@@ -10867,6 +10867,10 @@ var ProjectPicker = {render: function(){var _vm=this;var _h=_vm.$createElement;v
         value: [String, Array]
     },
 
+    created() {
+        this.getProjectsPromise = this.$jira.getProjects();
+    },
+
     methods: {
         mapProjectToProjectOption(project) {
             return {
@@ -10879,7 +10883,7 @@ var ProjectPicker = {render: function(){var _vm=this;var _h=_vm.$createElement;v
         queryValues(query) {
             if (query.term === undefined) {
             } else {
-                this.$jira.getProjects().then(projects => {
+                this.getProjectsPromise.then(projects => {
                     const projectItems = projects
                         .filter(project => project.key === query.term.toUpperCase() || project.name.toUpperCase().indexOf(query.term.toUpperCase()) >= 0)
                         .map(project => this.mapProjectToProjectOption(project));
@@ -10898,7 +10902,7 @@ var ProjectPicker = {render: function(){var _vm=this;var _h=_vm.$createElement;v
         initialValues(element, callback) {
             if (element.val()) {
                 const projectIds = element.val().split(',');
-                this.$jira.getProjects().then(projects => {
+                this.getProjectsPromise.then(projects => {
                     const projectItems = projectIds
                         .map(projectId => find_1(projects, {id: projectId}))
                         .map(project => this.mapProjectToProjectOption(project));
