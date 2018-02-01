@@ -47,6 +47,10 @@
             value: [String, Array]
         },
 
+        created() {
+            this.getProjectsPromise = this.$jira.getProjects();
+        },
+
         methods: {
             mapProjectToProjectOption(project) {
                 return {
@@ -59,7 +63,7 @@
             queryValues(query) {
                 if (query.term === undefined) {
                 } else {
-                    this.$jira.getProjects().then(projects => {
+                    this.getProjectsPromise.then(projects => {
                         const projectItems = projects
                             .filter(project => project.key === query.term.toUpperCase() || project.name.toUpperCase().indexOf(query.term.toUpperCase()) >= 0)
                             .map(project => this.mapProjectToProjectOption(project));
@@ -78,11 +82,11 @@
             initialValues(element, callback) {
                 if (element.val()) {
                     const projectIds = element.val().split(',');
-                    this.$jira.getProjects().then(projects => {
+                    this.getProjectsPromise.then(projects => {
                         const projectItems = projectIds
                             .map(projectId => find(projects, {id: projectId}))
                             .map(project => this.mapProjectToProjectOption(project));
-                        callback(projectItems)
+                        callback(projectItems);
                     })
                 } else {
                     callback([])
@@ -105,6 +109,6 @@
 
     .result-project-name {
         text-overflow: ellipsis;
-        overflow-y: hidden;
+        overflow: hidden;
     }
 </style>
