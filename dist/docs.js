@@ -8351,17 +8351,16 @@ var assignIn_1 = assignIn;
 var extend$1 = assignIn_1;
 
 function ajax(options) {
-    return new Promise((resolve, reject) => {
-        const defaultOptions = {
-            success(response) {
+    return new Promise(function (resolve, reject) {
+        var defaultOptions = {
+            success: function success(response) {
                 resolve(response ? JSON.parse(response) : undefined);
             },
-
-            error(error) {
-                reject(error);
+            error: function error(_error) {
+                reject(_error);
             }
         };
-        const finalOptions = extend$1(defaultOptions, options);
+        var finalOptions = extend$1(defaultOptions, options);
 
         AP.request(finalOptions);
     });
@@ -8386,7 +8385,7 @@ function post(url, data) {
 }
 
 function get(url) {
-    return ajax({url});
+    return ajax({ url: url });
 }
 
 var JiraCloudApi = Object.freeze({
@@ -8403,82 +8402,80 @@ var JiraServerApi = Object.freeze({
 	get: get$1
 });
 
-const projects = [
-    {
-        "expand": "description,lead,issueTypes,url,projectKeys",
-        "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10706",
-        "id": "10706",
-        "key": "AG",
-        "name": "Agility",
-        "avatarUrls": {
-            "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10706&avatarId=10847",
-            "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10706&avatarId=10847",
-            "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10706&avatarId=10847",
-            "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10706&avatarId=10847"
-        },
-        "projectTypeKey": "software",
-        "simplified": false
+var projects = [{
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10706",
+    "id": "10706",
+    "key": "AG",
+    "name": "Agility",
+    "avatarUrls": {
+        "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10706&avatarId=10847",
+        "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10706&avatarId=10847",
+        "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10706&avatarId=10847",
+        "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10706&avatarId=10847"
     },
-    {
-        "expand": "description,lead,issueTypes,url,projectKeys",
-        "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10705",
-        "id": "10705",
-        "key": "A2",
-        "name": "Agility 2",
-        "avatarUrls": {
-            "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10705&avatarId=10846",
-            "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10705&avatarId=10846",
-            "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10705&avatarId=10846",
-            "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10705&avatarId=10846"
-        },
-        "projectTypeKey": "software",
-        "simplified": false
+    "projectTypeKey": "software",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10705",
+    "id": "10705",
+    "key": "A2",
+    "name": "Agility 2",
+    "avatarUrls": {
+        "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10705&avatarId=10846",
+        "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10705&avatarId=10846",
+        "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10705&avatarId=10846",
+        "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10705&avatarId=10846"
     },
-    {
-        "expand": "description,lead,issueTypes,url,projectKeys",
-        "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10704",
-        "id": "10704",
-        "key": "AB",
-        "name": "Agility Board",
-        "avatarUrls": {
-            "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10704&avatarId=10846",
-            "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10704&avatarId=10846",
-            "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10704&avatarId=10846",
-            "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10704&avatarId=10846"
-        },
-        "projectTypeKey": "software",
-        "simplified": false
+    "projectTypeKey": "software",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10704",
+    "id": "10704",
+    "key": "AB",
+    "name": "Agility Board",
+    "avatarUrls": {
+        "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10704&avatarId=10846",
+        "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10704&avatarId=10846",
+        "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10704&avatarId=10846",
+        "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10704&avatarId=10846"
     },
-    {
-        "expand": "description,lead,issueTypes,url,projectKeys",
-        "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10651",
-        "id": "10651",
-        "key": "MOLEST65",
-        "name": "Awesome Granite Fish",
-        "avatarUrls": {
-            "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10651&avatarId=10846",
-            "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10651&avatarId=10846",
-            "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10651&avatarId=10846",
-            "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10651&avatarId=10846"
-        },
-        "projectTypeKey": "software",
-        "simplified": false
-    }
-];
+    "projectTypeKey": "software",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10651",
+    "id": "10651",
+    "key": "MOLEST65",
+    "name": "Awesome Granite Fish",
+    "avatarUrls": {
+        "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10651&avatarId=10846",
+        "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10651&avatarId=10846",
+        "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10651&avatarId=10846",
+        "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10651&avatarId=10846"
+    },
+    "projectTypeKey": "software",
+    "simplified": false
+}];
 
 function get$2(url, payload) {
-    let response;
+    var response = void 0;
     if (url === '/rest/api/2/project') {
         response = projects;
     } else if (url.match(/\/rest\/api\/2\/project\/\d+/)) {
-        const projectId = url.split('/')[url.split('/').length - 1];
-        response = projects.filter(project => project.id === projectId)[0];
+        var projectId = url.split('/')[url.split('/').length - 1];
+        response = projects.filter(function (project) {
+            return project.id === projectId;
+        })[0];
     }
-    return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(response, 100));
-    })
+    return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+            return resolve(response, 100);
+        });
+    });
 }
-
 
 var JiraMocksApi = Object.freeze({
 	get: get$2
@@ -8493,14 +8490,14 @@ function detectApi() {
     return JiraMocksApi;
 }
 
-let api = detectApi();
+var api = detectApi();
 
 function getProjects() {
     return api.get('/rest/api/2/project');
 }
 
 function getProject(projectKeyOrId) {
-    return api.get(`/rest/api/2/project/${projectKeyOrId}`);
+    return api.get('/rest/api/2/project/' + projectKeyOrId);
 }
 
 var JiraApi = Object.freeze({
@@ -10819,47 +10816,35 @@ var find = _createFind(findIndex_1);
 
 var find_1 = find;
 
-(function(){ if(typeof document !== 'undefined'){ var head=document.head||document.getElementsByTagName('head')[0], style=document.createElement('style'), css=" .result-project[data-v-48769a5e] { align-items: center; display: flex; padding: 3px 2px; } .result-project-avatar[data-v-48769a5e] { margin-right: 5px; } .result-project-name[data-v-48769a5e] { text-overflow: ellipsis; overflow: hidden; } "; style.type='text/css'; if (style.styleSheet){ style.styleSheet.cssText = css; } else { style.appendChild(document.createTextNode(css)); } head.appendChild(style); } })();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+(function () {
+    if (typeof document !== 'undefined') {
+        var head = document.head || document.getElementsByTagName('head')[0],
+            style = document.createElement('style'),
+            css = " .result-project[data-v-48769a5e] { align-items: center; display: flex; padding: 3px 2px; } .result-project-avatar[data-v-48769a5e] { margin-right: 5px; } .result-project-name[data-v-48769a5e] { text-overflow: ellipsis; overflow: hidden; } ";style.type = 'text/css';if (style.styleSheet) {
+            style.styleSheet.cssText = css;
+        } else {
+            style.appendChild(document.createTextNode(css));
+        }head.appendChild(style);
+    }
+})();
 
 // TODO add recently accessed section
 
-var ProjectPicker = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (!_vm.multiple)?_c('aui-select2-single',{attrs:{"disabled":_vm.disabled,"value":_vm.value,"placeholder":_vm.placeholder,"query":_vm.queryValues,"init-selection":_vm.initialValue},on:{"input":function($event){_vm.$emit('input', $event);}},scopedSlots:_vm._u([{key:"formatSelection",fn:function(option){return _c('span',{},[_c('aui-avatar',{attrs:{"squared":"","size":"xsmall","src":option.data.avatarUrls['48x48']}}),_vm._v(" "+_vm._s(option.data.name)+" ")],1)}},{key:"formatResult",fn:function(option){return _c('span',{staticClass:"result-project"},[_c('aui-avatar',{staticClass:"result-project-avatar",attrs:{"squared":"","size":"xsmall","src":option.data.avatarUrls['48x48']}}),_vm._v(" "),_c('span',{staticClass:"result-project-name"},[_vm._v(_vm._s(option.data.name))])],1)}}])}):_c('aui-select2-multi',{attrs:{"disabled":_vm.disabled,"value":_vm.value,"placeholder":_vm.placeholder,"query":_vm.queryValues,"init-selection":_vm.initialValues},on:{"input":function($event){_vm.$emit('input', $event);}},scopedSlots:_vm._u([{key:"formatSelection",fn:function(option){return _c('span',{},[_c('aui-avatar',{attrs:{"squared":"","size":"xsmall","src":option.data.avatarUrls['48x48']}}),_vm._v(" "+_vm._s(option.data.name)+" ")],1)}},{key:"formatResult",fn:function(option){return _c('span',{staticClass:"result-project"},[_c('aui-avatar',{staticClass:"result-project-avatar",attrs:{"squared":"","size":"xsmall","src":option.data.avatarUrls['48x48']}}),_vm._v(" "),_c('span',{staticClass:"result-project-name"},[_vm._v(_vm._s(option.data.name))])],1)}}])})},staticRenderFns: [],_scopeId: 'data-v-48769a5e',
+var ProjectPicker = { render: function render() {
+        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return !_vm.multiple ? _c('aui-select2-single', { attrs: { "disabled": _vm.disabled, "value": _vm.value, "placeholder": _vm.placeholder, "query": _vm.queryValues, "init-selection": _vm.initialValue }, on: { "input": function input($event) {
+                    _vm.$emit('input', $event);
+                } }, scopedSlots: _vm._u([{ key: "formatSelection", fn: function fn(option) {
+                    return _c('span', {}, [_c('aui-avatar', { attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" " + _vm._s(option.data.name) + " ")], 1);
+                } }, { key: "formatResult", fn: function fn(option) {
+                    return _c('span', { staticClass: "result-project" }, [_c('aui-avatar', { staticClass: "result-project-avatar", attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" "), _c('span', { staticClass: "result-project-name" }, [_vm._v(_vm._s(option.data.name))])], 1);
+                } }]) }) : _c('aui-select2-multi', { attrs: { "disabled": _vm.disabled, "value": _vm.value, "placeholder": _vm.placeholder, "query": _vm.queryValues, "init-selection": _vm.initialValues }, on: { "input": function input($event) {
+                    _vm.$emit('input', $event);
+                } }, scopedSlots: _vm._u([{ key: "formatSelection", fn: function fn(option) {
+                    return _c('span', {}, [_c('aui-avatar', { attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" " + _vm._s(option.data.name) + " ")], 1);
+                } }, { key: "formatResult", fn: function fn(option) {
+                    return _c('span', { staticClass: "result-project" }, [_c('aui-avatar', { staticClass: "result-project-avatar", attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" "), _c('span', { staticClass: "result-project-name" }, [_vm._v(_vm._s(option.data.name))])], 1);
+                } }]) });
+    }, staticRenderFns: [], _scopeId: 'data-v-48769a5e',
     props: {
         disabled: Boolean,
         multiple: Boolean,
@@ -10867,45 +10852,53 @@ var ProjectPicker = {render: function(){var _vm=this;var _h=_vm.$createElement;v
         value: [String, Array]
     },
 
-    created() {
+    created: function created() {
         this.getProjectsPromise = this.$jira.getProjects();
     },
 
+
     methods: {
-        mapProjectToProjectOption(project) {
+        mapProjectToProjectOption: function mapProjectToProjectOption(project) {
             return {
                 id: project.id,
-                text: `${project.name} (${project.key})`,
+                text: project.name + ' (' + project.key + ')',
                 data: project
-            }
+            };
         },
+        queryValues: function queryValues(query) {
+            var _this = this;
 
-        queryValues(query) {
-            if (query.term === undefined) {
-            } else {
-                this.getProjectsPromise.then(projects => {
-                    const projectItems = projects
-                        .filter(project => project.key === query.term.toUpperCase() || project.name.toUpperCase().indexOf(query.term.toUpperCase()) >= 0)
-                        .map(project => this.mapProjectToProjectOption(project));
-                    query.callback({results: projectItems});
+            if (query.term === undefined) {} else {
+                this.getProjectsPromise.then(function (projects) {
+                    var projectItems = projects.filter(function (project) {
+                        return project.key === query.term.toUpperCase() || project.name.toUpperCase().indexOf(query.term.toUpperCase()) >= 0;
+                    }).map(function (project) {
+                        return _this.mapProjectToProjectOption(project);
+                    });
+                    query.callback({ results: projectItems });
                 });
             }
         },
+        initialValue: function initialValue(element, callback) {
+            var _this2 = this;
 
-        initialValue(element, callback) {
             if (element.val()) {
-                this.$jira.getProject(element.val()).then(project => {
-                    callback(this.mapProjectToProjectOption(project));
+                this.$jira.getProject(element.val()).then(function (project) {
+                    callback(_this2.mapProjectToProjectOption(project));
                 });
             }
         },
-        initialValues(element, callback) {
+        initialValues: function initialValues(element, callback) {
+            var _this3 = this;
+
             if (element.val()) {
-                const projectIds = element.val().split(',');
-                this.getProjectsPromise.then(projects => {
-                    const projectItems = projectIds
-                        .map(projectId => find_1(projects, {id: projectId}))
-                        .map(project => this.mapProjectToProjectOption(project));
+                var projectIds = element.val().split(',');
+                this.getProjectsPromise.then(function (projects) {
+                    var projectItems = projectIds.map(function (projectId) {
+                        return find_1(projects, { id: projectId });
+                    }).map(function (project) {
+                        return _this3.mapProjectToProjectOption(project);
+                    });
                     callback(projectItems);
                 });
             } else {
@@ -10913,67 +10906,55 @@ var ProjectPicker = {render: function(){var _vm=this;var _h=_vm.$createElement;v
             }
         }
     }
-}
+};
 
 var VueAuiJiraExtras = {
-    install(Vue, options) {
+    install: function install(Vue, options) {
         Vue.component('va-project-picker', ProjectPicker);
 
         Vue.prototype.$jira = JiraApi;
     }
 };
 
-(function(){ if(typeof document !== 'undefined'){ var head=document.head||document.getElementsByTagName('head')[0], style=document.createElement('style'), css=""; style.type='text/css'; if (style.styleSheet){ style.styleSheet.cssText = css; } else { style.appendChild(document.createTextNode(css)); } head.appendChild(style); } })();
+(function () {
+    if (typeof document !== 'undefined') {
+        var head = document.head || document.getElementsByTagName('head')[0],
+            style = document.createElement('style'),
+            css = "";style.type = 'text/css';if (style.styleSheet) {
+            style.styleSheet.cssText = css;
+        } else {
+            style.appendChild(document.createTextNode(css));
+        }head.appendChild(style);
+    }
+})();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var App = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"page"}},[_vm._m(0),_vm._v(" "),_c('section',[_c('div',{staticClass:"aui-page-panel"},[_c('div',{staticClass:"aui-page-panel-inner"},[_c('section',{staticClass:"aui-page-panel-content"},[_c('h2',[_vm._v("Jira Project Picker")]),_vm._v(" "),_c('p',[_c('va-project-picker',{attrs:{"placeholder":"Select a project..."},model:{value:(_vm.projectId),callback:function ($$v) {_vm.projectId=$$v;},expression:"projectId"}}),_vm._v(" "),_c('aui-button',{attrs:{"type":"link"},on:{"click":function($event){_vm.projectId = undefined;}}},[_vm._v("Clear")])],1),_vm._v(" "),_c('form',{staticClass:"aui"},[_c('va-project-picker',{attrs:{"multiple":"multiple","placeholder":"Select a project..."},model:{value:(_vm.projectIds),callback:function ($$v) {_vm.projectIds=$$v;},expression:"projectIds"}})],1),_vm._v(" "),_c('aui-button',{attrs:{"type":"link"},on:{"click":function($event){_vm.projectIds = [];}}},[_vm._v("Clear")])],1)])])])])},staticRenderFns: [function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('header',{attrs:{"id":"header","role":"banner"}},[_c('nav',{staticClass:"aui-header aui-dropdown2-trigger-group",attrs:{"role":"navigation"}},[_c('div',{staticClass:"aui-header-inner"},[_c('div',{staticClass:"aui-header-primary"},[_c('h1',{staticClass:"aui-header-logo",attrs:{"id":"logo"}},[_c('a',{attrs:{"href":"http://example.com/"}},[_c('span',{staticClass:"aui-header-logo-device"},[_vm._v("AUI")])])]),_vm._v(" "),_c('ul',{staticClass:"aui-nav"},[_c('li',[_c('a',{attrs:{"href":"http://example.com/"}},[_vm._v("Nav")])])])])])])])}],
-    data() {
+var App = { render: function render() {
+        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('div', { attrs: { "id": "page" } }, [_vm._m(0), _vm._v(" "), _c('section', [_c('div', { staticClass: "aui-page-panel" }, [_c('div', { staticClass: "aui-page-panel-inner" }, [_c('section', { staticClass: "aui-page-panel-content" }, [_c('h2', [_vm._v("Jira Project Picker")]), _vm._v(" "), _c('p', [_c('va-project-picker', { attrs: { "placeholder": "Select a project..." }, model: { value: _vm.projectId, callback: function callback($$v) {
+                    _vm.projectId = $$v;
+                }, expression: "projectId" } }), _vm._v(" "), _c('aui-button', { attrs: { "type": "link" }, on: { "click": function click($event) {
+                    _vm.projectId = undefined;
+                } } }, [_vm._v("Clear")])], 1), _vm._v(" "), _c('form', { staticClass: "aui" }, [_c('va-project-picker', { attrs: { "multiple": "multiple", "placeholder": "Select a project..." }, model: { value: _vm.projectIds, callback: function callback($$v) {
+                    _vm.projectIds = $$v;
+                }, expression: "projectIds" } })], 1), _vm._v(" "), _c('aui-button', { attrs: { "type": "link" }, on: { "click": function click($event) {
+                    _vm.projectIds = [];
+                } } }, [_vm._v("Clear")])], 1)])])])]);
+    }, staticRenderFns: [function () {
+        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('header', { attrs: { "id": "header", "role": "banner" } }, [_c('nav', { staticClass: "aui-header aui-dropdown2-trigger-group", attrs: { "role": "navigation" } }, [_c('div', { staticClass: "aui-header-inner" }, [_c('div', { staticClass: "aui-header-primary" }, [_c('h1', { staticClass: "aui-header-logo", attrs: { "id": "logo" } }, [_c('a', { attrs: { "href": "http://example.com/" } }, [_c('span', { staticClass: "aui-header-logo-device" }, [_vm._v("AUI")])])]), _vm._v(" "), _c('ul', { staticClass: "aui-nav" }, [_c('li', [_c('a', { attrs: { "href": "http://example.com/" } }, [_vm._v("Nav")])])])])])])]);
+    }],
+    data: function data() {
         return {
             projectId: "10706",
             projectIds: ["10705"]
-        }
+        };
     }
-}
+};
 
 Vue$3.use(VueAui);
 Vue$3.use(VueAuiJiraExtras);
 
 new Vue$3({
     el: '#app',
-    render: h => h(App),
+    render: function render(h) {
+        return h(App);
+    }
 });

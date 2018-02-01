@@ -1,5 +1,3 @@
-'use strict';
-
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
 
@@ -3838,4 +3836,4 @@ var vueAuiJiraExtras = {
     }
 };
 
-module.exports = vueAuiJiraExtras;
+export default vueAuiJiraExtras;
