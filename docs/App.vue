@@ -28,6 +28,18 @@
                                                placeholder="Select a project..."></va-project-picker>
                         </form>
                         <aui-button type="link" @click="projectIds = []">Clear</aui-button>
+
+
+                        <h2>Jira User Picker</h2>
+                        <p>
+                            <va-user-picker v-model="userKey"></va-user-picker>
+                            <aui-button type="link" @click="userKey = undefined">Clear</aui-button>
+                        </p>
+                        <form class="aui">
+                            <va-user-picker multiple v-model="userKeys"
+                                               placeholder="Select some users"></va-user-picker>
+                        </form>
+                        <aui-button type="link" @click="userKeys = []">Clear</aui-button>
                     </section>
                 </div>
             </div>
@@ -40,7 +52,9 @@
         data() {
             return {
                 projectId: "10706",
-                projectIds: ["10705"]
+                projectIds: ["10705"],
+                userKey: "admin",
+                userKeys: ["admin", "mdavis-sd-demo"]
             }
         }
     }

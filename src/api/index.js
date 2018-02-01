@@ -15,10 +15,34 @@ export function detectApi() {
 
 let api = detectApi();
 
-export function getProjects() {
-    return api.get('/rest/api/2/project');
+export function getProject(projectKeyOrId) {
+    if (api.isDev) {
+        return JiraMocksApi.getProject(projectKeyOrId)
+    } else {
+        return api.get(`/rest/api/2/project/${projectKeyOrId}`);
+    }
 }
 
-export function getProject(projectKeyOrId) {
-    return api.get(`/rest/api/2/project/${projectKeyOrId}`);
+export function getProjects() {
+    if (api.isDev) {
+        return JiraMocksApi.getProjects()
+    } else {
+        return api.get('/rest/api/2/project');
+    }
+}
+
+export function getUser(userKey) {
+    if (api.isDev) {
+        return JiraMocksApi.getUser(userKey)
+    } else {
+        return api.get(`/rest/api/2/user?key=${userKey}`);
+    }
+}
+
+export function getUsers(username) {
+    if (api.isDev) {
+        return JiraMocksApi.getUsers(username)
+    } else {
+        return api.get(`/rest/api/2/user/search?username=${username}`);
+    }
 }
