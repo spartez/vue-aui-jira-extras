@@ -119,6 +119,6 @@
     .result-user-name {
         font-size: 12px;
         font-weight: 600;
-        color: #A5ADBA;
+        color: #8993A4;
     }
 </style>
