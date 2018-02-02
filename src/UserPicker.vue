@@ -16,7 +16,7 @@
             <aui-avatar size="medium" :src="option.data.avatarUrls['48x48']" class="result-user-avatar"/>
             <div class="result-user-text">
                 <span class="result-user-fullname">{{option.data.displayName}}</span>
-                <small class="result-user-name">@{{option.data.name}}</small>
+                <span class="result-user-name">@{{option.data.name}}</span>
             </div>
         </span>
     </aui-select2-single>
@@ -36,7 +36,7 @@
             <aui-avatar size="medium" :src="option.data.avatarUrls['48x48']" class="result-user-avatar"/>
             <div class="result-user-text">
                 <span class="result-user-fullname">{{option.data.displayName}}</span>
-                <small class="result-user-name">@{{option.data.name}}</small>
+                <span class="result-user-name">@{{option.data.name}}</span>
             </div>
         </span>
     </aui-select2-multi>
@@ -114,5 +114,11 @@
     .result-user-fullname {
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .result-user-name {
+        font-size: 12px;
+        font-weight: 600;
+        color: #A5ADBA;
     }
 </style>
