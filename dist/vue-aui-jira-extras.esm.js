@@ -1286,13 +1286,8 @@ function ajax(options) {
     });
 }
 
-function put(url, data) {
-    return ajax({
-        type: "PUT",
-        url: url,
-        contentType: "application/json",
-        data: JSON.stringify(data)
-    });
+function get(url) {
+    return ajax({ url: url });
 }
 
 function post(url, data) {
@@ -1304,23 +1299,143 @@ function post(url, data) {
     });
 }
 
-function get(url) {
-    return ajax({ url: url });
+function put(url, data) {
+    return ajax({
+        type: "PUT",
+        url: url,
+        contentType: "application/json",
+        data: JSON.stringify(data)
+    });
 }
 
 var JiraCloudApi = Object.freeze({
-	put: put,
+	get: get,
 	post: post,
-	get: get
+	put: put
 });
 
-function get$1() {
-    // return AP.request(...)
+var baseUrl = window.top.location.origin + (AJS.contextPath && AJS.contextPath());
+
+function setUrl(url) {
+    baseUrl = url;
 }
 
+function ajax$1(options) {
+    var actualOptions = Object.assign({}, options, {
+        url: baseUrl + options.url
+    });
+
+    return new Promise(function (resolve, reject) {
+        AJS.$.ajax(actualOptions).done(resolve).fail(reject);
+    });
+}
+
+function get$1(url) {
+    return ajax$1({
+        url: url,
+        dataType: "json"
+    });
+}
+
+function del(url) {
+    return ajax$1({
+        type: "DELETE",
+        url: url
+    });
+}
+
+function post$1(url, data) {
+    return ajax$1({
+        type: "POST",
+        url: url,
+        contentType: "application/json",
+        data: JSON.stringify(data)
+    });
+}
+
+function put$1(url, data) {
+    return ajax$1({
+        type: "PUT",
+        url: url,
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify(data),
+        dataFilter: function dataFilter(data, type) {
+            return type === "json" && data === "" ? null : data;
+        }
+    });
+}
+
+
+
 var JiraServerApi = Object.freeze({
-	get: get$1
+	setUrl: setUrl,
+	get: get$1,
+	del: del,
+	post: post$1,
+	put: put$1
 });
+
+var users = [{
+    "self": "http://squad75:8075/rest/api/2/user?username=jevans-sd-demo",
+    "key": "jevans-sd-demo",
+    "name": "jevans-sd-demo",
+    "emailAddress": "jevans-sd-demo@example.com",
+    "avatarUrls": {
+        "48x48": "http://www.gravatar.com/avatar/019353b5fd6b245699e8c8b9013bef16?d=mm&s=48",
+        "24x24": "http://www.gravatar.com/avatar/019353b5fd6b245699e8c8b9013bef16?d=mm&s=24",
+        "16x16": "http://www.gravatar.com/avatar/019353b5fd6b245699e8c8b9013bef16?d=mm&s=16",
+        "32x32": "http://www.gravatar.com/avatar/019353b5fd6b245699e8c8b9013bef16?d=mm&s=32"
+    },
+    "displayName": "Jennifer Evans",
+    "active": true,
+    "timeZone": "Etc/UTC"
+}, {
+    "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=mdavis-sd-demo",
+    "key": "mdavis-sd-demo",
+    "name": "mdavis-sd-demo",
+    "emailAddress": "davis@example.com",
+    "avatarUrls": {
+        "16x16": "https://randomuser.me/api/portraits/men/78.jpg",
+        "24x24": "https://randomuser.me/api/portraits/men/78.jpg",
+        "32x32": "https://randomuser.me/api/portraits/men/78.jpg",
+        "48x48": "https://randomuser.me/api/portraits/men/78.jpg"
+    },
+    "displayName": "Gawel Mazur",
+    "active": true,
+    "timeZone": "Europe/Berlin",
+    "locale": "en_US"
+}, {
+    "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=admin1",
+    "key": "admin",
+    "name": "admin1",
+    "emailAddress": "admin@example.com",
+    "avatarUrls": {
+        "16x16": "https://avatar-cdn.atlassian.com/505f80d4c04f00b9ab7047ede1920e70?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F505f80d4c04f00b9ab7047ede1920e70%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+        "24x24": "https://avatar-cdn.atlassian.com/505f80d4c04f00b9ab7047ede1920e70?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F505f80d4c04f00b9ab7047ede1920e70%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+        "32x32": "https://avatar-cdn.atlassian.com/505f80d4c04f00b9ab7047ede1920e70?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F505f80d4c04f00b9ab7047ede1920e70%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+        "48x48": "https://avatar-cdn.atlassian.com/505f80d4c04f00b9ab7047ede1920e70?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F505f80d4c04f00b9ab7047ede1920e70%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+    },
+    "displayName": "Damian Skrodzki",
+    "active": true,
+    "timeZone": "Europe/Berlin",
+    "locale": "en_US"
+}, {
+    "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=agrant-sd-demo",
+    "key": "agrant-sd-demo",
+    "name": "agrant-sd-demo",
+    "emailAddress": "agrant-sd-demo@example.com",
+    "avatarUrls": {
+        "16x16": "https://randomuser.me/api/portraits/women/93.jpg",
+        "24x24": "https://randomuser.me/api/portraits/women/93.jpg",
+        "32x32": "https://randomuser.me/api/portraits/women/93.jpg",
+        "48x48": "https://randomuser.me/api/portraits/women/93.jpg"
+    },
+    "displayName": "Alana Grant",
+    "active": true,
+    "timeZone": "Europe/Berlin",
+    "locale": "en_US"
+}];
 
 var projects = [{
     "expand": "description,lead,issueTypes,url,projectKeys",
@@ -1378,27 +1493,288 @@ var projects = [{
     },
     "projectTypeKey": "software",
     "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://spartez.atlassian.net/rest/api/2/project/12405",
+    "id": "12405",
+    "key": "ACDC",
+    "name": "Agile Cards",
+    "avatarUrls": {
+        "48x48": "https://spartez.atlassian.net/secure/projectavatar?pid=12405&avatarId=11548",
+        "24x24": "https://spartez.atlassian.net/secure/projectavatar?size=small&pid=12405&avatarId=11548",
+        "16x16": "https://spartez.atlassian.net/secure/projectavatar?size=xsmall&pid=12405&avatarId=11548",
+        "32x32": "https://spartez.atlassian.net/secure/projectavatar?size=medium&pid=12405&avatarId=11548"
+    },
+    "projectTypeKey": "software",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://spartez.atlassian.net/rest/api/2/project/11201",
+    "id": "11201",
+    "key": "AP",
+    "name": "Agile Poker",
+    "avatarUrls": {
+        "48x48": "https://spartez.atlassian.net/secure/projectavatar?pid=11201&avatarId=11546",
+        "24x24": "https://spartez.atlassian.net/secure/projectavatar?size=small&pid=11201&avatarId=11546",
+        "16x16": "https://spartez.atlassian.net/secure/projectavatar?size=xsmall&pid=11201&avatarId=11546",
+        "32x32": "https://spartez.atlassian.net/secure/projectavatar?size=medium&pid=11201&avatarId=11546"
+    },
+    "projectTypeKey": "software",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://spartez.atlassian.net/rest/api/2/project/12400",
+    "id": "12400",
+    "key": "AR",
+    "name": "Agile Retros",
+    "avatarUrls": {
+        "48x48": "https://spartez.atlassian.net/secure/projectavatar?pid=12400&avatarId=11551",
+        "24x24": "https://spartez.atlassian.net/secure/projectavatar?size=small&pid=12400&avatarId=11551",
+        "16x16": "https://spartez.atlassian.net/secure/projectavatar?size=xsmall&pid=12400&avatarId=11551",
+        "32x32": "https://spartez.atlassian.net/secure/projectavatar?size=medium&pid=12400&avatarId=11551"
+    },
+    "projectTypeKey": "software",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://spartez.atlassian.net/rest/api/2/project/11600",
+    "id": "11600",
+    "key": "BD",
+    "name": "Business Demo",
+    "avatarUrls": {
+        "48x48": "https://spartez.atlassian.net/secure/projectavatar?pid=11600&avatarId=11551",
+        "24x24": "https://spartez.atlassian.net/secure/projectavatar?size=small&pid=11600&avatarId=11551",
+        "16x16": "https://spartez.atlassian.net/secure/projectavatar?size=xsmall&pid=11600&avatarId=11551",
+        "32x32": "https://spartez.atlassian.net/secure/projectavatar?size=medium&pid=11600&avatarId=11551"
+    },
+    "projectTypeKey": "business",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://spartez.atlassian.net/rest/api/2/project/12406",
+    "id": "12406",
+    "key": "CR",
+    "name": "Canned Responses",
+    "avatarUrls": {
+        "48x48": "https://spartez.atlassian.net/secure/projectavatar?pid=12406&avatarId=11550",
+        "24x24": "https://spartez.atlassian.net/secure/projectavatar?size=small&pid=12406&avatarId=11550",
+        "16x16": "https://spartez.atlassian.net/secure/projectavatar?size=xsmall&pid=12406&avatarId=11550",
+        "32x32": "https://spartez.atlassian.net/secure/projectavatar?size=medium&pid=12406&avatarId=11550"
+    },
+    "projectTypeKey": "software",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://spartez.atlassian.net/rest/api/2/project/11801",
+    "id": "11801",
+    "key": "COR",
+    "name": "CoreProject",
+    "avatarUrls": {
+        "48x48": "https://spartez.atlassian.net/secure/projectavatar?pid=11801&avatarId=11551",
+        "24x24": "https://spartez.atlassian.net/secure/projectavatar?size=small&pid=11801&avatarId=11551",
+        "16x16": "https://spartez.atlassian.net/secure/projectavatar?size=xsmall&pid=11801&avatarId=11551",
+        "32x32": "https://spartez.atlassian.net/secure/projectavatar?size=medium&pid=11801&avatarId=11551"
+    },
+    "projectTypeKey": "business",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://spartez.atlassian.net/rest/api/2/project/10000",
+    "id": "10000",
+    "key": "DEMO",
+    "name": "Demonstration Project",
+    "avatarUrls": {
+        "48x48": "https://spartez.atlassian.net/secure/projectavatar?pid=10000&avatarId=10300",
+        "24x24": "https://spartez.atlassian.net/secure/projectavatar?size=small&pid=10000&avatarId=10300",
+        "16x16": "https://spartez.atlassian.net/secure/projectavatar?size=xsmall&pid=10000&avatarId=10300",
+        "32x32": "https://spartez.atlassian.net/secure/projectavatar?size=medium&pid=10000&avatarId=10300"
+    },
+    "projectTypeKey": "software",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://spartez.atlassian.net/rest/api/2/project/10700",
+    "id": "10700",
+    "key": "ES",
+    "name": "Estimation Sample",
+    "avatarUrls": {
+        "48x48": "https://spartez.atlassian.net/secure/projectavatar?pid=10700&avatarId=11551",
+        "24x24": "https://spartez.atlassian.net/secure/projectavatar?size=small&pid=10700&avatarId=11551",
+        "16x16": "https://spartez.atlassian.net/secure/projectavatar?size=xsmall&pid=10700&avatarId=11551",
+        "32x32": "https://spartez.atlassian.net/secure/projectavatar?size=medium&pid=10700&avatarId=11551"
+    },
+    "projectTypeKey": "software",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://spartez.atlassian.net/rest/api/2/project/11500",
+    "id": "11500",
+    "key": "IT",
+    "name": "IT Desk",
+    "avatarUrls": {
+        "48x48": "https://spartez.atlassian.net/secure/projectavatar?pid=11500&avatarId=11551",
+        "24x24": "https://spartez.atlassian.net/secure/projectavatar?size=small&pid=11500&avatarId=11551",
+        "16x16": "https://spartez.atlassian.net/secure/projectavatar?size=xsmall&pid=11500&avatarId=11551",
+        "32x32": "https://spartez.atlassian.net/secure/projectavatar?size=medium&pid=11500&avatarId=11551"
+    },
+    "projectTypeKey": "service_desk",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://spartez.atlassian.net/rest/api/2/project/10400",
+    "id": "10400",
+    "key": "KRY",
+    "name": "Kry-test1",
+    "avatarUrls": {
+        "48x48": "https://spartez.atlassian.net/secure/projectavatar?pid=10400&avatarId=11551",
+        "24x24": "https://spartez.atlassian.net/secure/projectavatar?size=small&pid=10400&avatarId=11551",
+        "16x16": "https://spartez.atlassian.net/secure/projectavatar?size=xsmall&pid=10400&avatarId=11551",
+        "32x32": "https://spartez.atlassian.net/secure/projectavatar?size=medium&pid=10400&avatarId=11551"
+    },
+    "projectTypeKey": "software",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://spartez.atlassian.net/rest/api/2/project/12402",
+    "id": "12402",
+    "key": "LIM",
+    "name": "Limbo",
+    "avatarUrls": {
+        "48x48": "https://spartez.atlassian.net/secure/projectavatar?pid=12402&avatarId=11551",
+        "24x24": "https://spartez.atlassian.net/secure/projectavatar?size=small&pid=12402&avatarId=11551",
+        "16x16": "https://spartez.atlassian.net/secure/projectavatar?size=xsmall&pid=12402&avatarId=11551",
+        "32x32": "https://spartez.atlassian.net/secure/projectavatar?size=medium&pid=12402&avatarId=11551"
+    },
+    "projectTypeKey": "software",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://spartez.atlassian.net/rest/api/2/project/11900",
+    "id": "11900",
+    "key": "MEET",
+    "name": "MeetJS Board",
+    "avatarUrls": {
+        "48x48": "https://spartez.atlassian.net/secure/projectavatar?pid=11900&avatarId=11551",
+        "24x24": "https://spartez.atlassian.net/secure/projectavatar?size=small&pid=11900&avatarId=11551",
+        "16x16": "https://spartez.atlassian.net/secure/projectavatar?size=xsmall&pid=11900&avatarId=11551",
+        "32x32": "https://spartez.atlassian.net/secure/projectavatar?size=medium&pid=11900&avatarId=11551"
+    },
+    "projectTypeKey": "software",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://spartez.atlassian.net/rest/api/2/project/12000",
+    "id": "12000",
+    "key": "SKP",
+    "name": "Sample Kanban Project",
+    "avatarUrls": {
+        "48x48": "https://spartez.atlassian.net/secure/projectavatar?pid=12000&avatarId=11551",
+        "24x24": "https://spartez.atlassian.net/secure/projectavatar?size=small&pid=12000&avatarId=11551",
+        "16x16": "https://spartez.atlassian.net/secure/projectavatar?size=xsmall&pid=12000&avatarId=11551",
+        "32x32": "https://spartez.atlassian.net/secure/projectavatar?size=medium&pid=12000&avatarId=11551"
+    },
+    "projectTypeKey": "software",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://spartez.atlassian.net/rest/api/2/project/10501",
+    "id": "10501",
+    "key": "SSP",
+    "name": "Sample Scrum Project",
+    "avatarUrls": {
+        "48x48": "https://spartez.atlassian.net/secure/projectavatar?pid=10501&avatarId=11551",
+        "24x24": "https://spartez.atlassian.net/secure/projectavatar?size=small&pid=10501&avatarId=11551",
+        "16x16": "https://spartez.atlassian.net/secure/projectavatar?size=xsmall&pid=10501&avatarId=11551",
+        "32x32": "https://spartez.atlassian.net/secure/projectavatar?size=medium&pid=10501&avatarId=11551"
+    },
+    "projectTypeKey": "software",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://spartez.atlassian.net/rest/api/2/project/12105",
+    "id": "12105",
+    "key": "SHIP",
+    "name": "ShipIt",
+    "avatarUrls": {
+        "48x48": "https://spartez.atlassian.net/secure/projectavatar?pid=12105&avatarId=11551",
+        "24x24": "https://spartez.atlassian.net/secure/projectavatar?size=small&pid=12105&avatarId=11551",
+        "16x16": "https://spartez.atlassian.net/secure/projectavatar?size=xsmall&pid=12105&avatarId=11551",
+        "32x32": "https://spartez.atlassian.net/secure/projectavatar?size=medium&pid=12105&avatarId=11551"
+    },
+    "projectTypeKey": "software",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://spartez.atlassian.net/rest/api/2/project/10900",
+    "id": "10900",
+    "key": "SPG",
+    "name": "SPG",
+    "avatarUrls": {
+        "48x48": "https://spartez.atlassian.net/secure/projectavatar?pid=10900&avatarId=11551",
+        "24x24": "https://spartez.atlassian.net/secure/projectavatar?size=small&pid=10900&avatarId=11551",
+        "16x16": "https://spartez.atlassian.net/secure/projectavatar?size=xsmall&pid=10900&avatarId=11551",
+        "32x32": "https://spartez.atlassian.net/secure/projectavatar?size=medium&pid=10900&avatarId=11551"
+    },
+    "projectTypeKey": "software",
+    "simplified": false
+}, {
+    "expand": "description,lead,issueTypes,url,projectKeys",
+    "self": "https://spartez.atlassian.net/rest/api/2/project/12403",
+    "id": "12403",
+    "key": "TFS",
+    "name": "TFS4JIRA",
+    "avatarUrls": {
+        "48x48": "https://spartez.atlassian.net/secure/projectavatar?pid=12403&avatarId=11551",
+        "24x24": "https://spartez.atlassian.net/secure/projectavatar?size=small&pid=12403&avatarId=11551",
+        "16x16": "https://spartez.atlassian.net/secure/projectavatar?size=xsmall&pid=12403&avatarId=11551",
+        "32x32": "https://spartez.atlassian.net/secure/projectavatar?size=medium&pid=12403&avatarId=11551"
+    },
+    "projectTypeKey": "software",
+    "simplified": false
 }];
 
-function get$2(url, payload) {
-    var response = void 0;
-    if (url === '/rest/api/2/project') {
-        response = projects;
-    } else if (url.match(/\/rest\/api\/2\/project\/\d+/)) {
-        var projectId = url.split('/')[url.split('/').length - 1];
-        response = projects.filter(function (project) {
-            return project.id === projectId;
-        })[0];
-    }
-    return new Promise(function (resolve, reject) {
-        setTimeout(function () {
-            return resolve(response, 100);
+var answerDelay = 300;
+
+function response(response) {
+    return new Promise(function (resolve) {
+        return setTimeout(function () {
+            return resolve(response, answerDelay);
         });
     });
 }
 
+var isDev = true;
+
+var getProject = function getProject(projectKeyOrId) {
+    return response(projects.filter(function (project) {
+        return project.id === projectKeyOrId;
+    })[0]);
+};
+var getProjects = function getProjects() {
+    return response(projects);
+};
+
+var getUser = function getUser(userKey) {
+    return response(users.filter(function (user) {
+        return user.key === userKey;
+    })[0]);
+};
+var getUsers = function getUsers(userQuery) {
+    return response(users.filter(function (user) {
+        return queryMatchesUser(userQuery, user);
+    }));
+};
+
+function queryMatchesUser(query, user) {
+    return user.key.toUpperCase().indexOf(query.toUpperCase()) >= 0 || user.name.toUpperCase().indexOf(query.toUpperCase()) >= 0 || user.displayName.toUpperCase().indexOf(query.toUpperCase()) >= 0;
+}
+
 var JiraMocksApi = Object.freeze({
-	get: get$2
+	isDev: isDev,
+	getProject: getProject,
+	getProjects: getProjects,
+	getUser: getUser,
+	getUsers: getUsers
 });
 
 function detectApi() {
@@ -1412,18 +1788,54 @@ function detectApi() {
 
 var api = detectApi();
 
-function getProjects() {
-    return api.get('/rest/api/2/project');
+function setMode(options) {
+    if (options.mode === 'server') {
+        api = JiraServerApi;
+        if (options.url) {
+            setUrl(options.url);
+        }
+    }
 }
 
-function getProject(projectKeyOrId) {
-    return api.get('/rest/api/2/project/' + projectKeyOrId);
+function getProject$1(projectKeyOrId) {
+    if (api.isDev) {
+        return getProject(projectKeyOrId);
+    } else {
+        return api.get('/rest/api/2/project/' + projectKeyOrId);
+    }
+}
+
+function getProjects$1() {
+    if (api.isDev) {
+        return getProjects();
+    } else {
+        return api.get('/rest/api/2/project');
+    }
+}
+
+function getUser$1(userKey) {
+    if (api.isDev) {
+        return getUser(userKey);
+    } else {
+        return api.get('/rest/api/2/user?key=' + userKey);
+    }
+}
+
+function getUsers$1(username) {
+    if (api.isDev) {
+        return getUsers(username);
+    } else {
+        return api.get('/rest/api/2/user/search?username=' + username);
+    }
 }
 
 var JiraApi = Object.freeze({
 	detectApi: detectApi,
-	getProjects: getProjects,
-	getProject: getProject
+	setMode: setMode,
+	getProject: getProject$1,
+	getProjects: getProjects$1,
+	getUser: getUser$1,
+	getUsers: getUsers$1
 });
 
 /**
@@ -3261,12 +3673,12 @@ var _baseGet = baseGet;
  * _.get(object, 'a.b.c', 'default');
  * // => 'default'
  */
-function get$3(object, path, defaultValue) {
+function get$2(object, path, defaultValue) {
   var result = object == null ? undefined : _baseGet(object, path);
   return result === undefined ? defaultValue : result;
 }
 
-var get_1 = get$3;
+var get_1 = get$2;
 
 /**
  * The base implementation of `_.hasIn` without support for deep paths.
@@ -3751,7 +4163,7 @@ var find_1 = find;
 // TODO add recently accessed section
 
 var ProjectPicker = { render: function render() {
-        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return !_vm.multiple ? _c('aui-select2-single', { attrs: { "disabled": _vm.disabled, "value": _vm.value, "placeholder": _vm.placeholder, "query": _vm.queryValues, "init-selection": _vm.initialValue }, on: { "input": function input($event) {
+        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return !_vm.multiple ? _c('aui-select2-single', { attrs: { "allow-clear": _vm.allowClear, "disabled": _vm.disabled, "value": _vm.value, "placeholder": _vm.placeholder, "query": _vm.queryValues, "init-selection": _vm.initialValue }, on: { "input": function input($event) {
                     _vm.$emit('input', $event);
                 } }, scopedSlots: _vm._u([{ key: "formatSelection", fn: function fn(option) {
                     return _c('span', {}, [_c('aui-avatar', { attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" " + _vm._s(option.data.name) + " ")], 1);
@@ -3766,6 +4178,7 @@ var ProjectPicker = { render: function render() {
                 } }]) });
     }, staticRenderFns: [], _scopeId: 'data-v-48769a5e',
     props: {
+        allowClear: Boolean,
         disabled: Boolean,
         multiple: Boolean,
         placeholder: String,
@@ -3828,9 +4241,103 @@ var ProjectPicker = { render: function render() {
     }
 };
 
+(function () {
+    if (typeof document !== 'undefined') {
+        var head = document.head || document.getElementsByTagName('head')[0],
+            style = document.createElement('style'),
+            css = " .result-user[data-v-134ad072] { align-items: center; display: flex; padding: 3px 2px; } .result-user-avatar[data-v-134ad072] { margin-right: 15px; } .result-user-text[data-v-134ad072] { display: flex; flex-direction: column; overflow: hidden; } .result-user-name[data-v-134ad072], .result-user-fullname[data-v-134ad072] { overflow: hidden; text-overflow: ellipsis; } .result-user-name[data-v-134ad072] { font-size: 12px; font-weight: 600; color: #8993A4; } ";style.type = 'text/css';if (style.styleSheet) {
+            style.styleSheet.cssText = css;
+        } else {
+            style.appendChild(document.createTextNode(css));
+        }head.appendChild(style);
+    }
+})();
+
+var UserPicker = { render: function render() {
+        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return !_vm.multiple ? _c('aui-select2-single', { attrs: { "allow-clear": _vm.allowClear, "disabled": _vm.disabled, "value": _vm.value, "placeholder": _vm.placeholder, "query": _vm.queryValues, "init-selection": _vm.initialValue }, on: { "input": function input($event) {
+                    _vm.$emit('input', $event);
+                } }, scopedSlots: _vm._u([{ key: "formatSelection", fn: function fn(option) {
+                    return _c('span', {}, [_c('aui-avatar', { attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" " + _vm._s(option.data.displayName) + " ")], 1);
+                } }, { key: "formatResult", fn: function fn(option) {
+                    return _c('span', { staticClass: "result-user" }, [_c('aui-avatar', { staticClass: "result-user-avatar", attrs: { "size": "medium", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" "), _c('div', { staticClass: "result-user-text" }, [_c('span', { staticClass: "result-user-fullname" }, [_vm._v(_vm._s(option.data.displayName))]), _vm._v(" "), _c('span', { staticClass: "result-user-name" }, [_vm._v("@" + _vm._s(option.data.name))])])], 1);
+                } }]) }) : _c('aui-select2-multi', { attrs: { "disabled": _vm.disabled, "value": _vm.value, "placeholder": _vm.placeholder, "query": _vm.queryValues, "init-selection": _vm.initialValues }, on: { "input": function input($event) {
+                    _vm.$emit('input', $event);
+                } }, scopedSlots: _vm._u([{ key: "formatSelection", fn: function fn(option) {
+                    return _c('span', {}, [_c('aui-avatar', { attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" " + _vm._s(option.data.displayName) + " ")], 1);
+                } }, { key: "formatResult", fn: function fn(option) {
+                    return _c('span', { staticClass: "result-user" }, [_c('aui-avatar', { staticClass: "result-user-avatar", attrs: { "size": "medium", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" "), _c('div', { staticClass: "result-user-text" }, [_c('span', { staticClass: "result-user-fullname" }, [_vm._v(_vm._s(option.data.displayName))]), _vm._v(" "), _c('span', { staticClass: "result-user-name" }, [_vm._v("@" + _vm._s(option.data.name))])])], 1);
+                } }]) });
+    }, staticRenderFns: [], _scopeId: 'data-v-134ad072',
+    props: {
+        allowClear: Boolean,
+        disabled: Boolean,
+        multiple: Boolean,
+        placeholder: String,
+        value: [String, Array]
+    },
+
+    methods: {
+        mapUserToOption: function mapUserToOption(user) {
+            return {
+                id: user.key,
+                data: user
+            };
+        },
+        queryValues: function queryValues(query) {
+            var _this = this;
+
+            if (query.term === undefined) {} else {
+                this.$jira.getUsers(query.term).then(function (users) {
+                    var userItems = users.map(function (user) {
+                        return _this.mapUserToOption(user);
+                    });
+                    query.callback({ results: userItems });
+                });
+            }
+        },
+        initialValue: function initialValue(element, callback) {
+            var _this2 = this;
+
+            if (element.val()) {
+                this.$jira.getUser(element.val()).then(function (user) {
+                    return callback(_this2.mapUserToOption(user));
+                });
+            }
+        },
+        initialValues: function initialValues(element, callback) {
+            var _this3 = this;
+
+            if (element.val()) {
+                var userKeys = element.val().split(',');
+
+                Promise.all(userKeys.map(function (userKey) {
+                    return _this3.$jira.getUser(userKey);
+                })).then(function (users) {
+                    var userItems = users.filter(function (user) {
+                        return user;
+                    }).map(function (user) {
+                        return _this3.mapUserToOption(user);
+                    });
+                    callback(userItems);
+                });
+            } else {
+                callback([]);
+            }
+        }
+    }
+};
+
 var vueAuiJiraExtras = {
-    install: function install(Vue, options) {
+    install: function install(Vue) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
         Vue.component('va-project-picker', ProjectPicker);
+        Vue.component('va-user-picker', UserPicker);
+
+        setMode({
+            mode: options.mode,
+            url: options.url
+        });
 
         Vue.prototype.$jira = JiraApi;
     }
