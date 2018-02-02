@@ -19,25 +19,20 @@
                     <section class="aui-page-panel-content">
                         <h2>Jira Project Picker</h2>
                         <p>
-                            <va-project-picker v-model="projectId"
-                                               placeholder="Select a project..."></va-project-picker>
-                            <aui-button type="link" @click="projectId = undefined">Clear</aui-button>
+                            <va-project-picker allow-clear v-model="projectId" placeholder="Select a project..."/>
                         </p>
                         <form class="aui">
-                            <va-project-picker multiple v-model="projectIds"
-                                               placeholder="Select a project..."></va-project-picker>
+                            <va-project-picker multiple v-model="projectIds" placeholder="Select a project..."/>
                         </form>
                         <aui-button type="link" @click="projectIds = []">Clear</aui-button>
 
-
                         <h2>Jira User Picker</h2>
                         <p>
-                            <va-user-picker v-model="userKey"></va-user-picker>
+                            <va-user-picker v-model="userKey"/>
                             <aui-button type="link" @click="userKey = undefined">Clear</aui-button>
                         </p>
                         <form class="aui">
-                            <va-user-picker multiple v-model="userKeys"
-                                               placeholder="Select some users"></va-user-picker>
+                            <va-user-picker multiple v-model="userKeys" placeholder="Select some users"/>
                         </form>
                         <aui-button type="link" @click="userKeys = []">Clear</aui-button>
                     </section>

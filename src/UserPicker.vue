@@ -1,6 +1,7 @@
 <template>
     <!-- TODO support multiple attribute in vue-aui -->
     <aui-select2-single v-if="!multiple"
+                        :allow-clear="allowClear"
                         :disabled="disabled"
                         :value="value"
                         :placeholder="placeholder"
@@ -45,6 +46,7 @@
 <script>
     export default {
         props: {
+            allowClear: Boolean,
             disabled: Boolean,
             multiple: Boolean,
             placeholder: String,

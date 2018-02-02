@@ -1,5 +1,6 @@
 <template>
     <aui-select2-single v-if="!multiple"
+                        :allow-clear="allowClear"
                         :disabled="disabled"
                         :value="value"
                         :placeholder="placeholder"
@@ -41,6 +42,7 @@
 
     export default {
         props: {
+            allowClear: Boolean,
             disabled: Boolean,
             multiple: Boolean,
             placeholder: String,

@@ -4,7 +4,7 @@ import ProjectPicker from './ProjectPicker.vue'
 import UserPicker from './UserPicker.vue'
 
 export default {
-    install(Vue, options) {
+    install(Vue, options = {}) {
         Vue.component('va-project-picker', ProjectPicker);
         Vue.component('va-user-picker', UserPicker);
 
