@@ -9,7 +9,7 @@ export default {
         Vue.component('va-user-picker', UserPicker);
 
         JiraApi.setMode({
-            mode: options.mode
+            mode: options.mode,
             url: options.url
         })
 
