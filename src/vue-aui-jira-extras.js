@@ -8,6 +8,11 @@ export default {
         Vue.component('va-project-picker', ProjectPicker);
         Vue.component('va-user-picker', UserPicker);
 
+        JiraApi.setMode({
+            mode: options.mode
+            url: options.url
+        })
+
         Vue.prototype.$jira = JiraApi
     }
 };

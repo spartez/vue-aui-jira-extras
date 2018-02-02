@@ -1,8 +1,12 @@
-const jiraBaseUrl = window.top.location.origin + (AJS.contextPath && AJS.contextPath());
+let baseUrl = window.top.location.origin + (AJS.contextPath && AJS.contextPath());
+
+export function setUrl(url) {
+    baseUrl = url;
+}
 
 function ajax(options) {
     const actualOptions = Object.assign({}, options, {
-        url: jiraBaseUrl + options.url
+        url: baseUrl + options.url
     });
 
     return new Promise((resolve, reject) => {

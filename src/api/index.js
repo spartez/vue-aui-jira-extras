@@ -15,6 +15,15 @@ export function detectApi() {
 
 let api = detectApi();
 
+export function setMode(options) {
+    if (options.mode === 'server') {
+        api = JiraServerApi;
+        if (options.url) {
+            JiraServerApi.setUrl(options.url)
+        }
+    }
+}
+
 export function getProject(projectKeyOrId) {
     if (api.isDev) {
         return JiraMocksApi.getProject(projectKeyOrId)
