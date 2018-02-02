@@ -31,6 +31,7 @@
     "@atlassian/aui": "^7.6.2",
     "babel-core": "^6.26.0",
     "babel-plugin-external-helpers": "^6.22.0",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "jquery": "^2.2.4",
     "lodash": "^4.17.4",

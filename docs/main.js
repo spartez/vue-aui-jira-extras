@@ -1,3 +1,5 @@
+import 'babel-polyfill/dist/polyfill'
+
 import Vue from 'vue';
 import VueAui from 'vue-aui';
 import VueAuiJiraExtras from '../src/vue-aui-jira-extras';
