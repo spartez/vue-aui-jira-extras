@@ -31,22 +31,6 @@ export default [
         "locale": "en_US"
     },
     {
-        "self": "http://squad75:8075/rest/api/2/user?username=mdavis-sd-demo",
-        "key": "mdavis-sd-demo",
-        "name": "mdavis-sd-demo",
-        "emailAddress": "mdavis-sd-demo@example.com",
-        "avatarUrls": {
-            "48x48": "http://www.gravatar.com/avatar/640b31496cb7d7cfa3b4fba8c4e96dc7?d=mm&s=48",
-            "24x24": "http://www.gravatar.com/avatar/640b31496cb7d7cfa3b4fba8c4e96dc7?d=mm&s=24",
-            "16x16": "http://www.gravatar.com/avatar/640b31496cb7d7cfa3b4fba8c4e96dc7?d=mm&s=16",
-            "32x32": "http://www.gravatar.com/avatar/640b31496cb7d7cfa3b4fba8c4e96dc7?d=mm&s=32"
-        },
-        "displayName": "Mitch Davis",
-        "active": true,
-        "timeZone": "Etc/UTC",
-        "locale": "en_US"
-    },
-    {
         "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=admin1",
         "key": "admin",
         "name": "admin1",
