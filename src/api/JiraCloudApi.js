@@ -17,13 +17,8 @@ function ajax(options) {
     });
 }
 
-export function put(url, data) {
-    return ajax({
-        type: "PUT",
-        url: url,
-        contentType: "application/json",
-        data: JSON.stringify(data)
-    });
+export function get(url) {
+    return ajax({url});
 }
 
 export function post(url, data) {
@@ -35,6 +30,11 @@ export function post(url, data) {
     });
 }
 
-export function get(url) {
-    return ajax({url});
+export function put(url, data) {
+    return ajax({
+        type: "PUT",
+        url: url,
+        contentType: "application/json",
+        data: JSON.stringify(data)
+    });
 }
