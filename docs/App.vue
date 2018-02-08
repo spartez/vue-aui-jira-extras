@@ -17,6 +17,7 @@
             <div class="aui-page-panel">
                 <div class="aui-page-panel-inner">
                     <section class="aui-page-panel-content">
+
                         <h2>Jira Project Picker</h2>
                         <p>
                             <va-project-picker allow-clear v-model="projectId" placeholder="Select a project..."/>
@@ -25,6 +26,7 @@
                             <va-project-picker multiple v-model="projectIds" placeholder="Select a project..."/>
                         </form>
                         <aui-button type="link" @click="projectIds = []">Clear</aui-button>
+
 
                         <h2>Jira User Picker</h2>
                         <p>
@@ -36,6 +38,17 @@
                         </form>
                         <aui-button type="link" @click="locked = []">Clear locks</aui-button>
                         <aui-button type="link" @click="userKeys = []">Clear</aui-button>
+
+
+                        <h2>Issue Type Picker</h2>
+                        <p>
+                            <va-issue-type-picker allow-clear v-model="issueType" project-id="10651"/>
+                        </p>
+                        <form class="aui">
+                            <va-issue-type-picker multiple v-model="issueTypes"
+                                                  project-id="10651"
+                                                  placeholder="Select issue type"/>
+                        </form>
                     </section>
                 </div>
             </div>
@@ -50,8 +63,10 @@
                 projectId: "10706",
                 projectIds: ["10705"],
                 userKey: "admin",
+                userKeys: ["admin", "mdavis-sd-demo"],
                 locked: ['admin'],
-                userKeys: ["admin", "mdavis-sd-demo"]
+                issueType: "10004",
+                issueTypes: ["10101"]
             }
         }
     }

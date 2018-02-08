@@ -25,33 +25,31 @@ export function setMode(options) {
 }
 
 export function getProject(projectKeyOrId) {
-    if (api.isDev) {
-        return JiraMocksApi.getProject(projectKeyOrId)
-    } else {
-        return api.get(`/rest/api/2/project/${projectKeyOrId}`);
-    }
+    return api.isMock
+        ? JiraMocksApi.getProject(projectKeyOrId)
+        : api.get(`/rest/api/2/project/${projectKeyOrId}`);
 }
 
 export function getProjects() {
-    if (api.isDev) {
-        return JiraMocksApi.getProjects()
-    } else {
-        return api.get('/rest/api/2/project');
-    }
+    return api.isMock
+        ? JiraMocksApi.getProjects()
+        : api.get('/rest/api/2/project');
 }
 
 export function getUser(userKey) {
-    if (api.isDev) {
-        return JiraMocksApi.getUser(userKey)
-    } else {
-        return api.get(`/rest/api/2/user?key=${userKey}`);
-    }
+    return api.isMock
+        ? JiraMocksApi.getUser(userKey)
+        : api.get(`/rest/api/2/user?key=${userKey}`);
 }
 
 export function getUsers(username) {
-    if (api.isDev) {
-        return JiraMocksApi.getUsers(username)
-    } else {
-        return api.get(`/rest/api/2/user/search?username=${username}`);
-    }
+    return api.isMock
+        ? JiraMocksApi.getUsers(username)
+        : api.get(`/rest/api/2/user/search?username=${username}`);
+}
+
+export function getIssueCreateMeta() {
+    return api.isMock
+        ? JiraMocksApi.getIssueCreateMeta()
+        : api.get(`/rest/api/2/issue/createmeta`);
 }
