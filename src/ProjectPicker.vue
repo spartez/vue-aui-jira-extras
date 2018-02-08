@@ -1,5 +1,6 @@
 <template>
     <aui-select2-single v-if="!multiple"
+                        ref="select"
                         :allow-clear="allowClear"
                         :disabled="disabled"
                         :value="value"
@@ -18,6 +19,7 @@
         </span>
     </aui-select2-single>
     <aui-select2-multi v-else
+                       ref="select"
                        :disabled="disabled"
                        :value="value"
                        :placeholder="placeholder"
@@ -44,9 +46,22 @@
         props: {
             allowClear: Boolean,
             disabled: Boolean,
+            locked: {
+                type: Array,
+                default: () => []
+            },
             multiple: Boolean,
             placeholder: String,
             value: [String, Array]
+        },
+
+        watch: {
+            locked: {
+                deep: true,
+                handler() {
+                    this.$refs.select.$emit('dataChanged');
+                }
+            }
         },
 
         created() {
@@ -57,6 +72,7 @@
             mapProjectToProjectOption(project) {
                 return {
                     id: project.id,
+                    locked: this.locked.indexOf(project.id) >= 0,
                     text: `${project.name} (${project.key})`,
                     data: project
                 }

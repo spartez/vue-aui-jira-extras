@@ -1,6 +1,7 @@
 <template>
     <!-- TODO support multiple attribute in vue-aui -->
-    <aui-select2-single v-if="!multiple"
+    <aui-select2-single ref="select"
+                        v-if="!multiple"
                         :allow-clear="allowClear"
                         :disabled="disabled"
                         :value="value"
@@ -22,6 +23,7 @@
         </span>
     </aui-select2-single>
     <aui-select2-multi v-else
+                       ref="select"
                        :disabled="disabled"
                        :value="value"
                        :placeholder="placeholder"
@@ -48,16 +50,30 @@
         props: {
             allowClear: Boolean,
             disabled: Boolean,
+            locked: {
+                type: Array,
+                default: () => []
+            },
             multiple: Boolean,
             placeholder: String,
             value: [String, Array]
+        },
+
+        watch: {
+            locked: {
+                deep: true,
+                handler() {
+                    this.$refs.select.$emit('dataChanged');
+                }
+            }
         },
 
         methods: {
             mapUserToOption(user) {
                 return {
                     id: user.key,
-                    data: user
+                    data: user,
+                    locked: this.locked.indexOf(user.key) >= 0
                 }
             },
 

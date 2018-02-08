@@ -32,8 +32,9 @@
                             <aui-button type="link" @click="userKey = undefined">Clear</aui-button>
                         </p>
                         <form class="aui">
-                            <va-user-picker multiple v-model="userKeys" placeholder="Select some users"/>
+                            <va-user-picker multiple v-model="userKeys" :locked="locked" placeholder="Select some users"/>
                         </form>
+                        <aui-button type="link" @click="locked = []">Clear locks</aui-button>
                         <aui-button type="link" @click="userKeys = []">Clear</aui-button>
                     </section>
                 </div>
@@ -49,6 +50,7 @@
                 projectId: "10706",
                 projectIds: ["10705"],
                 userKey: "admin",
+                locked: ['admin'],
                 userKeys: ["admin", "mdavis-sd-demo"]
             }
         }
