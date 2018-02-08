@@ -57,6 +57,14 @@
             multiple: Boolean,
             placeholder: String,
             projectId: String,
+            subtasks: {
+                type: Boolean,
+                default: true,
+            },
+            nonSubtasks: {
+                type: Boolean,
+                default: true,
+            },
             value: [String, Array]
         },
 
@@ -68,15 +76,17 @@
                 }
             },
 
-            projectId: {
-                immediate: true,
-                handler(projectId) {
-                    this.getIssueCreateMetaPromise.then(issueCreateMeta => {
-                        let projectIssueTypes = issueCreateMeta.projects.find(project => project.id === projectId);
-                        this.issueTypes = projectIssueTypes && projectIssueTypes.issuetypes;
-                    })
-                }
-            }
+            projectId() {
+                this.updateOptions()
+            },
+
+            subtasks() {
+                this.updateOptions()
+            },
+
+            nonSubtasks() {
+                this.updateOptions()
+            },
         },
 
         data() {
@@ -87,6 +97,21 @@
             // TODO support locked, needs aui-select2-option support for locked items
             this.getIssueCreateMetaPromise = this.$jira.getIssueCreateMeta();
         },
+
+        created() {
+            this.updateOptions()
+        },
+
+        methods: {
+            updateOptions() {
+                this.getIssueCreateMetaPromise.then(issueCreateMeta => {
+                    let projectIssueTypes = issueCreateMeta.projects.find(project => project.id === this.projectId);
+                    this.issueTypes = projectIssueTypes && projectIssueTypes.issuetypes
+                            .filter(issueType => issueType.subtask && this.subtasks
+                                || !issueType.subtask && this.nonSubtasks)
+                })
+            }
+        }
 
     }
 </script>

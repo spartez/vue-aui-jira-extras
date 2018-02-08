@@ -34,7 +34,8 @@
                             <aui-button type="link" @click="userKey = undefined">Clear</aui-button>
                         </p>
                         <form class="aui">
-                            <va-user-picker multiple v-model="userKeys" :locked="locked" placeholder="Select some users"/>
+                            <va-user-picker multiple v-model="userKeys" :locked="locked"
+                                            placeholder="Select some users"/>
                         </form>
                         <aui-button type="link" @click="locked = []">Clear locks</aui-button>
                         <aui-button type="link" @click="userKeys = []">Clear</aui-button>
@@ -47,7 +48,11 @@
                         <form class="aui">
                             <va-issue-type-picker multiple v-model="issueTypes"
                                                   project-id="10651"
+                                                  :subtasks="true"
+                                                  :non-subtasks="!showSubtasksOnly"
                                                   placeholder="Select issue type"/>
+                            <br>
+                            <aui-toggle-button v-model="showSubtasksOnly" id="subtasks"></aui-toggle-button> <span>Show subtasks only</span>
                         </form>
                     </section>
                 </div>
@@ -66,7 +71,8 @@
                 userKeys: ["admin", "mdavis-sd-demo"],
                 locked: ['admin'],
                 issueType: "10004",
-                issueTypes: ["10101"]
+                issueTypes: ["10101"],
+                showSubtasksOnly: false
             }
         }
     }
