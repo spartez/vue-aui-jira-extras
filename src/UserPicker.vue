@@ -1,14 +1,14 @@
 <template>
-    <!-- TODO support multiple attribute in vue-aui -->
-    <aui-select2-single ref="select"
-                        v-if="!multiple"
-                        :allow-clear="allowClear"
-                        :disabled="disabled"
-                        :value="value"
-                        :placeholder="placeholder"
-                        :query="queryValues"
-                        :init-selection="initialValue"
-                        @input="$emit('input', $event)"
+    <va-select2 ref="select"
+                :allow-clear="allowClear"
+                :disabled="disabled"
+                :init-selection="initialValue"
+                :locked="locked"
+                :multiple="multiple"
+                :placeholder="placeholder"
+                :query="queryValues"
+                :value="value"
+                @input="$emit('input', $event)"
     >
         <span slot="formatSelection" slot-scope="option">
             <aui-avatar squared size="xsmall" :src="option.data.avatarUrls['48x48']"/>
@@ -21,28 +21,7 @@
                 <span class="result-user-name">@{{option.data.name}}</span>
             </div>
         </span>
-    </aui-select2-single>
-    <aui-select2-multi v-else
-                       ref="select"
-                       :disabled="disabled"
-                       :value="value"
-                       :placeholder="placeholder"
-                       :query="queryValues"
-                       :init-selection="initialValues"
-                       @input="$emit('input', $event)"
-    >
-        <span slot="formatSelection" slot-scope="option">
-            <aui-avatar squared size="xsmall" :src="option.data.avatarUrls['48x48']"/>
-            {{option.data.displayName}}
-        </span>
-        <span slot="formatResult" slot-scope="option" class="result-user">
-            <aui-avatar size="medium" :src="option.data.avatarUrls['48x48']" class="result-user-avatar"/>
-            <div class="result-user-text">
-                <span class="result-user-fullname">{{option.data.displayName}}</span>
-                <span class="result-user-name">@{{option.data.name}}</span>
-            </div>
-        </span>
-    </aui-select2-multi>
+    </va-select2>
 </template>
 
 <script>
@@ -59,21 +38,11 @@
             value: [String, Array]
         },
 
-        watch: {
-            locked: {
-                deep: true,
-                handler() {
-                    this.$refs.select.$emit('dataChanged');
-                }
-            }
-        },
-
         methods: {
             mapUserToOption(user) {
                 return {
                     id: user.key,
                     data: user,
-                    locked: this.locked.indexOf(user.key) >= 0
                 }
             },
 
@@ -88,23 +57,23 @@
             },
 
             initialValue(element, callback) {
-                if (element.val()) {
-                    this.$jira.getUser(element.val())
-                        .then(user => callback(this.mapUserToOption(user)))
-                }
-            },
+                if (this.multiple) {
+                    if (element.val()) {
+                        const userKeys = element.val().split(',');
 
-            initialValues(element, callback) {
-                if (element.val()) {
-                    const userKeys = element.val().split(',');
-
-                    Promise.all(userKeys.map(userKey => this.$jira.getUser(userKey)))
-                        .then(users => {
-                            const userItems = users.filter(user => user).map(user => this.mapUserToOption(user));
-                            callback(userItems);
-                        });
+                        Promise.all(userKeys.map(userKey => this.$jira.getUser(userKey)))
+                            .then(users => {
+                                const userItems = users.filter(user => user).map(user => this.mapUserToOption(user));
+                                callback(userItems);
+                            });
+                    } else {
+                        callback([])
+                    }
                 } else {
-                    callback([])
+                    if (element.val()) {
+                        this.$jira.getUser(element.val())
+                            .then(user => callback(this.mapUserToOption(user)))
+                    }
                 }
             }
         }

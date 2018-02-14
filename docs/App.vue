@@ -52,7 +52,7 @@
                                                   :non-subtasks="!showSubtasksOnly"
                                                   placeholder="Select issue type"/>
                             <br>
-                            <aui-toggle-button v-model="showSubtasksOnly" id="subtasks"></aui-toggle-button> <span>Show subtasks only</span>
+                            <aui-toggle-button v-model="showSubtasksOnly"></aui-toggle-button> <span>Show subtasks only</span>
                         </form>
                     </section>
                 </div>
