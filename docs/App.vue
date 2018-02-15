@@ -25,20 +25,20 @@
                         <form class="aui">
                             <va-project-picker multiple v-model="projectIds" placeholder="Select a project..."/>
                         </form>
-                        <aui-button type="link" @click="projectIds = []">Clear</aui-button>
+                        <va-button type="link" @click="projectIds = []">Clear</va-button>
 
 
                         <h2>Jira User Picker</h2>
                         <p>
                             <va-user-picker v-model="userKey"/>
-                            <aui-button type="link" @click="userKey = undefined">Clear</aui-button>
+                            <va-button type="link" @click="userKey = undefined">Clear</va-button>
                         </p>
                         <form class="aui">
                             <va-user-picker multiple v-model="userKeys" :locked="locked"
                                             placeholder="Select some users"/>
                         </form>
-                        <aui-button type="link" @click="locked = []">Clear locks</aui-button>
-                        <aui-button type="link" @click="userKeys = []">Clear</aui-button>
+                        <va-button type="link" @click="locked = []">Clear locks</va-button>
+                        <va-button type="link" @click="userKeys = []">Clear</va-button>
 
 
                         <h2>Issue Type Picker</h2>
@@ -52,7 +52,7 @@
                                                   :non-subtasks="!showSubtasksOnly"
                                                   placeholder="Select issue type"/>
                             <br>
-                            <aui-toggle-button v-model="showSubtasksOnly"></aui-toggle-button> <span>Show subtasks only</span>
+                            <va-toggle v-model="showSubtasksOnly"/> <span>Show subtasks only</span>
                         </form>
                     </section>
                 </div>
