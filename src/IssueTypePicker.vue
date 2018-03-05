@@ -1,23 +1,25 @@
 <template>
     <va-select2 ref="select"
-                 :multiple="multiple"
-                 :allow-clear="allowClear"
-                 :disabled="disabled"
-                 :value="value"
-                 :placeholder="placeholder"
-                 @input="$emit('input', $event)"
+                :multiple="multiple"
+                :allow-clear="allowClear"
+                :disabled="disabled"
+                :init-selection="initSelection"
+                :locked="locked"
+                :placeholder="placeholder"
+                :query="query"
+                :value="value"
+                @input="$emit('input', $event)"
     >
-        <aui-select2-option v-for="issueType in issueTypes"
-                            :value="issueType.id"
-                            :text="issueType.name"
-                            :data="issueType"/>
+
         <span slot="formatSelection" slot-scope="option">
             <aui-avatar squared size="xsmall" :src="option.data.iconUrl"/>
             {{option.data.name}}
         </span>
+
         <span slot="formatResult" slot-scope="option" class="result-issuetype">
             <aui-avatar size="xsmall" :src="option.data.iconUrl" class="result-issuetype-avatar"/>
             <span class="result-issuetype-name">{{option.data.name}}</span>
+
         </span>
     </va-select2>
 </template>
@@ -27,14 +29,18 @@
         props: {
             allowClear: Boolean,
             disabled: Boolean,
+            locked: {
+                type: Array,
+                default: () => []
+            },
             multiple: Boolean,
-            placeholder: String,
-            projectId: String,
-            subtasks: {
+            nonSubtasks: {
                 type: Boolean,
                 default: true,
             },
-            nonSubtasks: {
+            placeholder: String,
+            projectId: String,
+            subtasks: {
                 type: Boolean,
                 default: true,
             },
@@ -55,12 +61,7 @@
             },
         },
 
-        data() {
-            return {issueTypes: []}
-        },
-
         beforeCreate() {
-            // TODO support locked
             this.getIssueCreateMetaPromise = this.$jira.getIssueCreateMeta();
         },
 
@@ -69,12 +70,57 @@
         },
 
         methods: {
+            mapIssueTypeToOption(issueType) {
+                return {
+                    id: issueType.id,
+                    text: issueType.name,
+                    data: issueType
+                }
+            },
+
+            query(query) {
+                if (query.term === undefined) {
+                } else {
+                    this.getIssueTypes.then(issueTypes => {
+                        query.callback({
+                            results: issueTypes.map(issueType => this.mapIssueTypeToOption(issueType))
+                        })
+                    })
+                }
+            },
+
+            initSelection(element, callback) {
+                if (this.multiple) {
+                    if (element.val()) {
+                        const issueTypeIds = element.val().split(',');
+                        this.getIssueTypes.then(issueTypes => {
+                            let issueTypeOptions = issueTypeIds
+                                .map(issueTypeId => issueTypes.find(issueType => issueType.id === issueTypeId))
+                                .filter(issueType => issueType)
+                                .map(issueType => this.mapIssueTypeToOption(issueType));
+                            callback(issueTypeOptions)
+                        })
+                    } else {
+                        callback([])
+                    }
+                } else {
+                    if (element.val()) {
+                        this.getIssueTypes.then(issueTypes => {
+                            let issueType = issueTypes.find(issueType => issueType.id === element.val());
+                            callback(this.mapIssueTypeToOption(issueType))
+                        })
+                    }
+                }
+            },
+
             updateOptions() {
-                this.getIssueCreateMetaPromise.then(issueCreateMeta => {
+                this.getIssueTypes = this.getIssueCreateMetaPromise.then(issueCreateMeta => {
                     let projectIssueTypes = issueCreateMeta.projects.find(project => project.id === this.projectId);
-                    this.issueTypes = projectIssueTypes && projectIssueTypes.issuetypes
-                        .filter(issueType => issueType.subtask && this.subtasks
-                            || !issueType.subtask && this.nonSubtasks)
+                    return projectIssueTypes
+                        ? projectIssueTypes.issuetypes.filter(
+                            issueType => issueType.subtask && this.subtasks
+                                || !issueType.subtask && this.nonSubtasks)
+                        : [];
                 })
             }
         }

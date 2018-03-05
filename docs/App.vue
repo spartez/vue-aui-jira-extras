@@ -46,13 +46,17 @@
                             <va-issue-type-picker allow-clear v-model="issueType" project-id="10651"/>
                         </p>
                         <form class="aui">
-                            <va-issue-type-picker multiple v-model="issueTypes"
-                                                  project-id="10651"
-                                                  :subtasks="true"
-                                                  :non-subtasks="!showSubtasksOnly"
-                                                  placeholder="Select issue type"/>
-                            <br>
-                            <va-toggle v-model="showSubtasksOnly"/> <span>Show subtasks only</span>
+                            <p>
+                                <va-toggle v-model="showSubtasksOnly" label="Show subtasks only"/>
+                            </p>
+                            <p>
+                                <va-issue-type-picker multiple v-model="issueTypes"
+                                                      project-id="10651"
+                                                      :locked="lockedIssueTypes"
+                                                      :subtasks="true"
+                                                      :non-subtasks="!showSubtasksOnly"
+                                                      placeholder="Select issue type"/>
+                            </p>
                         </form>
                     </section>
                 </div>
@@ -70,6 +74,7 @@
                 userKey: "admin",
                 userKeys: ["admin", "mdavis-sd-demo"],
                 locked: ['admin'],
+                lockedIssueTypes: ['10101'],
                 issueType: "10004",
                 issueTypes: ["10101"],
                 showSubtasksOnly: false
