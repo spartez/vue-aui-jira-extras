@@ -16,7 +16,7 @@ Features:
 
 * [x] Project picker (`va-project-picker`)
 * [x] User picker (`va-user-picker`)
-* [ ] Issue type picker
+* [x] Issue type picker
 * [ ] Issue picker
 * [ ] Group picker
 
