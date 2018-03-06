@@ -718,10 +718,13 @@ var reIsUint = /^(?:0|[1-9]\d*)$/;
  * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
  */
 function isIndex(value, length) {
+  var type = typeof value;
   length = length == null ? MAX_SAFE_INTEGER$1 : length;
+
   return !!length &&
-    (typeof value == 'number' || reIsUint.test(value)) &&
-    (value > -1 && value % 1 == 0 && value < length);
+    (type == 'number' ||
+      (type != 'symbol' && reIsUint.test(value))) &&
+        (value > -1 && value % 1 == 0 && value < length);
 }
 
 var _isIndex = isIndex;
@@ -1316,7 +1319,8 @@ var JiraCloudApi = Object.freeze({
 	put: put
 });
 
-var baseUrl = window.top.location.origin + (AJS.contextPath && AJS.contextPath());
+var contextPath = window.top.AJS.contextPath && window.top.AJS.contextPath();
+var baseUrl = window.top.location.origin + contextPath;
 
 function setUrl(url) {
     baseUrl = url;
@@ -1735,6 +1739,164 @@ var projects = [{
     "simplified": false
 }];
 
+var issueCreateMeta = {
+    "expand": "projects",
+    "projects": [{
+        "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10706",
+        "id": "10706",
+        "key": "AG",
+        "name": "Agility",
+        "avatarUrls": {
+            "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10706&avatarId=10847",
+            "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10706&avatarId=10847",
+            "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10706&avatarId=10847",
+            "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10706&avatarId=10847"
+        },
+        "issuetypes": [{
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10001",
+            "id": "10001",
+            "description": "A task that needs to be done.",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+            "name": "Task",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10004",
+            "id": "10004",
+            "description": "A big user story that needs to be broken down. Created by JIRA Software - do not edit or delete.",
+            "iconUrl": "https://dskrodzki.atlassian.net/images/icons/issuetypes/epic.svg",
+            "name": "Epic",
+            "subtask": false
+        }]
+    }, {
+        "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10705",
+        "id": "10705",
+        "key": "A2",
+        "name": "Agility 2",
+        "avatarUrls": {
+            "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10705&avatarId=10846",
+            "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10705&avatarId=10846",
+            "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10705&avatarId=10846",
+            "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10705&avatarId=10846"
+        },
+        "issuetypes": [{
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10001",
+            "id": "10001",
+            "description": "A task that needs to be done.",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+            "name": "Task",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10002",
+            "id": "10002",
+            "description": "The sub-task of the issue",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10316&avatarType=issuetype",
+            "name": "Sub-task",
+            "subtask": true
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10000",
+            "id": "10000",
+            "description": "A user story. Created by JIRA Software - do not edit or delete.",
+            "iconUrl": "https://dskrodzki.atlassian.net/images/icons/issuetypes/story.svg",
+            "name": "Story",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10003",
+            "id": "10003",
+            "description": "A problem which impairs or prevents the functions of the product.",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+            "name": "Bug",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10004",
+            "id": "10004",
+            "description": "A big user story that needs to be broken down. Created by JIRA Software - do not edit or delete.",
+            "iconUrl": "https://dskrodzki.atlassian.net/images/icons/issuetypes/epic.svg",
+            "name": "Epic",
+            "subtask": false
+        }]
+    }, {
+        "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10704",
+        "id": "10704",
+        "key": "AB",
+        "name": "Agility Board",
+        "avatarUrls": {
+            "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10704&avatarId=10846",
+            "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10704&avatarId=10846",
+            "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10704&avatarId=10846",
+            "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10704&avatarId=10846"
+        },
+        "issuetypes": [{
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10001",
+            "id": "10001",
+            "description": "A task that needs to be done.",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+            "name": "Task",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10004",
+            "id": "10004",
+            "description": "A big user story that needs to be broken down. Created by JIRA Software - do not edit or delete.",
+            "iconUrl": "https://dskrodzki.atlassian.net/images/icons/issuetypes/epic.svg",
+            "name": "Epic",
+            "subtask": false
+        }]
+    }, {
+        "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10651",
+        "id": "10651",
+        "key": "MOLEST65",
+        "name": "Awesome Granite Fish",
+        "avatarUrls": {
+            "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10651&avatarId=10846",
+            "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10651&avatarId=10846",
+            "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10651&avatarId=10846",
+            "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10651&avatarId=10846"
+        },
+        "issuetypes": [{
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10100",
+            "id": "10100",
+            "description": "An improvement or enhancement to an existing feature or task.",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10310&avatarType=issuetype",
+            "name": "Improvement",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10001",
+            "id": "10001",
+            "description": "A task that needs to be done.",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+            "name": "Task",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10002",
+            "id": "10002",
+            "description": "The sub-task of the issue",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10316&avatarType=issuetype",
+            "name": "Sub-task",
+            "subtask": true
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10101",
+            "id": "10101",
+            "description": "A new feature of the product, which has yet to be developed.",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10311&avatarType=issuetype",
+            "name": "New Feature",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10003",
+            "id": "10003",
+            "description": "A problem which impairs or prevents the functions of the product.",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+            "name": "Bug",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10004",
+            "id": "10004",
+            "description": "A big user story that needs to be broken down. Created by JIRA Software - do not edit or delete.",
+            "iconUrl": "https://dskrodzki.atlassian.net/images/icons/issuetypes/epic.svg",
+            "name": "Epic",
+            "subtask": false
+        }]
+    }]
+};
+
 var answerDelay = 300;
 
 function response(response) {
@@ -1745,7 +1907,7 @@ function response(response) {
     });
 }
 
-var isDev = true;
+var isMock = true;
 
 var getProject = function getProject(projectKeyOrId) {
     return response(projects.filter(function (project) {
@@ -1771,18 +1933,23 @@ function queryMatchesUser(query, user) {
     return user.key.toUpperCase().indexOf(query.toUpperCase()) >= 0 || user.name.toUpperCase().indexOf(query.toUpperCase()) >= 0 || user.displayName.toUpperCase().indexOf(query.toUpperCase()) >= 0;
 }
 
+var getIssueCreateMeta = function getIssueCreateMeta() {
+    return response(issueCreateMeta);
+};
+
 var JiraMocksApi = Object.freeze({
-	isDev: isDev,
+	isMock: isMock,
 	getProject: getProject,
 	getProjects: getProjects,
 	getUser: getUser,
-	getUsers: getUsers
+	getUsers: getUsers,
+	getIssueCreateMeta: getIssueCreateMeta
 });
 
 function detectApi() {
     if (window.AP && AP.jira && AP.user) {
         return JiraCloudApi;
-    } else if (window.JIRA && JIRA.API) {
+    } else if (window.top.JIRA && window.top.JIRA.API) {
         return JiraServerApi;
     }
     return JiraMocksApi;
@@ -1800,35 +1967,23 @@ function setMode(options) {
 }
 
 function getProject$1(projectKeyOrId) {
-    if (api.isDev) {
-        return getProject(projectKeyOrId);
-    } else {
-        return api.get('/rest/api/2/project/' + projectKeyOrId);
-    }
+    return api.isMock ? getProject(projectKeyOrId) : api.get('/rest/api/2/project/' + projectKeyOrId);
 }
 
 function getProjects$1() {
-    if (api.isDev) {
-        return getProjects();
-    } else {
-        return api.get('/rest/api/2/project');
-    }
+    return api.isMock ? getProjects() : api.get('/rest/api/2/project');
 }
 
 function getUser$1(userKey) {
-    if (api.isDev) {
-        return getUser(userKey);
-    } else {
-        return api.get('/rest/api/2/user?key=' + userKey);
-    }
+    return api.isMock ? getUser(userKey) : api.get('/rest/api/2/user?key=' + userKey);
 }
 
 function getUsers$1(username) {
-    if (api.isDev) {
-        return getUsers(username);
-    } else {
-        return api.get('/rest/api/2/user/search?username=' + username);
-    }
+    return api.isMock ? getUsers(username) : api.get('/rest/api/2/user/search?username=' + username);
+}
+
+function getIssueCreateMeta$1() {
+    return api.isMock ? getIssueCreateMeta() : api.get('/rest/api/2/issue/createmeta');
 }
 
 var JiraApi = Object.freeze({
@@ -1837,7 +1992,8 @@ var JiraApi = Object.freeze({
 	getProject: getProject$1,
 	getProjects: getProjects$1,
 	getUser: getUser$1,
-	getUsers: getUsers$1
+	getUsers: getUsers$1,
+	getIssueCreateMeta: getIssueCreateMeta$1
 });
 
 /**
@@ -3483,7 +3639,6 @@ function memoizeCapped(func) {
 var _memoizeCapped = memoizeCapped;
 
 /** Used to match property names within property paths. */
-var reLeadingDot = /^\./;
 var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
 
 /** Used to match backslashes in property paths. */
@@ -3498,11 +3653,11 @@ var reEscapeChar = /\\(\\)?/g;
  */
 var stringToPath = _memoizeCapped(function(string) {
   var result = [];
-  if (reLeadingDot.test(string)) {
+  if (string.charCodeAt(0) === 46 /* . */) {
     result.push('');
   }
-  string.replace(rePropName, function(match, number, quote, string) {
-    result.push(quote ? string.replace(reEscapeChar, '$1') : (number || match));
+  string.replace(rePropName, function(match, number, quote, subString) {
+    result.push(quote ? subString.replace(reEscapeChar, '$1') : (number || match));
   });
   return result;
 });
@@ -4165,13 +4320,7 @@ var find_1 = find;
 // TODO add recently accessed section
 
 var ProjectPicker = { render: function render() {
-        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return !_vm.multiple ? _c('aui-select2-single', { attrs: { "allow-clear": _vm.allowClear, "disabled": _vm.disabled, "value": _vm.value, "placeholder": _vm.placeholder, "query": _vm.queryValues, "init-selection": _vm.initialValue }, on: { "input": function input($event) {
-                    _vm.$emit('input', $event);
-                } }, scopedSlots: _vm._u([{ key: "formatSelection", fn: function fn(option) {
-                    return _c('span', {}, [_c('aui-avatar', { attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" " + _vm._s(option.data.name) + " ")], 1);
-                } }, { key: "formatResult", fn: function fn(option) {
-                    return _c('span', { staticClass: "result-project" }, [_c('aui-avatar', { staticClass: "result-project-avatar", attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" "), _c('span', { staticClass: "result-project-name" }, [_vm._v(_vm._s(option.data.name))])], 1);
-                } }]) }) : _c('aui-select2-multi', { attrs: { "disabled": _vm.disabled, "value": _vm.value, "placeholder": _vm.placeholder, "query": _vm.queryValues, "init-selection": _vm.initialValues }, on: { "input": function input($event) {
+        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('va-select2', { attrs: { "allow-clear": _vm.allowClear, "disabled": _vm.disabled, "init-selection": _vm.initialValue, "locked": _vm.locked, "multiple": _vm.multiple, "placeholder": _vm.placeholder, "query": _vm.queryValues, "value": _vm.value }, on: { "input": function input($event) {
                     _vm.$emit('input', $event);
                 } }, scopedSlots: _vm._u([{ key: "formatSelection", fn: function fn(option) {
                     return _c('span', {}, [_c('aui-avatar', { attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" " + _vm._s(option.data.name) + " ")], 1);
@@ -4182,6 +4331,12 @@ var ProjectPicker = { render: function render() {
     props: {
         allowClear: Boolean,
         disabled: Boolean,
+        locked: {
+            type: Array,
+            default: function _default() {
+                return [];
+            }
+        },
         multiple: Boolean,
         placeholder: String,
         value: [String, Array]
@@ -4217,27 +4372,26 @@ var ProjectPicker = { render: function render() {
         initialValue: function initialValue(element, callback) {
             var _this2 = this;
 
-            if (element.val()) {
-                this.$jira.getProject(element.val()).then(function (project) {
-                    callback(_this2.mapProjectToProjectOption(project));
-                });
-            }
-        },
-        initialValues: function initialValues(element, callback) {
-            var _this3 = this;
-
-            if (element.val()) {
-                var projectIds = element.val().split(',');
-                this.getProjectsPromise.then(function (projects) {
-                    var projectItems = projectIds.map(function (projectId) {
-                        return find_1(projects, { id: projectId });
-                    }).map(function (project) {
-                        return _this3.mapProjectToProjectOption(project);
+            if (this.multiple) {
+                if (element.val()) {
+                    var projectIds = element.val().split(',');
+                    this.getProjectsPromise.then(function (projects) {
+                        var projectItems = projectIds.map(function (projectId) {
+                            return find_1(projects, { id: projectId });
+                        }).map(function (project) {
+                            return _this2.mapProjectToProjectOption(project);
+                        });
+                        callback(projectItems);
                     });
-                    callback(projectItems);
-                });
+                } else {
+                    callback([]);
+                }
             } else {
-                callback([]);
+                if (element.val()) {
+                    this.$jira.getProject(element.val()).then(function (project) {
+                        callback(_this2.mapProjectToProjectOption(project));
+                    });
+                }
             }
         }
     }
@@ -4256,13 +4410,7 @@ var ProjectPicker = { render: function render() {
 })();
 
 var UserPicker = { render: function render() {
-        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return !_vm.multiple ? _c('aui-select2-single', { attrs: { "allow-clear": _vm.allowClear, "disabled": _vm.disabled, "value": _vm.value, "placeholder": _vm.placeholder, "query": _vm.queryValues, "init-selection": _vm.initialValue }, on: { "input": function input($event) {
-                    _vm.$emit('input', $event);
-                } }, scopedSlots: _vm._u([{ key: "formatSelection", fn: function fn(option) {
-                    return _c('span', {}, [_c('aui-avatar', { attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" " + _vm._s(option.data.displayName) + " ")], 1);
-                } }, { key: "formatResult", fn: function fn(option) {
-                    return _c('span', { staticClass: "result-user" }, [_c('aui-avatar', { staticClass: "result-user-avatar", attrs: { "size": "medium", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" "), _c('div', { staticClass: "result-user-text" }, [_c('span', { staticClass: "result-user-fullname" }, [_vm._v(_vm._s(option.data.displayName))]), _vm._v(" "), _c('span', { staticClass: "result-user-name" }, [_vm._v("@" + _vm._s(option.data.name))])])], 1);
-                } }]) }) : _c('aui-select2-multi', { attrs: { "disabled": _vm.disabled, "value": _vm.value, "placeholder": _vm.placeholder, "query": _vm.queryValues, "init-selection": _vm.initialValues }, on: { "input": function input($event) {
+        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('va-select2', { ref: "select", attrs: { "allow-clear": _vm.allowClear, "disabled": _vm.disabled, "init-selection": _vm.initialValue, "locked": _vm.locked, "multiple": _vm.multiple, "placeholder": _vm.placeholder, "query": _vm.queryValues, "value": _vm.value }, on: { "input": function input($event) {
                     _vm.$emit('input', $event);
                 } }, scopedSlots: _vm._u([{ key: "formatSelection", fn: function fn(option) {
                     return _c('span', {}, [_c('aui-avatar', { attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" " + _vm._s(option.data.displayName) + " ")], 1);
@@ -4273,6 +4421,12 @@ var UserPicker = { render: function render() {
     props: {
         allowClear: Boolean,
         disabled: Boolean,
+        locked: {
+            type: Array,
+            default: function _default() {
+                return [];
+            }
+        },
         multiple: Boolean,
         placeholder: String,
         value: [String, Array]
@@ -4300,33 +4454,165 @@ var UserPicker = { render: function render() {
         initialValue: function initialValue(element, callback) {
             var _this2 = this;
 
-            if (element.val()) {
-                this.$jira.getUser(element.val()).then(function (user) {
-                    return callback(_this2.mapUserToOption(user));
-                });
-            }
-        },
-        initialValues: function initialValues(element, callback) {
-            var _this3 = this;
+            if (this.multiple) {
+                if (element.val()) {
+                    var userKeys = element.val().split(',');
 
-            if (element.val()) {
-                var userKeys = element.val().split(',');
-
-                Promise.all(userKeys.map(function (userKey) {
-                    return _this3.$jira.getUser(userKey);
-                })).then(function (users) {
-                    var userItems = users.filter(function (user) {
-                        return user;
-                    }).map(function (user) {
-                        return _this3.mapUserToOption(user);
+                    Promise.all(userKeys.map(function (userKey) {
+                        return _this2.$jira.getUser(userKey);
+                    })).then(function (users) {
+                        var userItems = users.filter(function (user) {
+                            return user;
+                        }).map(function (user) {
+                            return _this2.mapUserToOption(user);
+                        });
+                        callback(userItems);
                     });
-                    callback(userItems);
-                });
+                } else {
+                    callback([]);
+                }
             } else {
-                callback([]);
+                if (element.val()) {
+                    this.$jira.getUser(element.val()).then(function (user) {
+                        return callback(_this2.mapUserToOption(user));
+                    });
+                }
             }
         }
     }
+};
+
+(function () {
+    if (typeof document !== 'undefined') {
+        var head = document.head || document.getElementsByTagName('head')[0],
+            style = document.createElement('style'),
+            css = " .result-issuetype[data-v-028e4a90] { align-items: center; display: flex; } .result-issuetype-name[data-v-028e4a90] { overflow: hidden; text-overflow: ellipsis; padding: 4px; } ";style.type = 'text/css';if (style.styleSheet) {
+            style.styleSheet.cssText = css;
+        } else {
+            style.appendChild(document.createTextNode(css));
+        }head.appendChild(style);
+    }
+})();
+
+var IssueTypePicker = { render: function render() {
+        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('va-select2', { ref: "select", attrs: { "multiple": _vm.multiple, "allow-clear": _vm.allowClear, "disabled": _vm.disabled, "init-selection": _vm.initSelection, "locked": _vm.locked, "placeholder": _vm.placeholder, "query": _vm.query, "value": _vm.value }, on: { "input": function input($event) {
+                    _vm.$emit('input', $event);
+                } }, scopedSlots: _vm._u([{ key: "formatSelection", fn: function fn(option) {
+                    return _c('span', {}, [_c('aui-avatar', { attrs: { "squared": "", "size": "xsmall", "src": option.data.iconUrl } }), _vm._v(" " + _vm._s(option.data.name) + " ")], 1);
+                } }, { key: "formatResult", fn: function fn(option) {
+                    return _c('span', { staticClass: "result-issuetype" }, [_c('aui-avatar', { staticClass: "result-issuetype-avatar", attrs: { "size": "xsmall", "src": option.data.iconUrl } }), _vm._v(" "), _c('span', { staticClass: "result-issuetype-name" }, [_vm._v(_vm._s(option.data.name))])], 1);
+                } }]) });
+    }, staticRenderFns: [], _scopeId: 'data-v-028e4a90',
+    props: {
+        allowClear: Boolean,
+        disabled: Boolean,
+        locked: {
+            type: Array,
+            default: function _default() {
+                return [];
+            }
+        },
+        multiple: Boolean,
+        nonSubtasks: {
+            type: Boolean,
+            default: true
+        },
+        placeholder: String,
+        projectId: String,
+        subtasks: {
+            type: Boolean,
+            default: true
+        },
+        value: [String, Array]
+    },
+
+    watch: {
+        projectId: function projectId() {
+            this.updateOptions();
+        },
+        subtasks: function subtasks() {
+            this.updateOptions();
+        },
+        nonSubtasks: function nonSubtasks() {
+            this.updateOptions();
+        }
+    },
+
+    beforeCreate: function beforeCreate() {
+        this.getIssueCreateMetaPromise = this.$jira.getIssueCreateMeta();
+    },
+    created: function created() {
+        this.updateOptions();
+    },
+
+
+    methods: {
+        mapIssueTypeToOption: function mapIssueTypeToOption(issueType) {
+            return {
+                id: issueType.id,
+                text: issueType.name,
+                data: issueType
+            };
+        },
+        query: function query(_query) {
+            var _this = this;
+
+            if (_query.term === undefined) {} else {
+                this.getIssueTypes.then(function (issueTypes) {
+                    _query.callback({
+                        results: issueTypes.map(function (issueType) {
+                            return _this.mapIssueTypeToOption(issueType);
+                        })
+                    });
+                });
+            }
+        },
+        initSelection: function initSelection(element, callback) {
+            var _this2 = this;
+
+            if (this.multiple) {
+                if (element.val()) {
+                    var issueTypeIds = element.val().split(',');
+                    this.getIssueTypes.then(function (issueTypes) {
+                        var issueTypeOptions = issueTypeIds.map(function (issueTypeId) {
+                            return issueTypes.find(function (issueType) {
+                                return issueType.id === issueTypeId;
+                            });
+                        }).filter(function (issueType) {
+                            return issueType;
+                        }).map(function (issueType) {
+                            return _this2.mapIssueTypeToOption(issueType);
+                        });
+                        callback(issueTypeOptions);
+                    });
+                } else {
+                    callback([]);
+                }
+            } else {
+                if (element.val()) {
+                    this.getIssueTypes.then(function (issueTypes) {
+                        var issueType = issueTypes.find(function (issueType) {
+                            return issueType.id === element.val();
+                        });
+                        callback(_this2.mapIssueTypeToOption(issueType));
+                    });
+                }
+            }
+        },
+        updateOptions: function updateOptions() {
+            var _this3 = this;
+
+            this.getIssueTypes = this.getIssueCreateMetaPromise.then(function (issueCreateMeta) {
+                var projectIssueTypes = issueCreateMeta.projects.find(function (project) {
+                    return project.id === _this3.projectId;
+                });
+                return projectIssueTypes ? projectIssueTypes.issuetypes.filter(function (issueType) {
+                    return issueType.subtask && _this3.subtasks || !issueType.subtask && _this3.nonSubtasks;
+                }) : [];
+            });
+        }
+    }
+
 };
 
 var vueAuiJiraExtras = {
@@ -4335,6 +4621,7 @@ var vueAuiJiraExtras = {
 
         Vue.component('va-project-picker', ProjectPicker);
         Vue.component('va-user-picker', UserPicker);
+        Vue.component('va-issue-type-picker', IssueTypePicker);
 
         setMode({
             mode: options.mode,
