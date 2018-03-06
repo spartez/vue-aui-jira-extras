@@ -4,7 +4,8 @@
 
 [![npm version](https://badge.fury.io/js/vue-aui-jira-extras.svg)](https://badge.fury.io/js/vue-aui-jira-extras)
 
-`vue-aui-jira-extras` is an addition to [vue-aui](https://github.com/spartez/vue-aui). It implements various Jira pickers without adding Jira dependency to `vue-aui` library.
+`vue-aui-jira-extras` is an addition to [vue-aui](https://github.com/spartez/vue-aui).
+It implements various Jira pickers using UI components from `vue-aui` library.
 
 Features:
 
@@ -16,7 +17,7 @@ Features:
 
 * [x] Project picker (`va-project-picker`)
 * [x] User picker (`va-user-picker`)
-* [x] Issue type picker
+* [x] Issue type picker (`va-issue-type-picker`)
 * [ ] Issue picker
 * [ ] Group picker
 
@@ -30,24 +31,15 @@ After that add this to install library
 
     Vue.use(VueAuiJira);
     
-    
-## Customization
+Installation registers components and Jira API object globally. 
+Jira version (Cloud or Server) will be detected automatically and proper API will be used.
 
-If you use this library inside iframes on Jira Server, auto-detection won't work, you need to manually set 'server' mode and set proper Jira base URL.
-
-    Vue.use(VueAuiJira, {
-        mode: 'server',
-        url: jiraBaseUrl
-    });
-
-## Usage
-
-Installation registers components and Jira API object globally.
-
-#### Use components
+### Use components
 
     <va-user-picker multiple v-model="participants"/>
+    
+Yes, that's it.
 
-#### Use Jira API
+### Use Jira API
 
     this.$jira.getProject(projectId);

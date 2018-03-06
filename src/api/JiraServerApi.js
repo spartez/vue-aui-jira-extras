@@ -1,4 +1,5 @@
-let baseUrl = window.top.location.origin + (AJS.contextPath && AJS.contextPath());
+let contextPath = window.top.AJS.contextPath && window.top.AJS.contextPath();
+let baseUrl = window.top.location.origin + contextPath;
 
 export function setUrl(url) {
     baseUrl = url;

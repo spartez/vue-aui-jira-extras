@@ -7,7 +7,7 @@ export function detectApi() {
         return JiraMocksApi;
     } else if (window.AP && AP.jira && AP.user) {
         return JiraCloudApi;
-    } else if (window.JIRA && JIRA.API) {
+    } else if (window.top.JIRA && window.top.JIRA.API) {
         return JiraServerApi;
     }
     return JiraMocksApi;
