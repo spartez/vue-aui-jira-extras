@@ -7,22 +7,13 @@ export function detectApi() {
         return JiraMocksApi;
     } else if (window.AP && AP.jira && AP.user) {
         return JiraCloudApi;
-    } else if (window.top.JIRA && window.top.JIRA.API) {
+    } else if (window.top.JIRA && window.top.JIRA.Ajax) {
         return JiraServerApi;
     }
     return JiraMocksApi;
 }
 
-let api = detectApi();
-
-export function setMode(options) {
-    if (options.mode === 'server') {
-        api = JiraServerApi;
-        if (options.url) {
-            JiraServerApi.setUrl(options.url)
-        }
-    }
-}
+const api = detectApi();
 
 export function getProject(projectKeyOrId) {
     return api.isMock

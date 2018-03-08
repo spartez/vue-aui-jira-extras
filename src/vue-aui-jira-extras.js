@@ -10,11 +10,6 @@ export default {
         Vue.component('va-user-picker', UserPicker);
         Vue.component('va-issue-type-picker', IssueTypePicker);
 
-        JiraApi.setMode({
-            mode: options.mode,
-            url: options.url
-        })
-
         Vue.prototype.$jira = JiraApi
     }
 };
