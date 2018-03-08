@@ -1947,22 +1947,13 @@ var JiraMocksApi = Object.freeze({
 function detectApi() {
     if (window.AP && AP.jira && AP.user) {
         return JiraCloudApi;
-    } else if (window.top.JIRA && window.top.JIRA.API) {
+    } else if (window.top.JIRA && window.top.JIRA.Ajax) {
         return JiraServerApi;
     }
     return JiraMocksApi;
 }
 
 var api = detectApi();
-
-function setMode(options) {
-    if (options.mode === 'server') {
-        api = JiraServerApi;
-        if (options.url) {
-            setUrl(options.url);
-        }
-    }
-}
 
 function getProject$1(projectKeyOrId) {
     return api.isMock ? getProject(projectKeyOrId) : api.get('/rest/api/2/project/' + projectKeyOrId);
@@ -1986,7 +1977,6 @@ function getIssueCreateMeta$1() {
 
 var JiraApi = Object.freeze({
 	detectApi: detectApi,
-	setMode: setMode,
 	getProject: getProject$1,
 	getProjects: getProjects$1,
 	getUser: getUser$1,
@@ -4615,16 +4605,9 @@ var IssueTypePicker = { render: function render() {
 
 var vueAuiJiraExtras = {
     install: function install(Vue) {
-        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
         Vue.component('va-project-picker', ProjectPicker);
         Vue.component('va-user-picker', UserPicker);
         Vue.component('va-issue-type-picker', IssueTypePicker);
-
-        setMode({
-            mode: options.mode,
-            url: options.url
-        });
 
         Vue.prototype.$jira = JiraApi;
     }
