@@ -7,6 +7,7 @@ import serve from "rollup-plugin-serve";
 import replace from "rollup-plugin-replace";
 import vue from "rollup-plugin-vue";
 import babel from 'rollup-plugin-babel';
+import typescript from 'rollup-plugin-typescript2';
 
 import pkg from './package.json';
 
@@ -17,6 +18,18 @@ const commonConfig = {
         }),
         resolve(),
         commonjs(),
+        typescript({
+            tsconfigDefaults: {
+                compilerOptions: {
+                    declaration: true,
+                    module: "es2015",
+                    moduleResolution: "node",
+                    experimentalDecorators: true,
+                    target: "es6",
+                }
+            },
+            include: [ "*.ts", "**/*.ts" ]
+        }),
         babel({
             exclude: 'node_modules/**'
         }),

@@ -1,5 +1,3 @@
-import extend from 'lodash/extend'
-
 function ajax(options) {
     return new Promise((resolve, reject) => {
         const defaultOptions = {
@@ -11,7 +9,7 @@ function ajax(options) {
                 reject(error);
             }
         };
-        const finalOptions = extend(defaultOptions, options);
+        const finalOptions = Object.assign(defaultOptions, options);
 
         AP.request(finalOptions);
     });

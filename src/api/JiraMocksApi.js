@@ -5,11 +5,15 @@ import issueCreateMeta from './mocks/issueCreateMeta'
 const answerDelay = 300;
 
 function response(response) {
-    return new Promise(resolve => setTimeout(() => resolve(response, answerDelay)));
+    return new Promise(resolve => setTimeout(() => resolve(response), answerDelay));
 }
 
 export const isMock = true;
 
+export function get(url) {
+    console.log(`GET ${url}`);
+    return new Promise(resolve => resolve([]))
+}
 
 export const getProject = projectKeyOrId => response(projects.filter(project => project.id === projectKeyOrId)[0]);
 export const getProjects = () => response(projects);

@@ -1,4 +1,4 @@
-import * as JiraApi from './api'
+import JiraApi from './api'
 
 import ProjectPicker from './ProjectPicker.vue'
 import UserPicker from './UserPicker.vue'
@@ -10,6 +10,6 @@ export default {
         Vue.component('va-user-picker', UserPicker);
         Vue.component('va-issue-type-picker', IssueTypePicker);
 
-        Vue.prototype.$jira = JiraApi
+        Vue.prototype.$jira = new JiraApi();
     }
 };
