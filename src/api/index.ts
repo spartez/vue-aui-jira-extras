@@ -1,17 +1,20 @@
-import * as JiraCloudApi from './JiraCloudApi'
-import * as JiraServerApi from './JiraServerApi'
+import {JiraApiBase} from "./JiraApiBase";
+
+import JiraCloudApi from './JiraCloudApi'
+import JiraServerApi from './JiraServerApi'
 import * as JiraMocksApi from './JiraMocksApi'
 
 export default class JiraApi {
     private api = this.detectApi();
 
-    private detectApi() {
+    private detectApi(): JiraApiBase {
         if (process.env.NODE_ENV === 'dev') {
             return JiraMocksApi;
         } else if (window.AP && window.AP.jira && window.AP.user) {
-            return JiraCloudApi;
+            return new JiraCloudApi();
         } else if (window.top.JIRA && window.top.JIRA.Ajax) {
-            return JiraServerApi;
+            // It's important that window.top line above is not executed on Cloud as it throws cross domain error there.
+            return new JiraServerApi();
         }
         return JiraMocksApi;
     }

@@ -15,6 +15,19 @@ export function get(url) {
     return new Promise(resolve => resolve([]))
 }
 
+export function del(url) {
+    console.log(`DELETE ${url}`);
+    return new Promise(resolve => resolve([]))
+}
+export function put(url) {
+    console.log(`PUT ${url}`);
+    return new Promise(resolve => resolve([]))
+}
+export function post(url) {
+    console.log(`POST ${url}`);
+    return new Promise(resolve => resolve([]))
+}
+
 export const getProject = projectKeyOrId => response(projects.filter(project => project.id === projectKeyOrId)[0]);
 export const getProjects = () => response(projects);
 
