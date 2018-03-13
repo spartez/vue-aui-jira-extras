@@ -14809,66 +14809,249 @@ var JiraServerApi = function () {
     return JiraServerApi;
 }();
 
-var users = [{
-    "self": "http://squad75:8075/rest/api/2/user?username=jevans-sd-demo",
-    "key": "jevans-sd-demo",
-    "name": "jevans-sd-demo",
-    "emailAddress": "jevans-sd-demo@example.com",
-    "avatarUrls": {
-        "48x48": "http://www.gravatar.com/avatar/019353b5fd6b245699e8c8b9013bef16?d=mm&s=48",
-        "24x24": "http://www.gravatar.com/avatar/019353b5fd6b245699e8c8b9013bef16?d=mm&s=24",
-        "16x16": "http://www.gravatar.com/avatar/019353b5fd6b245699e8c8b9013bef16?d=mm&s=16",
-        "32x32": "http://www.gravatar.com/avatar/019353b5fd6b245699e8c8b9013bef16?d=mm&s=32"
-    },
-    "displayName": "Jennifer Evans",
-    "active": true,
-    "timeZone": "Etc/UTC"
-}, {
-    "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=mdavis-sd-demo",
-    "key": "mdavis-sd-demo",
-    "name": "mdavis-sd-demo",
-    "emailAddress": "davis@example.com",
-    "avatarUrls": {
-        "16x16": "https://randomuser.me/api/portraits/men/78.jpg",
-        "24x24": "https://randomuser.me/api/portraits/men/78.jpg",
-        "32x32": "https://randomuser.me/api/portraits/men/78.jpg",
-        "48x48": "https://randomuser.me/api/portraits/men/78.jpg"
-    },
-    "displayName": "Gawel Mazur",
-    "active": true,
-    "timeZone": "Europe/Berlin",
-    "locale": "en_US"
-}, {
-    "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=admin1",
-    "key": "admin",
-    "name": "admin1",
-    "emailAddress": "admin@example.com",
-    "avatarUrls": {
-        "16x16": "https://avatar-cdn.atlassian.com/505f80d4c04f00b9ab7047ede1920e70?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F505f80d4c04f00b9ab7047ede1920e70%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
-        "24x24": "https://avatar-cdn.atlassian.com/505f80d4c04f00b9ab7047ede1920e70?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F505f80d4c04f00b9ab7047ede1920e70%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
-        "32x32": "https://avatar-cdn.atlassian.com/505f80d4c04f00b9ab7047ede1920e70?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F505f80d4c04f00b9ab7047ede1920e70%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
-        "48x48": "https://avatar-cdn.atlassian.com/505f80d4c04f00b9ab7047ede1920e70?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F505f80d4c04f00b9ab7047ede1920e70%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
-    },
-    "displayName": "Damian Skrodzki",
-    "active": true,
-    "timeZone": "Europe/Berlin",
-    "locale": "en_US"
-}, {
-    "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=agrant-sd-demo",
-    "key": "agrant-sd-demo",
-    "name": "agrant-sd-demo",
-    "emailAddress": "agrant-sd-demo@example.com",
-    "avatarUrls": {
-        "16x16": "https://randomuser.me/api/portraits/women/93.jpg",
-        "24x24": "https://randomuser.me/api/portraits/women/93.jpg",
-        "32x32": "https://randomuser.me/api/portraits/women/93.jpg",
-        "48x48": "https://randomuser.me/api/portraits/women/93.jpg"
-    },
-    "displayName": "Alana Grant",
-    "active": true,
-    "timeZone": "Europe/Berlin",
-    "locale": "en_US"
-}];
+var groups = {
+    "header": "Showing 10 of 10 matching groups",
+    "total": 10,
+    "groups": [{
+        "name": "administrators",
+        "html": "administrators",
+        "labels": [{
+            "text": "Admin",
+            "title": "Users added to this group will be given administrative access",
+            "type": "ADMIN"
+        }]
+    }, {
+        "name": "atlassian-addons-admin",
+        "html": "atlassian-addons-admin",
+        "labels": [{
+            "text": "Admin",
+            "title": "Users added to this group will be given administrative access",
+            "type": "ADMIN"
+        }]
+    }, {
+        "name": "confluence-administrators",
+        "html": "confluence-administrators",
+        "labels": [{
+            "text": "Admin",
+            "title": "Users added to this group will be given administrative access",
+            "type": "ADMIN"
+        }]
+    }, {
+        "name": "confluence-users",
+        "html": "confluence-users",
+        "labels": []
+    }, {
+        "name": "jira-administrators",
+        "html": "jira-administrators",
+        "labels": [{
+            "text": "Admin",
+            "title": "Users added to this group will be given administrative access",
+            "type": "ADMIN"
+        }]
+    }, {
+        "name": "jira-core-users",
+        "html": "jira-core-users",
+        "labels": [{
+            "text": "JIRA Core",
+            "title": "Users added to this group will be given access to <strong>JIRA Core</strong>",
+            "type": "SINGLE"
+        }]
+    }, {
+        "name": "jira-servicedesk-users",
+        "html": "jira-servicedesk-users",
+        "labels": [{
+            "text": "Jira Service Desk",
+            "title": "Users added to this group will be given access to <strong>Jira Service Desk</strong>",
+            "type": "SINGLE"
+        }]
+    }, {
+        "name": "jira-software-users",
+        "html": "jira-software-users",
+        "labels": [{
+            "text": "JIRA Software",
+            "title": "Users added to this group will be given access to <strong>JIRA Software</strong>",
+            "type": "SINGLE"
+        }]
+    }, {
+        "name": "site-admins",
+        "html": "site-admins",
+        "labels": [{
+            "text": "Admin",
+            "title": "Users added to this group will be given administrative access",
+            "type": "ADMIN"
+        }, {
+            "text": "Multi-App-Access",
+            "title": "Users added to this group will be given access to <strong>Jira Service Desk</strong>, <strong>JIRA Software</strong> and <strong>JIRA Core</strong>",
+            "type": "MULTIPLE"
+        }]
+    }, {
+        "name": "system-administrators",
+        "html": "system-administrators",
+        "labels": [{
+            "text": "Admin",
+            "title": "Users added to this group will be given administrative access",
+            "type": "ADMIN"
+        }]
+    }]
+};
+
+var issueCreateMeta = {
+    "expand": "projects",
+    "projects": [{
+        "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10706",
+        "id": "10706",
+        "key": "AG",
+        "name": "Agility",
+        "avatarUrls": {
+            "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10706&avatarId=10847",
+            "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10706&avatarId=10847",
+            "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10706&avatarId=10847",
+            "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10706&avatarId=10847"
+        },
+        "issuetypes": [{
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10001",
+            "id": "10001",
+            "description": "A task that needs to be done.",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+            "name": "Task",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10004",
+            "id": "10004",
+            "description": "A big user story that needs to be broken down. Created by JIRA Software - do not edit or delete.",
+            "iconUrl": "https://dskrodzki.atlassian.net/images/icons/issuetypes/epic.svg",
+            "name": "Epic",
+            "subtask": false
+        }]
+    }, {
+        "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10705",
+        "id": "10705",
+        "key": "A2",
+        "name": "Agility 2",
+        "avatarUrls": {
+            "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10705&avatarId=10846",
+            "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10705&avatarId=10846",
+            "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10705&avatarId=10846",
+            "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10705&avatarId=10846"
+        },
+        "issuetypes": [{
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10001",
+            "id": "10001",
+            "description": "A task that needs to be done.",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+            "name": "Task",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10002",
+            "id": "10002",
+            "description": "The sub-task of the issue",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10316&avatarType=issuetype",
+            "name": "Sub-task",
+            "subtask": true
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10000",
+            "id": "10000",
+            "description": "A user story. Created by JIRA Software - do not edit or delete.",
+            "iconUrl": "https://dskrodzki.atlassian.net/images/icons/issuetypes/story.svg",
+            "name": "Story",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10003",
+            "id": "10003",
+            "description": "A problem which impairs or prevents the functions of the product.",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+            "name": "Bug",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10004",
+            "id": "10004",
+            "description": "A big user story that needs to be broken down. Created by JIRA Software - do not edit or delete.",
+            "iconUrl": "https://dskrodzki.atlassian.net/images/icons/issuetypes/epic.svg",
+            "name": "Epic",
+            "subtask": false
+        }]
+    }, {
+        "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10704",
+        "id": "10704",
+        "key": "AB",
+        "name": "Agility Board",
+        "avatarUrls": {
+            "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10704&avatarId=10846",
+            "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10704&avatarId=10846",
+            "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10704&avatarId=10846",
+            "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10704&avatarId=10846"
+        },
+        "issuetypes": [{
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10001",
+            "id": "10001",
+            "description": "A task that needs to be done.",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+            "name": "Task",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10004",
+            "id": "10004",
+            "description": "A big user story that needs to be broken down. Created by JIRA Software - do not edit or delete.",
+            "iconUrl": "https://dskrodzki.atlassian.net/images/icons/issuetypes/epic.svg",
+            "name": "Epic",
+            "subtask": false
+        }]
+    }, {
+        "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10651",
+        "id": "10651",
+        "key": "MOLEST65",
+        "name": "Awesome Granite Fish",
+        "avatarUrls": {
+            "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10651&avatarId=10846",
+            "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10651&avatarId=10846",
+            "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10651&avatarId=10846",
+            "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10651&avatarId=10846"
+        },
+        "issuetypes": [{
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10100",
+            "id": "10100",
+            "description": "An improvement or enhancement to an existing feature or task.",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10310&avatarType=issuetype",
+            "name": "Improvement",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10001",
+            "id": "10001",
+            "description": "A task that needs to be done.",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+            "name": "Task",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10002",
+            "id": "10002",
+            "description": "The sub-task of the issue",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10316&avatarType=issuetype",
+            "name": "Sub-task",
+            "subtask": true
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10101",
+            "id": "10101",
+            "description": "A new feature of the product, which has yet to be developed.",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10311&avatarType=issuetype",
+            "name": "New Feature",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10003",
+            "id": "10003",
+            "description": "A problem which impairs or prevents the functions of the product.",
+            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+            "name": "Bug",
+            "subtask": false
+        }, {
+            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10004",
+            "id": "10004",
+            "description": "A big user story that needs to be broken down. Created by JIRA Software - do not edit or delete.",
+            "iconUrl": "https://dskrodzki.atlassian.net/images/icons/issuetypes/epic.svg",
+            "name": "Epic",
+            "subtask": false
+        }]
+    }]
+};
 
 var projects = [{
     "expand": "description,lead,issueTypes,url,projectKeys",
@@ -15166,165 +15349,68 @@ var projects = [{
     "simplified": false
 }];
 
-var issueCreateMeta = {
-    "expand": "projects",
-    "projects": [{
-        "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10706",
-        "id": "10706",
-        "key": "AG",
-        "name": "Agility",
-        "avatarUrls": {
-            "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10706&avatarId=10847",
-            "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10706&avatarId=10847",
-            "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10706&avatarId=10847",
-            "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10706&avatarId=10847"
-        },
-        "issuetypes": [{
-            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10001",
-            "id": "10001",
-            "description": "A task that needs to be done.",
-            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
-            "name": "Task",
-            "subtask": false
-        }, {
-            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10004",
-            "id": "10004",
-            "description": "A big user story that needs to be broken down. Created by JIRA Software - do not edit or delete.",
-            "iconUrl": "https://dskrodzki.atlassian.net/images/icons/issuetypes/epic.svg",
-            "name": "Epic",
-            "subtask": false
-        }]
-    }, {
-        "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10705",
-        "id": "10705",
-        "key": "A2",
-        "name": "Agility 2",
-        "avatarUrls": {
-            "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10705&avatarId=10846",
-            "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10705&avatarId=10846",
-            "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10705&avatarId=10846",
-            "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10705&avatarId=10846"
-        },
-        "issuetypes": [{
-            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10001",
-            "id": "10001",
-            "description": "A task that needs to be done.",
-            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
-            "name": "Task",
-            "subtask": false
-        }, {
-            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10002",
-            "id": "10002",
-            "description": "The sub-task of the issue",
-            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10316&avatarType=issuetype",
-            "name": "Sub-task",
-            "subtask": true
-        }, {
-            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10000",
-            "id": "10000",
-            "description": "A user story. Created by JIRA Software - do not edit or delete.",
-            "iconUrl": "https://dskrodzki.atlassian.net/images/icons/issuetypes/story.svg",
-            "name": "Story",
-            "subtask": false
-        }, {
-            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10003",
-            "id": "10003",
-            "description": "A problem which impairs or prevents the functions of the product.",
-            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
-            "name": "Bug",
-            "subtask": false
-        }, {
-            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10004",
-            "id": "10004",
-            "description": "A big user story that needs to be broken down. Created by JIRA Software - do not edit or delete.",
-            "iconUrl": "https://dskrodzki.atlassian.net/images/icons/issuetypes/epic.svg",
-            "name": "Epic",
-            "subtask": false
-        }]
-    }, {
-        "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10704",
-        "id": "10704",
-        "key": "AB",
-        "name": "Agility Board",
-        "avatarUrls": {
-            "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10704&avatarId=10846",
-            "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10704&avatarId=10846",
-            "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10704&avatarId=10846",
-            "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10704&avatarId=10846"
-        },
-        "issuetypes": [{
-            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10001",
-            "id": "10001",
-            "description": "A task that needs to be done.",
-            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
-            "name": "Task",
-            "subtask": false
-        }, {
-            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10004",
-            "id": "10004",
-            "description": "A big user story that needs to be broken down. Created by JIRA Software - do not edit or delete.",
-            "iconUrl": "https://dskrodzki.atlassian.net/images/icons/issuetypes/epic.svg",
-            "name": "Epic",
-            "subtask": false
-        }]
-    }, {
-        "self": "https://dskrodzki.atlassian.net/rest/api/2/project/10651",
-        "id": "10651",
-        "key": "MOLEST65",
-        "name": "Awesome Granite Fish",
-        "avatarUrls": {
-            "48x48": "https://dskrodzki.atlassian.net/secure/projectavatar?pid=10651&avatarId=10846",
-            "24x24": "https://dskrodzki.atlassian.net/secure/projectavatar?size=small&pid=10651&avatarId=10846",
-            "16x16": "https://dskrodzki.atlassian.net/secure/projectavatar?size=xsmall&pid=10651&avatarId=10846",
-            "32x32": "https://dskrodzki.atlassian.net/secure/projectavatar?size=medium&pid=10651&avatarId=10846"
-        },
-        "issuetypes": [{
-            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10100",
-            "id": "10100",
-            "description": "An improvement or enhancement to an existing feature or task.",
-            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10310&avatarType=issuetype",
-            "name": "Improvement",
-            "subtask": false
-        }, {
-            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10001",
-            "id": "10001",
-            "description": "A task that needs to be done.",
-            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
-            "name": "Task",
-            "subtask": false
-        }, {
-            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10002",
-            "id": "10002",
-            "description": "The sub-task of the issue",
-            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10316&avatarType=issuetype",
-            "name": "Sub-task",
-            "subtask": true
-        }, {
-            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10101",
-            "id": "10101",
-            "description": "A new feature of the product, which has yet to be developed.",
-            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10311&avatarType=issuetype",
-            "name": "New Feature",
-            "subtask": false
-        }, {
-            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10003",
-            "id": "10003",
-            "description": "A problem which impairs or prevents the functions of the product.",
-            "iconUrl": "https://dskrodzki.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
-            "name": "Bug",
-            "subtask": false
-        }, {
-            "self": "https://dskrodzki.atlassian.net/rest/api/2/issuetype/10004",
-            "id": "10004",
-            "description": "A big user story that needs to be broken down. Created by JIRA Software - do not edit or delete.",
-            "iconUrl": "https://dskrodzki.atlassian.net/images/icons/issuetypes/epic.svg",
-            "name": "Epic",
-            "subtask": false
-        }]
-    }]
-};
+var users = [{
+    "self": "http://squad75:8075/rest/api/2/user?username=jevans-sd-demo",
+    "key": "jevans-sd-demo",
+    "name": "jevans-sd-demo",
+    "emailAddress": "jevans-sd-demo@example.com",
+    "avatarUrls": {
+        "48x48": "http://www.gravatar.com/avatar/019353b5fd6b245699e8c8b9013bef16?d=mm&s=48",
+        "24x24": "http://www.gravatar.com/avatar/019353b5fd6b245699e8c8b9013bef16?d=mm&s=24",
+        "16x16": "http://www.gravatar.com/avatar/019353b5fd6b245699e8c8b9013bef16?d=mm&s=16",
+        "32x32": "http://www.gravatar.com/avatar/019353b5fd6b245699e8c8b9013bef16?d=mm&s=32"
+    },
+    "displayName": "Jennifer Evans",
+    "active": true,
+    "timeZone": "Etc/UTC"
+}, {
+    "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=mdavis-sd-demo",
+    "key": "mdavis-sd-demo",
+    "name": "mdavis-sd-demo",
+    "emailAddress": "davis@example.com",
+    "avatarUrls": {
+        "16x16": "https://randomuser.me/api/portraits/men/78.jpg",
+        "24x24": "https://randomuser.me/api/portraits/men/78.jpg",
+        "32x32": "https://randomuser.me/api/portraits/men/78.jpg",
+        "48x48": "https://randomuser.me/api/portraits/men/78.jpg"
+    },
+    "displayName": "Gawel Mazur",
+    "active": true,
+    "timeZone": "Europe/Berlin",
+    "locale": "en_US"
+}, {
+    "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=admin1",
+    "key": "admin",
+    "name": "admin1",
+    "emailAddress": "admin@example.com",
+    "avatarUrls": {
+        "16x16": "https://avatar-cdn.atlassian.com/505f80d4c04f00b9ab7047ede1920e70?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F505f80d4c04f00b9ab7047ede1920e70%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+        "24x24": "https://avatar-cdn.atlassian.com/505f80d4c04f00b9ab7047ede1920e70?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F505f80d4c04f00b9ab7047ede1920e70%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+        "32x32": "https://avatar-cdn.atlassian.com/505f80d4c04f00b9ab7047ede1920e70?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F505f80d4c04f00b9ab7047ede1920e70%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+        "48x48": "https://avatar-cdn.atlassian.com/505f80d4c04f00b9ab7047ede1920e70?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F505f80d4c04f00b9ab7047ede1920e70%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+    },
+    "displayName": "Damian Skrodzki",
+    "active": true,
+    "timeZone": "Europe/Berlin",
+    "locale": "en_US"
+}, {
+    "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=agrant-sd-demo",
+    "key": "agrant-sd-demo",
+    "name": "agrant-sd-demo",
+    "emailAddress": "agrant-sd-demo@example.com",
+    "avatarUrls": {
+        "16x16": "https://randomuser.me/api/portraits/women/93.jpg",
+        "24x24": "https://randomuser.me/api/portraits/women/93.jpg",
+        "32x32": "https://randomuser.me/api/portraits/women/93.jpg",
+        "48x48": "https://randomuser.me/api/portraits/women/93.jpg"
+    },
+    "displayName": "Alana Grant",
+    "active": true,
+    "timeZone": "Europe/Berlin",
+    "locale": "en_US"
+}];
 
-var answerDelay = 300;
+var answerDelay = 200;
 function response(response) {
     return new Promise(function (resolve) {
         return setTimeout(function () {
@@ -15357,6 +15443,11 @@ function post(url) {
         return resolve([]);
     });
 }
+var getGroupsForPicker = function getGroupsForPicker(query) {
+    return response(Object.assign({}, groups, { groups: groups.groups.filter(function (group) {
+            return group.name.indexOf(query) >= 0;
+        }) }));
+};
 var getProject = function getProject(projectKeyOrId) {
     return response(projects.filter(function (project) {
         return project.id === projectKeyOrId;
@@ -15388,6 +15479,7 @@ var JiraMocksApi = Object.freeze({
 	del: del$1,
 	put: put,
 	post: post,
+	getGroupsForPicker: getGroupsForPicker,
 	getProject: getProject,
 	getProjects: getProjects,
 	getUser: getUser,
@@ -15395,25 +15487,24 @@ var JiraMocksApi = Object.freeze({
 	getIssueCreateMeta: getIssueCreateMeta
 });
 
+function detectApi() {
+    if (window.AP && window.AP.jira && window.AP.user) {
+        return new JiraCloudApi();
+    } else if (window.top.JIRA && window.top.JIRA.Ajax) {
+        // It's important that window.top line above is not executed on Cloud as it throws cross domain error there.
+        return new JiraServerApi();
+    }
+    return JiraMocksApi;
+}
+
 var JiraApi = function () {
     function JiraApi() {
         classCallCheck(this, JiraApi);
 
-        this.api = this.detectApi();
+        this.api = detectApi();
     }
 
     createClass(JiraApi, [{
-        key: 'detectApi',
-        value: function detectApi() {
-            if (window.AP && window.AP.jira && window.AP.user) {
-                return new JiraCloudApi();
-            } else if (window.top.JIRA && window.top.JIRA.Ajax) {
-                // It's important that window.top line above is not executed on Cloud as it throws cross domain error there.
-                return new JiraServerApi();
-            }
-            return JiraMocksApi;
-        }
-    }, {
         key: 'getProject',
         value: function getProject$$1(projectKeyOrId) {
             return this.api.isMock ? getProject(projectKeyOrId) : this.api.get('/rest/api/2/project/' + projectKeyOrId);
@@ -15433,6 +15524,14 @@ var JiraApi = function () {
         key: 'getUsers',
         value: function getUsers$$1(username) {
             var users = this.api.isMock ? getUsers(username) : this.api.get('/rest/api/2/user/search?username=' + username);
+            return users;
+        }
+    }, {
+        key: 'getGroupsForPicker',
+        value: function getGroupsForPicker$$1(_ref) {
+            var query = _ref.query;
+
+            var users = this.api.isMock ? getGroupsForPicker(query) : this.api.get('/rest/api/2/groups/picker?query=' + query);
             return users;
         }
     }, {
@@ -18577,7 +18676,7 @@ var find_1 = find;
     if (typeof document !== 'undefined') {
         var head = document.head || document.getElementsByTagName('head')[0],
             style = document.createElement('style'),
-            css = " .result-project[data-v-48769a5e] { align-items: center; display: flex; padding: 3px 2px; } .result-project-avatar[data-v-48769a5e] { margin-right: 5px; } .result-project-name[data-v-48769a5e] { text-overflow: ellipsis; overflow: hidden; } ";style.type = 'text/css';if (style.styleSheet) {
+            css = " .result-project[data-v-f2ac1cf2] { align-items: center; display: flex; padding: 3px 2px; } .result-project-avatar[data-v-f2ac1cf2] { margin-right: 5px; } .result-project-name[data-v-f2ac1cf2] { text-overflow: ellipsis; overflow: hidden; } ";style.type = 'text/css';if (style.styleSheet) {
             style.styleSheet.cssText = css;
         } else {
             style.appendChild(document.createTextNode(css));
@@ -18594,7 +18693,7 @@ var ProjectPicker = { render: function render() {
                 } }, { key: "formatResult", fn: function fn(option) {
                     return _c('span', { staticClass: "result-project" }, [_c('aui-avatar', { staticClass: "result-project-avatar", attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" "), _c('span', { staticClass: "result-project-name" }, [_vm._v(_vm._s(option.data.name))])], 1);
                 } }]) });
-    }, staticRenderFns: [], _scopeId: 'data-v-48769a5e',
+    }, staticRenderFns: [], _scopeId: 'data-v-f2ac1cf2',
     props: {
         allowClear: Boolean,
         disabled: Boolean,
@@ -18668,7 +18767,7 @@ var ProjectPicker = { render: function render() {
     if (typeof document !== 'undefined') {
         var head = document.head || document.getElementsByTagName('head')[0],
             style = document.createElement('style'),
-            css = " .result-user[data-v-134ad072] { align-items: center; display: flex; padding: 3px 2px; } .result-user-avatar[data-v-134ad072] { margin-right: 15px; } .result-user-text[data-v-134ad072] { display: flex; flex-direction: column; overflow: hidden; } .result-user-name[data-v-134ad072], .result-user-fullname[data-v-134ad072] { overflow: hidden; text-overflow: ellipsis; } .result-user-name[data-v-134ad072] { font-size: 12px; font-weight: 600; color: #8993A4; } ";style.type = 'text/css';if (style.styleSheet) {
+            css = " .result-user[data-v-e5241c2e] { align-items: center; display: flex; padding: 3px 2px; } .result-user-avatar[data-v-e5241c2e] { margin-right: 15px; } .result-user-text[data-v-e5241c2e] { display: flex; flex-direction: column; overflow: hidden; } .result-user-name[data-v-e5241c2e], .result-user-fullname[data-v-e5241c2e] { overflow: hidden; text-overflow: ellipsis; } .result-user-name[data-v-e5241c2e] { font-size: 12px; font-weight: 600; color: #8993A4; } ";style.type = 'text/css';if (style.styleSheet) {
             style.styleSheet.cssText = css;
         } else {
             style.appendChild(document.createTextNode(css));
@@ -18684,7 +18783,7 @@ var UserPicker = { render: function render() {
                 } }, { key: "formatResult", fn: function fn(option) {
                     return _c('span', { staticClass: "result-user" }, [_c('aui-avatar', { staticClass: "result-user-avatar", attrs: { "size": "medium", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" "), _c('div', { staticClass: "result-user-text" }, [_c('span', { staticClass: "result-user-fullname" }, [_vm._v(_vm._s(option.data.displayName))]), _vm._v(" "), _c('span', { staticClass: "result-user-name" }, [_vm._v("@" + _vm._s(option.data.name))])])], 1);
                 } }]) });
-    }, staticRenderFns: [], _scopeId: 'data-v-134ad072',
+    }, staticRenderFns: [], _scopeId: 'data-v-e5241c2e',
     props: {
         allowClear: Boolean,
         disabled: Boolean,
@@ -18753,7 +18852,7 @@ var UserPicker = { render: function render() {
     if (typeof document !== 'undefined') {
         var head = document.head || document.getElementsByTagName('head')[0],
             style = document.createElement('style'),
-            css = " .result-issuetype[data-v-028e4a90] { align-items: center; display: flex; } .result-issuetype-name[data-v-028e4a90] { overflow: hidden; text-overflow: ellipsis; padding: 4px; } ";style.type = 'text/css';if (style.styleSheet) {
+            css = " .result-issuetype[data-v-7d730ba1] { align-items: center; display: flex; } .result-issuetype-name[data-v-7d730ba1] { overflow: hidden; text-overflow: ellipsis; padding: 4px; } ";style.type = 'text/css';if (style.styleSheet) {
             style.styleSheet.cssText = css;
         } else {
             style.appendChild(document.createTextNode(css));
@@ -18769,7 +18868,7 @@ var IssueTypePicker = { render: function render() {
                 } }, { key: "formatResult", fn: function fn(option) {
                     return _c('span', { staticClass: "result-issuetype" }, [_c('aui-avatar', { staticClass: "result-issuetype-avatar", attrs: { "size": "xsmall", "src": option.data.iconUrl } }), _vm._v(" "), _c('span', { staticClass: "result-issuetype-name" }, [_vm._v(_vm._s(option.data.name))])], 1);
                 } }]) });
-    }, staticRenderFns: [], _scopeId: 'data-v-028e4a90',
+    }, staticRenderFns: [], _scopeId: 'data-v-7d730ba1',
     props: {
         allowClear: Boolean,
         disabled: Boolean,
@@ -18882,12 +18981,75 @@ var IssueTypePicker = { render: function render() {
 
 };
 
+(function () {
+    if (typeof document !== 'undefined') {
+        var head = document.head || document.getElementsByTagName('head')[0],
+            style = document.createElement('style'),
+            css = "";style.type = 'text/css';if (style.styleSheet) {
+            style.styleSheet.cssText = css;
+        } else {
+            style.appendChild(document.createTextNode(css));
+        }head.appendChild(style);
+    }
+})();
+
+var GroupsPicker = { render: function render() {
+        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('va-select2', { attrs: { "allow-clear": _vm.allowClear, "disabled": _vm.disabled, "init-selection": _vm.initialMultiValues, "multiple": _vm.multiple, "placeholder": _vm.placeholder, "query": _vm.queryGroups, "value": _vm.value }, on: { "input": function input($event) {
+                    _vm.$emit('input', $event);
+                } } });
+    }, staticRenderFns: [],
+    props: {
+        allowClear: Boolean,
+        disabled: Boolean,
+        multiple: Boolean,
+        placeholder: { type: String, default: "Select groups..." },
+        value: {
+            type: [Array, String],
+            required: true
+        }
+    },
+
+    methods: {
+        mapGroupToGroupOption: function mapGroupToGroupOption(group) {
+            return { id: group, text: group };
+        },
+        queryGroups: function queryGroups(_ref) {
+            var _this = this;
+
+            var term = _ref.term,
+                callback = _ref.callback;
+
+            this.$jira.getGroupsForPicker({ query: term }).then(function (groupsResults) {
+                callback({ results: groupsResults.groups.map(function (group) {
+                        return _this.mapGroupToGroupOption(group.name);
+                    }) });
+            });
+        },
+        initialMultiValues: function initialMultiValues(element, callback) {
+            var value = element.val();
+            if (!this.multiple) {
+                if (value) {
+                    callback(this.mapGroupToGroupOption(value));
+                }
+            } else {
+                if (value) {
+                    var items = value.split(',').map(this.mapGroupToGroupOption);
+                    callback(items);
+                } else {
+                    callback([]);
+                }
+            }
+        }
+    }
+};
+
 var VueAuiJiraExtras = {
     install: function install(Vue) {
 
         Vue.component('va-project-picker', ProjectPicker);
         Vue.component('va-user-picker', UserPicker);
         Vue.component('va-issue-type-picker', IssueTypePicker);
+        Vue.component('va-group-picker', GroupsPicker);
 
         Vue.prototype.$jira = new JiraApi();
     }
@@ -18928,7 +19090,11 @@ var App = { render: function render() {
                     _vm.showSubtasksOnly = $$v;
                 }, expression: "showSubtasksOnly" } })], 1), _vm._v(" "), _c('p', [_c('va-issue-type-picker', { attrs: { "multiple": "multiple", "project-id": "10651", "locked": _vm.lockedIssueTypes, "subtasks": true, "non-subtasks": !_vm.showSubtasksOnly, "placeholder": "Select issue type" }, model: { value: _vm.issueTypes, callback: function callback($$v) {
                     _vm.issueTypes = $$v;
-                }, expression: "issueTypes" } })], 1)])], 1)])])])]);
+                }, expression: "issueTypes" } })], 1)]), _vm._v(" "), _c('h2', [_vm._v("Groups picker")]), _vm._v(" "), _c('p', [_c('va-groups-picker', { model: { value: _vm.group, callback: function callback($$v) {
+                    _vm.group = $$v;
+                }, expression: "group" } })], 1), _vm._v(" "), _c('form', { staticClass: "aui" }, [_c('va-groups-picker', { attrs: { "multiple": "multiple", "placeholder": "Select groups for access" }, model: { value: _vm.groups, callback: function callback($$v) {
+                    _vm.groups = $$v;
+                }, expression: "groups" } })], 1)], 1)])])])]);
     }, staticRenderFns: [function () {
         var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('header', { attrs: { "id": "header", "role": "banner" } }, [_c('nav', { staticClass: "aui-header aui-dropdown2-trigger-group", attrs: { "role": "navigation" } }, [_c('div', { staticClass: "aui-header-inner" }, [_c('div', { staticClass: "aui-header-primary" }, [_c('h1', { staticClass: "aui-header-logo", attrs: { "id": "logo" } }, [_c('a', { attrs: { "href": "http://example.com/" } }, [_c('span', { staticClass: "aui-header-logo-device" }, [_vm._v("AUI")])])]), _vm._v(" "), _c('ul', { staticClass: "aui-nav" }, [_c('li', [_c('a', { attrs: { "href": "http://example.com/" } }, [_vm._v("Nav")])])])])])])]);
     }],
@@ -18942,6 +19108,8 @@ var App = { render: function render() {
             lockedIssueTypes: ['10101'],
             issueType: "10004",
             issueTypes: ["10101"],
+            group: "site-admins",
+            groups: ["administrators", 'jira-core-users'],
             showSubtasksOnly: false
         };
     }
