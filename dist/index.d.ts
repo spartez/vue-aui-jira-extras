@@ -1,11 +1,11 @@
 export default class JiraApi {
     private api;
-    getProject(projectKeyOrId: string): Promise<object>;
-    getProjects(): Promise<Array<object>>;
-    getUser(userKey: string): Promise<object>;
-    getUsers(username: string): Promise<Array<object>>;
+    getProject(projectKeyOrId: string): Promise<Jira.Project>;
+    getProjects(): Promise<Array<Jira.Project>>;
+    getUser(userKey: string): Promise<Jira.User>;
+    getUsers(username: string): Promise<Array<Jira.User>>;
     getGroupsForPicker({query}: {
         query: string;
-    }): Promise<object[]>;
+    }): Promise<any>;
     getIssueCreateMeta(): Promise<object>;
 }

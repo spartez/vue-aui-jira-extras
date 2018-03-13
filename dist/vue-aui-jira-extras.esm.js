@@ -869,8 +869,7 @@ var JiraApi = function () {
     }, {
         key: 'getProjects',
         value: function getProjects$$1() {
-            var projects = this.api.isMock ? getProjects() : this.api.get('/rest/api/2/project');
-            return projects;
+            return this.api.isMock ? getProjects() : this.api.get('/rest/api/2/project');
         }
     }, {
         key: 'getUser',
@@ -880,16 +879,14 @@ var JiraApi = function () {
     }, {
         key: 'getUsers',
         value: function getUsers$$1(username) {
-            var users = this.api.isMock ? getUsers(username) : this.api.get('/rest/api/2/user/search?username=' + username);
-            return users;
+            return this.api.isMock ? getUsers(username) : this.api.get('/rest/api/2/user/search?username=' + username);
         }
     }, {
         key: 'getGroupsForPicker',
         value: function getGroupsForPicker$$1(_ref) {
             var query = _ref.query;
 
-            var users = this.api.isMock ? getGroupsForPicker(query) : this.api.get('/rest/api/2/groups/picker?query=' + query);
-            return users;
+            return this.api.isMock ? getGroupsForPicker(query) : this.api.get('/rest/api/2/groups/picker?query=' + query);
         }
     }, {
         key: 'getIssueCreateMeta',
