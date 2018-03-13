@@ -1,8 +1,9 @@
-import users from './mocks/users'
-import projects from './mocks/projects'
+import groups from './mocks/groups'
 import issueCreateMeta from './mocks/issueCreateMeta'
+import projects from './mocks/projects'
+import users from './mocks/users'
 
-const answerDelay = 300;
+const answerDelay = 200;
 
 function response(response) {
     return new Promise(resolve => setTimeout(() => resolve(response), answerDelay));
@@ -19,14 +20,21 @@ export function del(url) {
     console.log(`DELETE ${url}`);
     return new Promise(resolve => resolve([]))
 }
+
 export function put(url) {
     console.log(`PUT ${url}`);
     return new Promise(resolve => resolve([]))
 }
+
 export function post(url) {
     console.log(`POST ${url}`);
     return new Promise(resolve => resolve([]))
 }
+
+export const getGroupsForPicker = query => response({
+    ...groups,
+    groups: groups.groups.filter(group => group.name.indexOf(query) >= 0)
+});
 
 export const getProject = projectKeyOrId => response(projects.filter(project => project.id === projectKeyOrId)[0]);
 export const getProjects = () => response(projects);

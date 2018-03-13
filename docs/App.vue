@@ -58,6 +58,14 @@
                                                       placeholder="Select issue type"/>
                             </p>
                         </form>
+
+                        <h2>Groups picker</h2>
+                        <p>
+                            <va-groups-picker v-model="group"/>
+                        </p>
+                        <form class="aui">
+                            <va-groups-picker multiple v-model="groups" placeholder="Select groups for access"/>
+                        </form>
                     </section>
                 </div>
             </div>
@@ -77,6 +85,8 @@
                 lockedIssueTypes: ['10101'],
                 issueType: "10004",
                 issueTypes: ["10101"],
+                group: "site-admins",
+                groups: ["administrators", 'jira-core-users'],
                 showSubtasksOnly: false
             }
         }

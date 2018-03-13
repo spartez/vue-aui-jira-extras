@@ -5,21 +5,21 @@
 [![npm version](https://badge.fury.io/js/vue-aui-jira-extras.svg)](https://badge.fury.io/js/vue-aui-jira-extras)
 
 `vue-aui-jira-extras` is an addition to [vue-aui](https://github.com/spartez/vue-aui).
-It implements various Jira pickers using UI components from `vue-aui` library.
+It implements various Jira pickers using UI components from `vue-aui` library. 
 
 Features:
 
-* Works with Jira Server and Cloud
-* Automatically detects how to query Jira host
-* No manual data feeding - fetches needed data automatically
+* Supports Jira Server and Cloud out of the box (automatic detection)
+* No manual data feeding - components fetch needed data
+* API autocompletion provided by Typescript typings
 
 ## Implemented pickers
 
 * [x] Project picker (`va-project-picker`)
 * [x] User picker (`va-user-picker`)
 * [x] Issue type picker (`va-issue-type-picker`)
+* [x] Group picker (`va-group-picker`)
 * [ ] Issue picker
-* [ ] Group picker
 
 ## Installation
 
