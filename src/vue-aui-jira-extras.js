@@ -1,8 +1,8 @@
 import JiraApi from './api'
 
-import ProjectPicker from './ProjectPicker.vue'
-import UserPicker from './UserPicker.vue'
-import IssueTypePicker from './IssueTypePicker.vue'
+import ProjectPicker from './components/ProjectPicker.vue'
+import UserPicker from './components/UserPicker.vue'
+import IssueTypePicker from './components/IssueTypePicker.vue'
 
 export default {
     install(Vue, options = {}) {
