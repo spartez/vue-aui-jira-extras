@@ -1,0 +1,10 @@
+export declare const isMock: boolean;
+export declare function get(url: any): Promise<{}>;
+export declare function del(url: any): Promise<{}>;
+export declare function put(url: any): Promise<{}>;
+export declare function post(url: any): Promise<{}>;
+export declare const getProject: (projectKeyOrId: any) => Promise<{}>;
+export declare const getProjects: () => Promise<{}>;
+export declare const getUser: (userKey: any) => Promise<{}>;
+export declare const getUsers: (userQuery: any) => Promise<{}>;
+export declare const getIssueCreateMeta: () => Promise<{}>;
