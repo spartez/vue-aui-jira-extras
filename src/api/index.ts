@@ -129,10 +129,10 @@ export default class JiraApi {
             : this.api.get(`/rest/api/2/user/search?username=${username}`);
     }
 
-    getGroupsForPicker({query}: { query: string }) {
+    getGroupsForPicker(query: { query: string }) {
         return this.api.isMock
-            ? JiraMocksApi.getGroupsForPicker(query)
-            : this.api.get(`/rest/api/2/groups/picker?query=${query}`);
+            ? JiraMocksApi.getGroupsForPicker(query.query)
+            : this.api.get(`/rest/api/2/groups/picker?${stringify(query)}`);
     }
 
     getIssueCreateMeta(): Promise<object> {
