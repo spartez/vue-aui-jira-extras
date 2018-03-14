@@ -25,25 +25,25 @@ export default class JiraCloudApi implements JiraApiBase {
         return this.ajax({url});
     }
 
-    post(url, data) {
+    post(url, body) {
         return this.ajax({
             type: "POST",
             url,
             contentType: "application/json",
-            data: JSON.stringify(data)
+            data: JSON.stringify(body)
         });
     }
 
-    put(url, data) {
+    put(url, body) {
         return this.ajax({
             type: "PUT",
             url,
             contentType: "application/json",
-            data: JSON.stringify(data)
+            data: JSON.stringify(body)
         });
     }
 
-    del (url) {
+    del(url) {
         return this.ajax({
             type: "DELETE",
             url,

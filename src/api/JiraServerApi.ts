@@ -11,6 +11,7 @@ export default class JiraServerApi implements JiraApiBase {
             url: this.baseUrl + options.url
         });
 
+        // TODO get rid of jquery ajax here
         return new Promise((resolve, reject) => {
             window.AJS.$.ajax(actualOptions).done(resolve).fail(reject);
         })
@@ -30,50 +31,25 @@ export default class JiraServerApi implements JiraApiBase {
         });
     }
 
-    post(url, data) {
+    post(url, body) {
         return this.ajax({
             type: "POST",
             url,
             contentType: "application/json",
-            data: JSON.stringify(data)
+            data: JSON.stringify(body)
         });
     }
 
-    put(url, data) {
+    put(url, body) {
         return this.ajax({
             type: "PUT",
             url,
             contentType: "application/json",
             dataType: "json",
-            data: JSON.stringify(data),
+            data: JSON.stringify(body),
             dataFilter(data, type) {
                 return type === "json" && data === "" ? null : data;
             }
         });
-    }
-
-    private getPaged(url, dataProperty) {
-        const promise = window.AJS.$.Deferred();
-
-        let data = [];
-        if (url.indexOf("?") === -1) url += "?";
-
-        const getNextPage = function () {
-            return this.ajax({url: url + `&startAt=${data.length}`}).then(function (res) {
-                let newData = res[dataProperty];
-                promise.notify(newData);
-
-                data = data.concat(newData);
-                if (data.length < res["total"] || res["isLast"] === false) {
-                    getNextPage()
-                } else {
-                    promise.resolve(data);
-                }
-            })
-        }
-
-        getNextPage();
-
-        return promise.promise();
     }
 }
