@@ -1,5 +1,32 @@
 declare namespace Jira {
 
+    interface ApplicationProperty {
+        id: string,
+        key: string,
+        value: string,
+        name: string,
+        desc: string,
+        type: string,
+        defaultValue: string
+        example?: string,
+        allowedValues?: Array<string>
+    }
+
+    interface EntityProperty {
+        self?: string;
+        key: string;
+        value: any;
+    }
+
+    interface EntityPropertyKey {
+        self: string;
+        key: string;
+    }
+
+    interface EntityPropertiesKeys {
+        keys: Array<EntityPropertyKey>
+    }
+
     interface UserLight {
         self: string;
         name: string;
