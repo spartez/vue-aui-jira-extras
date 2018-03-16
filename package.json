@@ -40,6 +40,7 @@
     "jquery": "^2.2.4",
     "np": "^2.20.1",
     "process": "latest",
+    "querystring": "^0.2.0",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^8.2.6",
     "rollup-plugin-node-resolve": "^3.0.2",

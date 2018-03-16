@@ -16,19 +16,19 @@ const commonConfig = {
         vue({
             css: true,
         }),
-        resolve(),
+        resolve({preferBuiltins: false}),
         commonjs(),
         typescript({
             tsconfigDefaults: {
                 compilerOptions: {
                     declaration: true,
                     module: "es2015",
-                    moduleResolution: "node",
+                    moduleResolution: "classic",
                     experimentalDecorators: true,
                     target: "es6",
                 }
             },
-            include: [ "*.ts", "**/*.ts" ]
+            include: ["*.ts", "**/*.ts"]
         }),
         babel({
             exclude: 'node_modules/**'
