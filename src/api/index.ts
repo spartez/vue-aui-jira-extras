@@ -17,6 +17,8 @@ function detectApi(): JiraApiBase {
     return JiraMocksApi;
 }
 
+// Ultimately, move to jira-api-client npm package or similar
+
 export default class JiraApi {
     private api = detectApi();
 

@@ -41,7 +41,7 @@ const commonConfig = {
 
 
 let libraryConfig = merge({
-    input: './src/vue-aui-jira-extras.js',
+    input: './src/vue-aui-jira-extras.ts',
     output: [
         {file: pkg.main, format: 'cjs'},
         {file: pkg.module, format: 'es'}

@@ -4,7 +4,7 @@
   "description": "vue-aui companion library with Jira related components.",
   "main": "dist/vue-aui-jira-extras.js",
   "module": "dist/vue-aui-jira-extras.esm.js",
-  "types": "dist/api/index.d.ts",
+  "types": "dist/vue-aui-jira-extras.d.ts",
   "scripts": {
     "build": "rollup -c --environment 'NODE_ENV:production'",
     "dev": "rollup -c -w --environment 'NODE_ENV:dev'",
