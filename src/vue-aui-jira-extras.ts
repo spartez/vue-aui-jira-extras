@@ -1,11 +1,15 @@
+import {PluginFunction} from "vue";
+
 import JiraApi from './api'
 import {registerAll} from './imports'
 
-export default class {
-    install(Vue, options = {}) {
-        registerAll();
-        Vue.prototype.$jira = new JiraApi();
-    }
+export class VueAuiJiraExtrasOptions {
+}
+
+const VueAuiJiraExtras: PluginFunction<VueAuiJiraExtrasOptions> = (Vue, options) => {
+    registerAll(Vue);
+    Vue.prototype.$jira = new JiraApi();
 };
 
+export default VueAuiJiraExtras;
 export {default as JiraApi} from './api'
