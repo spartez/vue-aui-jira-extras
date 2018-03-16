@@ -9,7 +9,7 @@
     "build": "rollup -c --environment 'NODE_ENV:production'",
     "dev": "rollup -c -w --environment 'NODE_ENV:dev'",
     "release": "./node_modules/np/cli.js",
-    "version": "npm run build && git add ./dist"
+    "version": "rm -fr dist/ && npm run build && git add ./dist"
   },
   "repository": {
     "type": "git",
