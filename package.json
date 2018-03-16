@@ -8,7 +8,7 @@
   "scripts": {
     "build": "rollup -c --environment 'NODE_ENV:production'",
     "dev": "rollup -c -w --environment 'NODE_ENV:dev'",
-    "release": "np",
+    "release": "./node_modules/np/cli.js",
     "version": "npm run build && git add ./dist"
   },
   "repository": {
@@ -38,6 +38,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "jquery": "^2.2.4",
+    "np": "^2.20.1",
     "process": "latest",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^8.2.6",
