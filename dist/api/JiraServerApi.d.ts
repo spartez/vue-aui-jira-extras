@@ -6,7 +6,6 @@ export default class JiraServerApi implements JiraApiBase {
     private ajax(options);
     get(url: any): Promise<{}>;
     del(url: any): Promise<{}>;
-    post(url: any, data: any): Promise<{}>;
-    put(url: any, data: any): Promise<{}>;
-    private getPaged(url, dataProperty);
+    post(url: any, body: any): Promise<{}>;
+    put(url: any, body: any): Promise<{}>;
 }

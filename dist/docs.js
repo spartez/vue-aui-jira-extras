@@ -7484,7 +7484,7 @@ module.exports = _dereq_(23);
 },{}]},{},[1]);
 
 /*!
- * Vue.js v2.5.15
+ * Vue.js v2.5.16
  * (c) 2014-2018 Evan You
  * Released under the MIT License.
  */
@@ -10852,6 +10852,24 @@ function FunctionalRenderContext (
   Ctor
 ) {
   var options = Ctor.options;
+  // ensure the createElement function in functional components
+  // gets a unique context - this is necessary for correct named slot check
+  var contextVm;
+  if (hasOwn(parent, '_uid')) {
+    contextVm = Object.create(parent);
+    // $flow-disable-line
+    contextVm._original = parent;
+  } else {
+    // the context vm passed in is a functional context as well.
+    // in this case we want to make sure we are able to get a hold to the
+    // real context instance.
+    contextVm = parent;
+    // $flow-disable-line
+    parent = parent._original;
+  }
+  var isCompiled = isTrue(options._compiled);
+  var needNormalization = !isCompiled;
+
   this.data = data;
   this.props = props;
   this.children = children;
@@ -10859,12 +10877,6 @@ function FunctionalRenderContext (
   this.listeners = data.on || emptyObject;
   this.injections = resolveInject(options.inject, parent);
   this.slots = function () { return resolveSlots(children, parent); };
-
-  // ensure the createElement function in functional components
-  // gets a unique context - this is necessary for correct named slot check
-  var contextVm = Object.create(parent);
-  var isCompiled = isTrue(options._compiled);
-  var needNormalization = !isCompiled;
 
   // support for compiled functional template
   if (isCompiled) {
@@ -10921,23 +10933,28 @@ function createFunctionalComponent (
   var vnode = options.render.call(null, renderContext._c, renderContext);
 
   if (vnode instanceof VNode) {
-    setFunctionalContextForVNode(vnode, data, contextVm, options);
-    return vnode
+    return cloneAndMarkFunctionalResult(vnode, data, renderContext.parent, options)
   } else if (Array.isArray(vnode)) {
     var vnodes = normalizeChildren(vnode) || [];
+    var res = new Array(vnodes.length);
     for (var i = 0; i < vnodes.length; i++) {
-      setFunctionalContextForVNode(vnodes[i], data, contextVm, options);
+      res[i] = cloneAndMarkFunctionalResult(vnodes[i], data, renderContext.parent, options);
     }
-    return vnodes
+    return res
   }
 }
 
-function setFunctionalContextForVNode (vnode, data, vm, options) {
-  vnode.fnContext = vm;
-  vnode.fnOptions = options;
+function cloneAndMarkFunctionalResult (vnode, data, contextVm, options) {
+  // #7817 clone node before setting fnContext, otherwise if the node is reused
+  // (e.g. it was from a cached normal slot) the fnContext causes named slots
+  // that should not be matched to match.
+  var clone = cloneVNode(vnode);
+  clone.fnContext = contextVm;
+  clone.fnOptions = options;
   if (data.slot) {
-    (vnode.data || (vnode.data = {})).slot = data.slot;
+    (clone.data || (clone.data = {})).slot = data.slot;
   }
+  return clone
 }
 
 function mergeProps (to, from) {
@@ -10967,7 +10984,7 @@ function mergeProps (to, from) {
 
 /*  */
 
-// hooks to be invoked on component VNodes during patch
+// inline hooks to be invoked on component VNodes during patch
 var componentVNodeHooks = {
   init: function init (
     vnode,
@@ -11122,8 +11139,8 @@ function createComponent (
     }
   }
 
-  // merge component management hooks onto the placeholder node
-  mergeHooks(data);
+  // install component management hooks onto the placeholder node
+  installComponentHooks(data);
 
   // return a placeholder vnode
   var name = Ctor.options.name || tag;
@@ -11163,22 +11180,11 @@ function createComponentInstanceForVnode (
   return new vnode.componentOptions.Ctor(options)
 }
 
-function mergeHooks (data) {
-  if (!data.hook) {
-    data.hook = {};
-  }
+function installComponentHooks (data) {
+  var hooks = data.hook || (data.hook = {});
   for (var i = 0; i < hooksToMerge.length; i++) {
     var key = hooksToMerge[i];
-    var fromParent = data.hook[key];
-    var ours = componentVNodeHooks[key];
-    data.hook[key] = fromParent ? mergeHook$1(ours, fromParent) : ours;
-  }
-}
-
-function mergeHook$1 (one, two) {
-  return function (a, b, c, d) {
-    one(a, b, c, d);
-    two(a, b, c, d);
+    hooks[key] = componentVNodeHooks[key];
   }
 }
 
@@ -11750,13 +11756,15 @@ var KeepAlive = {
     }
   },
 
-  watch: {
-    include: function include (val) {
-      pruneCache(this, function (name) { return matches(val, name); });
-    },
-    exclude: function exclude (val) {
-      pruneCache(this, function (name) { return !matches(val, name); });
-    }
+  mounted: function mounted () {
+    var this$1 = this;
+
+    this.$watch('include', function (val) {
+      pruneCache(this$1, function (name) { return matches(val, name); });
+    });
+    this.$watch('exclude', function (val) {
+      pruneCache(this$1, function (name) { return !matches(val, name); });
+    });
   },
 
   render: function render () {
@@ -11867,7 +11875,7 @@ Object.defineProperty(Vue, 'FunctionalRenderContext', {
   value: FunctionalRenderContext
 });
 
-Vue.version = '2.5.15';
+Vue.version = '2.5.16';
 
 /*  */
 
@@ -14641,6 +14649,120 @@ var eo=Object.freeze({}),no=Object.prototype.toString,ro=v("slot,component",!0),
 var VueAui = unwrapExports(vueAui);
 var vueAui_1 = vueAui.VueAui;
 
+// Copyright Joyent, Inc. and other Node contributors.
+
+// If obj.hasOwnProperty has been overridden, then calling
+// obj.hasOwnProperty(prop) will break.
+// See: https://github.com/joyent/node/issues/1707
+function hasOwnProperty$1(obj, prop) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+var decode = function(qs, sep, eq, options) {
+  sep = sep || '&';
+  eq = eq || '=';
+  var obj = {};
+
+  if (typeof qs !== 'string' || qs.length === 0) {
+    return obj;
+  }
+
+  var regexp = /\+/g;
+  qs = qs.split(sep);
+
+  var maxKeys = 1000;
+  if (options && typeof options.maxKeys === 'number') {
+    maxKeys = options.maxKeys;
+  }
+
+  var len = qs.length;
+  // maxKeys <= 0 means that we should not limit keys count
+  if (maxKeys > 0 && len > maxKeys) {
+    len = maxKeys;
+  }
+
+  for (var i = 0; i < len; ++i) {
+    var x = qs[i].replace(regexp, '%20'),
+        idx = x.indexOf(eq),
+        kstr, vstr, k, v;
+
+    if (idx >= 0) {
+      kstr = x.substr(0, idx);
+      vstr = x.substr(idx + 1);
+    } else {
+      kstr = x;
+      vstr = '';
+    }
+
+    k = decodeURIComponent(kstr);
+    v = decodeURIComponent(vstr);
+
+    if (!hasOwnProperty$1(obj, k)) {
+      obj[k] = v;
+    } else if (Array.isArray(obj[k])) {
+      obj[k].push(v);
+    } else {
+      obj[k] = [obj[k], v];
+    }
+  }
+
+  return obj;
+};
+
+// Copyright Joyent, Inc. and other Node contributors.
+
+var stringifyPrimitive = function(v) {
+  switch (typeof v) {
+    case 'string':
+      return v;
+
+    case 'boolean':
+      return v ? 'true' : 'false';
+
+    case 'number':
+      return isFinite(v) ? v : '';
+
+    default:
+      return '';
+  }
+};
+
+var encode = function(obj, sep, eq, name) {
+  sep = sep || '&';
+  eq = eq || '=';
+  if (obj === null) {
+    obj = undefined;
+  }
+
+  if (typeof obj === 'object') {
+    return Object.keys(obj).map(function(k) {
+      var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
+      if (Array.isArray(obj[k])) {
+        return obj[k].map(function(v) {
+          return ks + encodeURIComponent(stringifyPrimitive(v));
+        }).join(sep);
+      } else {
+        return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
+      }
+    }).join(sep);
+
+  }
+
+  if (!name) return '';
+  return encodeURIComponent(stringifyPrimitive(name)) + eq +
+         encodeURIComponent(stringifyPrimitive(obj));
+};
+
+var querystring = createCommonjsModule(function (module, exports) {
+
+exports.decode = exports.parse = decode;
+exports.encode = exports.stringify = encode;
+});
+var querystring_1 = querystring.decode;
+var querystring_2 = querystring.parse;
+var querystring_3 = querystring.encode;
+var querystring_4 = querystring.stringify;
+
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -14695,22 +14817,22 @@ var JiraCloudApi = function () {
         }
     }, {
         key: "post",
-        value: function post(url, data) {
+        value: function post(url, body) {
             return this.ajax({
                 type: "POST",
                 url: url,
                 contentType: "application/json",
-                data: JSON.stringify(data)
+                data: JSON.stringify(body)
             });
         }
     }, {
         key: "put",
-        value: function put(url, data) {
+        value: function put(url, body) {
             return this.ajax({
                 type: "PUT",
                 url: url,
                 contentType: "application/json",
-                data: JSON.stringify(data)
+                data: JSON.stringify(body)
             });
         }
     }, {
@@ -14740,6 +14862,7 @@ var JiraServerApi = function () {
             var actualOptions = Object.assign({}, options, {
                 url: this.baseUrl + options.url
             });
+            // TODO get rid of jquery ajax here
             return new Promise(function (resolve, reject) {
                 window.AJS.$.ajax(actualOptions).done(resolve).fail(reject);
             });
@@ -14762,48 +14885,27 @@ var JiraServerApi = function () {
         }
     }, {
         key: "post",
-        value: function post(url, data) {
+        value: function post(url, body) {
             return this.ajax({
                 type: "POST",
                 url: url,
                 contentType: "application/json",
-                data: JSON.stringify(data)
+                data: JSON.stringify(body)
             });
         }
     }, {
         key: "put",
-        value: function put(url, data) {
+        value: function put(url, body) {
             return this.ajax({
                 type: "PUT",
                 url: url,
                 contentType: "application/json",
                 dataType: "json",
-                data: JSON.stringify(data),
+                data: JSON.stringify(body),
                 dataFilter: function dataFilter(data, type) {
                     return type === "json" && data === "" ? null : data;
                 }
             });
-        }
-    }, {
-        key: "getPaged",
-        value: function getPaged(url, dataProperty) {
-            var promise = window.AJS.$.Deferred();
-            var data = [];
-            if (url.indexOf("?") === -1) url += "?";
-            var getNextPage = function getNextPage() {
-                return this.ajax({ url: url + ("&startAt=" + data.length) }).then(function (res) {
-                    var newData = res[dataProperty];
-                    promise.notify(newData);
-                    data = data.concat(newData);
-                    if (data.length < res["total"] || res["isLast"] === false) {
-                        getNextPage();
-                    } else {
-                        promise.resolve(data);
-                    }
-                });
-            };
-            getNextPage();
-            return promise.promise();
         }
     }]);
     return JiraServerApi;
@@ -15496,6 +15598,7 @@ function detectApi() {
     }
     return JiraMocksApi;
 }
+// Ultimately, move to jira-api-client npm package or similar
 
 var JiraApi = function () {
     function JiraApi() {
@@ -15503,16 +15606,130 @@ var JiraApi = function () {
 
         this.api = detectApi();
     }
+    // App properties API
+
 
     createClass(JiraApi, [{
+        key: 'getAppProperties',
+        value: function getAppProperties(addonKey) {
+            return this.api.get('rest/atlassian-connect/1/addons/' + addonKey + '/properties');
+        }
+    }, {
+        key: 'getAppProperty',
+        value: function getAppProperty(addonKey, propertyKey) {
+            return this.api.get('rest/atlassian-connect/1/addons/' + addonKey + '/properties/' + propertyKey);
+        }
+    }, {
+        key: 'setAppProperty',
+        value: function setAppProperty(addonKey, propertyKey, body) {
+            return this.api.put('rest/atlassian-connect/1/addons/' + addonKey + '/properties/' + propertyKey, body);
+        }
+    }, {
+        key: 'deleteAppProperty',
+        value: function deleteAppProperty(addonKey, propertyKey) {
+            return this.api.del('rest/atlassian-connect/1/addons/' + addonKey + '/properties/' + propertyKey);
+        }
+        // Jira API
+
+    }, {
+        key: 'getApplicationProperty',
+        value: function getApplicationProperty(query) {
+            return this.api.get('/rest/api/2/application-properties?' + querystring_4(query));
+        }
+    }, {
+        key: 'setApplicationProperty',
+        value: function setApplicationProperty(id, body) {
+            return this.api.put('/rest/api/2/application-properties/' + id, body);
+        }
+    }, {
+        key: 'getAdvancedSettings',
+        value: function getAdvancedSettings() {
+            return this.api.get('/rest/api/2/application-properties/advanced-settings');
+        }
+    }, {
+        key: 'getFields',
+        value: function getFields() {
+            return this.api.get('/rest/api/2/field');
+        }
+    }, {
+        key: 'getIssue',
+        value: function getIssue(issueIdOrKey, query) {
+            return this.api.get('/rest/api/2/issue/' + issueIdOrKey + '?' + querystring_4(query));
+        }
+    }, {
+        key: 'getIssuePropertyKeys',
+        value: function getIssuePropertyKeys(issueIdOrKey) {
+            return this.api.get('/rest/api/2/issue/' + issueIdOrKey + '/properties');
+        }
+    }, {
+        key: 'getIssueProperty',
+        value: function getIssueProperty(issueIdOrKey, propertyKey) {
+            return this.api.get('/rest/api/2/issue/' + issueIdOrKey + '/properties/' + propertyKey);
+        }
+    }, {
+        key: 'setIssueProperty',
+        value: function setIssueProperty(issueIdOrKey, propertyKey, body) {
+            return this.api.put('/rest/api/2/issue/' + issueIdOrKey + '/properties/' + propertyKey, body);
+        }
+    }, {
+        key: 'deleteIssueProperty',
+        value: function deleteIssueProperty(issueIdOrKey, propertyKey) {
+            return this.api.del('/rest/api/2/issue/' + issueIdOrKey + '/properties/' + propertyKey);
+        }
+    }, {
+        key: 'getCurrentUser',
+        value: function getCurrentUser(query) {
+            return this.api.del('/rest/api/2/myself?' + querystring_4(query));
+        }
+    }, {
         key: 'getProject',
-        value: function getProject$$1(projectKeyOrId) {
-            return this.api.isMock ? getProject(projectKeyOrId) : this.api.get('/rest/api/2/project/' + projectKeyOrId);
+        value: function getProject$$1(projectKeyOrId, query) {
+            return this.api.isMock ? getProject(projectKeyOrId) : this.api.get('/rest/api/2/project/' + projectKeyOrId + '?' + querystring_4(query));
         }
     }, {
         key: 'getProjects',
-        value: function getProjects$$1() {
-            return this.api.isMock ? getProjects() : this.api.get('/rest/api/2/project');
+        value: function getProjects$$1(query) {
+            return this.api.isMock ? getProjects() : this.api.get('/rest/api/2/project?' + querystring_4(query));
+        }
+    }, {
+        key: 'getProjectPropertyKeys',
+        value: function getProjectPropertyKeys(projectIdOrKey) {
+            return this.api.get('/rest/api/2/project/' + projectIdOrKey + '/properties');
+        }
+    }, {
+        key: 'getProjectProperty',
+        value: function getProjectProperty(projectIdOrKey, propertyKey) {
+            return this.api.get('/rest/api/2/project/' + projectIdOrKey + '/properties/' + propertyKey);
+        }
+    }, {
+        key: 'setProjectProperty',
+        value: function setProjectProperty(projectIdOrKey, propertyKey, body) {
+            return this.api.put('/rest/api/2/project/' + projectIdOrKey + '/properties/' + propertyKey, body);
+        }
+    }, {
+        key: 'deleteProjectProperty',
+        value: function deleteProjectProperty(projectIdOrKey, propertyKey) {
+            return this.api.del('/rest/api/2/project/' + projectIdOrKey + '/properties/' + propertyKey);
+        }
+    }, {
+        key: 'getUserPropertyKeys',
+        value: function getUserPropertyKeys(query) {
+            return this.api.get('/rest/api/2/user/properties?' + querystring_4(query));
+        }
+    }, {
+        key: 'getUserProperty',
+        value: function getUserProperty(propertyKey, query) {
+            return this.api.get('/rest/api/2/user/properties/' + propertyKey + '?' + querystring_4(query));
+        }
+    }, {
+        key: 'setUserProperty',
+        value: function setUserProperty(propertyKey, query, body) {
+            return this.api.put('/rest/api/2/user/properties/' + propertyKey + '?' + querystring_4(query), body);
+        }
+    }, {
+        key: 'deleteUserProperty',
+        value: function deleteUserProperty(propertyKey, query) {
+            return this.api.del('/rest/api/2/user/properties/' + propertyKey + '?' + querystring_4(query));
         }
     }, {
         key: 'getUser',
@@ -15526,10 +15743,8 @@ var JiraApi = function () {
         }
     }, {
         key: 'getGroupsForPicker',
-        value: function getGroupsForPicker$$1(_ref) {
-            var query = _ref.query;
-
-            return this.api.isMock ? getGroupsForPicker(query) : this.api.get('/rest/api/2/groups/picker?query=' + query);
+        value: function getGroupsForPicker$$1(query) {
+            return this.api.isMock ? getGroupsForPicker(query.query) : this.api.get('/rest/api/2/groups/picker?' + querystring_4(query));
         }
     }, {
         key: 'getIssueCreateMeta',
@@ -15816,7 +16031,7 @@ var _Symbol = Symbol$1;
 var objectProto = Object.prototype;
 
 /** Used to check objects for own properties. */
-var hasOwnProperty$1 = objectProto.hasOwnProperty;
+var hasOwnProperty$2 = objectProto.hasOwnProperty;
 
 /**
  * Used to resolve the
@@ -15836,7 +16051,7 @@ var symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
  * @returns {string} Returns the raw `toStringTag`.
  */
 function getRawTag(value) {
-  var isOwn = hasOwnProperty$1.call(value, symToStringTag),
+  var isOwn = hasOwnProperty$2.call(value, symToStringTag),
       tag = value[symToStringTag];
 
   try {
@@ -16040,11 +16255,11 @@ var funcProto$1 = Function.prototype,
 var funcToString$1 = funcProto$1.toString;
 
 /** Used to check objects for own properties. */
-var hasOwnProperty$2 = objectProto$2.hasOwnProperty;
+var hasOwnProperty$3 = objectProto$2.hasOwnProperty;
 
 /** Used to detect if a method is native. */
 var reIsNative = RegExp('^' +
-  funcToString$1.call(hasOwnProperty$2).replace(reRegExpChar, '\\$&')
+  funcToString$1.call(hasOwnProperty$3).replace(reRegExpChar, '\\$&')
   .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
 );
 
@@ -16144,7 +16359,7 @@ var HASH_UNDEFINED = '__lodash_hash_undefined__';
 var objectProto$3 = Object.prototype;
 
 /** Used to check objects for own properties. */
-var hasOwnProperty$3 = objectProto$3.hasOwnProperty;
+var hasOwnProperty$4 = objectProto$3.hasOwnProperty;
 
 /**
  * Gets the hash value for `key`.
@@ -16161,7 +16376,7 @@ function hashGet(key) {
     var result = data[key];
     return result === HASH_UNDEFINED ? undefined : result;
   }
-  return hasOwnProperty$3.call(data, key) ? data[key] : undefined;
+  return hasOwnProperty$4.call(data, key) ? data[key] : undefined;
 }
 
 var _hashGet = hashGet;
@@ -16170,7 +16385,7 @@ var _hashGet = hashGet;
 var objectProto$4 = Object.prototype;
 
 /** Used to check objects for own properties. */
-var hasOwnProperty$4 = objectProto$4.hasOwnProperty;
+var hasOwnProperty$5 = objectProto$4.hasOwnProperty;
 
 /**
  * Checks if a hash value for `key` exists.
@@ -16183,7 +16398,7 @@ var hasOwnProperty$4 = objectProto$4.hasOwnProperty;
  */
 function hashHas(key) {
   var data = this.__data__;
-  return _nativeCreate ? (data[key] !== undefined) : hasOwnProperty$4.call(data, key);
+  return _nativeCreate ? (data[key] !== undefined) : hasOwnProperty$5.call(data, key);
 }
 
 var _hashHas = hashHas;
@@ -16976,7 +17191,7 @@ var _baseIsArguments = baseIsArguments;
 var objectProto$6 = Object.prototype;
 
 /** Used to check objects for own properties. */
-var hasOwnProperty$5 = objectProto$6.hasOwnProperty;
+var hasOwnProperty$6 = objectProto$6.hasOwnProperty;
 
 /** Built-in value references. */
 var propertyIsEnumerable$1 = objectProto$6.propertyIsEnumerable;
@@ -17000,7 +17215,7 @@ var propertyIsEnumerable$1 = objectProto$6.propertyIsEnumerable;
  * // => false
  */
 var isArguments = _baseIsArguments(function() { return arguments; }()) ? _baseIsArguments : function(value) {
-  return isObjectLike_1(value) && hasOwnProperty$5.call(value, 'callee') &&
+  return isObjectLike_1(value) && hasOwnProperty$6.call(value, 'callee') &&
     !propertyIsEnumerable$1.call(value, 'callee');
 };
 
@@ -17248,7 +17463,7 @@ var isTypedArray_1 = isTypedArray;
 var objectProto$7 = Object.prototype;
 
 /** Used to check objects for own properties. */
-var hasOwnProperty$6 = objectProto$7.hasOwnProperty;
+var hasOwnProperty$7 = objectProto$7.hasOwnProperty;
 
 /**
  * Creates an array of the enumerable property names of the array-like `value`.
@@ -17268,7 +17483,7 @@ function arrayLikeKeys(value, inherited) {
       length = result.length;
 
   for (var key in value) {
-    if ((inherited || hasOwnProperty$6.call(value, key)) &&
+    if ((inherited || hasOwnProperty$7.call(value, key)) &&
         !(skipIndexes && (
            // Safari 9 has enumerable `arguments.length` in strict mode.
            key == 'length' ||
@@ -17331,7 +17546,7 @@ var _nativeKeys = nativeKeys;
 var objectProto$9 = Object.prototype;
 
 /** Used to check objects for own properties. */
-var hasOwnProperty$7 = objectProto$9.hasOwnProperty;
+var hasOwnProperty$8 = objectProto$9.hasOwnProperty;
 
 /**
  * The base implementation of `_.keys` which doesn't treat sparse arrays as dense.
@@ -17346,7 +17561,7 @@ function baseKeys(object) {
   }
   var result = [];
   for (var key in Object(object)) {
-    if (hasOwnProperty$7.call(object, key) && key != 'constructor') {
+    if (hasOwnProperty$8.call(object, key) && key != 'constructor') {
       result.push(key);
     }
   }
@@ -17440,7 +17655,7 @@ var COMPARE_PARTIAL_FLAG$2 = 1;
 var objectProto$10 = Object.prototype;
 
 /** Used to check objects for own properties. */
-var hasOwnProperty$8 = objectProto$10.hasOwnProperty;
+var hasOwnProperty$9 = objectProto$10.hasOwnProperty;
 
 /**
  * A specialized version of `baseIsEqualDeep` for objects with support for
@@ -17468,7 +17683,7 @@ function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
   var index = objLength;
   while (index--) {
     var key = objProps[index];
-    if (!(isPartial ? key in other : hasOwnProperty$8.call(other, key))) {
+    if (!(isPartial ? key in other : hasOwnProperty$9.call(other, key))) {
       return false;
     }
   }
@@ -17604,7 +17819,7 @@ var argsTag$2 = '[object Arguments]',
 var objectProto$11 = Object.prototype;
 
 /** Used to check objects for own properties. */
-var hasOwnProperty$9 = objectProto$11.hasOwnProperty;
+var hasOwnProperty$10 = objectProto$11.hasOwnProperty;
 
 /**
  * A specialized version of `baseIsEqual` for arrays and objects which performs
@@ -17647,8 +17862,8 @@ function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack) {
       : _equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack);
   }
   if (!(bitmask & COMPARE_PARTIAL_FLAG$3)) {
-    var objIsWrapped = objIsObj && hasOwnProperty$9.call(object, '__wrapped__'),
-        othIsWrapped = othIsObj && hasOwnProperty$9.call(other, '__wrapped__');
+    var objIsWrapped = objIsObj && hasOwnProperty$10.call(object, '__wrapped__'),
+        othIsWrapped = othIsObj && hasOwnProperty$10.call(other, '__wrapped__');
 
     if (objIsWrapped || othIsWrapped) {
       var objUnwrapped = objIsWrapped ? object.value() : object,
@@ -19040,16 +19255,16 @@ var GroupsPicker = { render: function render() {
     }
 };
 
-var VueAuiJiraExtras = {
-    install: function install(Vue) {
+function registerAll(Vue) {
+    Vue.component('va-project-picker', ProjectPicker);
+    Vue.component('va-user-picker', UserPicker);
+    Vue.component('va-issue-type-picker', IssueTypePicker);
+    Vue.component('va-group-picker', GroupsPicker);
+}
 
-        Vue.component('va-project-picker', ProjectPicker);
-        Vue.component('va-user-picker', UserPicker);
-        Vue.component('va-issue-type-picker', IssueTypePicker);
-        Vue.component('va-group-picker', GroupsPicker);
-
-        Vue.prototype.$jira = new JiraApi();
-    }
+var VueAuiJiraExtras = function VueAuiJiraExtras(Vue, options) {
+    registerAll(Vue);
+    Vue.prototype.$jira = new JiraApi();
 };
 
 (function () {
@@ -19087,9 +19302,9 @@ var App = { render: function render() {
                     _vm.showSubtasksOnly = $$v;
                 }, expression: "showSubtasksOnly" } })], 1), _vm._v(" "), _c('p', [_c('va-issue-type-picker', { attrs: { "multiple": "multiple", "project-id": "10651", "locked": _vm.lockedIssueTypes, "subtasks": true, "non-subtasks": !_vm.showSubtasksOnly, "placeholder": "Select issue type" }, model: { value: _vm.issueTypes, callback: function callback($$v) {
                     _vm.issueTypes = $$v;
-                }, expression: "issueTypes" } })], 1)]), _vm._v(" "), _c('h2', [_vm._v("Groups picker")]), _vm._v(" "), _c('p', [_c('va-groups-picker', { model: { value: _vm.group, callback: function callback($$v) {
+                }, expression: "issueTypes" } })], 1)]), _vm._v(" "), _c('h2', [_vm._v("Groups picker")]), _vm._v(" "), _c('p', [_c('va-group-picker', { model: { value: _vm.group, callback: function callback($$v) {
                     _vm.group = $$v;
-                }, expression: "group" } })], 1), _vm._v(" "), _c('form', { staticClass: "aui" }, [_c('va-groups-picker', { attrs: { "multiple": "multiple", "placeholder": "Select groups for access" }, model: { value: _vm.groups, callback: function callback($$v) {
+                }, expression: "group" } })], 1), _vm._v(" "), _c('form', { staticClass: "aui" }, [_c('va-group-picker', { attrs: { "multiple": "multiple", "placeholder": "Select groups for access" }, model: { value: _vm.groups, callback: function callback($$v) {
                     _vm.groups = $$v;
                 }, expression: "groups" } })], 1)], 1)])])])]);
     }, staticRenderFns: [function () {
