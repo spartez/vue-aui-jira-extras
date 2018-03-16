@@ -56,6 +56,21 @@ export default class JiraApi {
     }
 
 
+    getFields(): Promise<Array<Jira.Field>> {
+        return this.api.get(`/rest/api/2/field`);
+    }
+
+
+    getIssue(issueIdOrKey: string, query: {
+        expand: string,
+        fields: string,
+        fieldsByKeys: boolean,
+        properties: string,
+        updateHistory: boolean
+    }): Promise<Jira.Issue> {
+        return this.api.get(`/rest/api/2/issue/${issueIdOrKey}?${stringify(query)}`)
+    }
+
     getIssuePropertyKeys(issueIdOrKey: string): Promise<Jira.EntityPropertiesKeys> {
         return this.api.get(`/rest/api/2/issue/${issueIdOrKey}/properties`)
     }
@@ -72,6 +87,23 @@ export default class JiraApi {
         return this.api.del(`/rest/api/2/issue/${issueIdOrKey}/properties/${propertyKey}`)
     }
 
+
+    getCurrentUser(query: { expand: string }): Promise<Jira.User> {
+        return this.api.del(`/rest/api/2/myself?${stringify(query)}`)
+    }
+
+
+    getProject(projectKeyOrId: string, query: { expand: string }): Promise<Jira.Project> {
+        return this.api.isMock
+            ? JiraMocksApi.getProject(projectKeyOrId)
+            : this.api.get(`/rest/api/2/project/${projectKeyOrId}?${stringify(query)}`);
+    }
+
+    getProjects(query: { expand: string, recent: number }): Promise<Array<Jira.Project>> {
+        return this.api.isMock
+            ? JiraMocksApi.getProjects()
+            : this.api.get(`/rest/api/2/project?${stringify(query)}`);
+    }
 
     getProjectPropertyKeys(projectIdOrKey: string): Promise<Jira.EntityPropertiesKeys> {
         return this.api.get(`/rest/api/2/project/${projectIdOrKey}/properties`)
@@ -106,18 +138,6 @@ export default class JiraApi {
         return this.api.del(`/rest/api/2/user/properties/${propertyKey}?${stringify(query)}`)
     }
 
-
-    getProject(projectKeyOrId: string): Promise<Jira.Project> {
-        return this.api.isMock
-            ? JiraMocksApi.getProject(projectKeyOrId)
-            : this.api.get(`/rest/api/2/project/${projectKeyOrId}`);
-    }
-
-    getProjects(): Promise<Array<Jira.Project>> {
-        return this.api.isMock
-            ? JiraMocksApi.getProjects()
-            : this.api.get('/rest/api/2/project');
-    }
 
     getUser(userKey: string): Promise<Jira.User> {
         return this.api.isMock

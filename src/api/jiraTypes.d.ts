@@ -165,4 +165,79 @@ declare namespace Jira {
         projectCategory: ProjectCategory;
         simplified: boolean;
     }
+
+    interface Field {
+        id: string,
+        name: string,
+        custom: boolean,
+        orderable: boolean,
+        navigable: boolean,
+        searchable: boolean,
+        clauseNames: Array<string>,
+        schema: {
+            type: string,
+            system: string
+        }
+    }
+
+    interface Changelog {
+        startAt: number,
+        maxResults: number,
+        total: number,
+        histories: Array<ChangeHistory>
+    }
+
+    interface ChangeHistory {
+        author: object,
+        created: string,
+        historyMetadata: any,
+        id: string,
+        items: Array<ChangeItem>
+    }
+
+    interface ChangeItem {
+        field: string,
+        fieldId: string,
+        fieldtype: string,
+        from: string,
+        fromString: string,
+        to: string,
+        toString: string
+    }
+
+    interface JsonType {
+        custom: string,
+        customId: number,
+        items: string,
+        system: string,
+        type: string
+    }
+
+    interface Issue {
+        self: string,
+        changelog?: Changelog,
+        editMeta?: object,
+        fields?: {
+            [key: string]: any;
+        },
+        id: string,
+        key: string,
+        names?: {
+            [key: string]: string;
+        },
+        operations?: object,
+        properties?: {
+            [key: string]: any;
+        },
+        renderedFields?: {
+            [key: string]: any;
+        },
+        schema?: {
+            [key: string]: JsonType;
+        },
+        transitions?: Array<object>,
+        versionedRepresentations?: {
+            [key: string]: object;
+        }
+    }
 }
