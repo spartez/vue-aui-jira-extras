@@ -6,8 +6,8 @@
   "module": "dist/vue-aui-jira-extras.esm.js",
   "types": "dist/vue-aui-jira-extras.d.ts",
   "scripts": {
-    "build": "rollup -c --environment 'NODE_ENV:production'",
-    "dev": "rollup -c -w --environment 'NODE_ENV:dev'",
+    "build": "./node_modules/rollup/bin/rollup -c --environment 'NODE_ENV:production'",
+    "dev": "./node_modules/rollup/bin/rollup -c -w --environment 'NODE_ENV:dev'",
     "release": "./node_modules/np/cli.js",
     "version": "rm -fr dist/ && npm run build && git add ./dist"
   },
@@ -28,7 +28,7 @@
     "url": "https://github.com/spartez/vue-aui-jira-extras/issues"
   },
   "homepage": "https://github.com/spartez/vue-aui-jira-extras#readme",
-  "peerDependencies": {
+  "dependencies": {
     "vue-aui": "^1.0.0-rc.1"
   },
   "devDependencies": {
@@ -41,6 +41,7 @@
     "np": "^2.20.1",
     "process": "latest",
     "querystring": "^0.2.0",
+    "rollup": "^0.57.1",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^8.2.6",
     "rollup-plugin-node-resolve": "^3.0.2",
