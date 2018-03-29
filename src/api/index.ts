@@ -17,8 +17,13 @@ function detectApi(): JiraApiBase {
     return JiraMocksApi;
 }
 
-// Ultimately, move to jira-api-client npm package or similar
+export type UserKeyOrUsername = {
+    userKey?: string;
+    username?: string;
+};
 
+
+// Ultimately, move to jira-js-client npm package or similar
 export default class JiraApi {
     private api = detectApi();
 
@@ -61,7 +66,7 @@ export default class JiraApi {
     }
 
 
-    getIssue(issueIdOrKey: string, query: {
+    getIssue(issueIdOrKey: string, query?: {
         expand: string,
         fields: string,
         fieldsByKeys: boolean,
@@ -88,18 +93,18 @@ export default class JiraApi {
     }
 
 
-    getCurrentUser(query: { expand: string }): Promise<Jira.User> {
+    getCurrentUser(query?: { expand: string }): Promise<Jira.User> {
         return this.api.del(`/rest/api/2/myself?${stringify(query)}`)
     }
 
 
-    getProject(projectKeyOrId: string, query: { expand: string }): Promise<Jira.Project> {
+    getProject(projectKeyOrId: string, query?: { expand: string }): Promise<Jira.Project> {
         return this.api.isMock
             ? JiraMocksApi.getProject(projectKeyOrId)
             : this.api.get(`/rest/api/2/project/${projectKeyOrId}?${stringify(query)}`);
     }
 
-    getProjects(query: { expand: string, recent: number }): Promise<Array<Jira.Project>> {
+    getProjects(query?: { expand: string, recent: number }): Promise<Array<Jira.Project>> {
         return this.api.isMock
             ? JiraMocksApi.getProjects()
             : this.api.get(`/rest/api/2/project?${stringify(query)}`);
@@ -122,19 +127,19 @@ export default class JiraApi {
     }
 
 
-    getUserPropertyKeys(query: { userKey: string } | { username: string }): Promise<Jira.EntityPropertiesKeys> {
+    getUserPropertyKeys(query: UserKeyOrUsername): Promise<Jira.EntityPropertiesKeys> {
         return this.api.get(`/rest/api/2/user/properties?${stringify(query)}`)
     }
 
-    getUserProperty(propertyKey: string, query: { userKey: string } | { username: string }): Promise<Jira.EntityProperty> {
+    getUserProperty(propertyKey: string, query: UserKeyOrUsername): Promise<Jira.EntityProperty> {
         return this.api.get(`/rest/api/2/user/properties/${propertyKey}?${stringify(query)}`)
     }
 
-    setUserProperty(propertyKey: string, query: { userKey: string } | { username: string }, body: any): Promise<void> {
+    setUserProperty(propertyKey: string, query: UserKeyOrUsername, body: any): Promise<void> {
         return this.api.put(`/rest/api/2/user/properties/${propertyKey}?${stringify(query)}`, body)
     }
 
-    deleteUserProperty(propertyKey: string, query: { userKey: string } | { username: string }): Promise<void> {
+    deleteUserProperty(propertyKey: string, query: UserKeyOrUsername): Promise<void> {
         return this.api.del(`/rest/api/2/user/properties/${propertyKey}?${stringify(query)}`)
     }
 
