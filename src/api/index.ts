@@ -1,4 +1,4 @@
-import {stringify, escape} from "querystring";
+import {stringify} from "querystring";
 
 import {JiraApiBase} from "./JiraApiBase";
 import JiraCloudApi from './JiraCloudApi'
@@ -149,13 +149,13 @@ export default class JiraApi {
     getUser(userKey: string): Promise<Jira.User> {
         return this.api.isMock
             ? JiraMocksApi.getUser(userKey)
-            : this.api.get(`/rest/api/2/user?key=${escape(userKey)}`);
+            : this.api.get(`/rest/api/2/user?key=${encodeURIComponent(userKey)}`);
     }
 
     getUsers(username: string): Promise<Array<Jira.User>> {
         return this.api.isMock
             ? JiraMocksApi.getUsers(username)
-            : this.api.get(`/rest/api/2/user/search?username=${escape(username)}`);
+            : this.api.get(`/rest/api/2/user/search?username=${encodeURIComponent(username)}`);
     }
 
     getGroupsForPicker(query: { query: string }) {
