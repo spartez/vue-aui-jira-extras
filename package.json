@@ -6,9 +6,9 @@
   "module": "dist/vue-aui-jira-extras.esm.js",
   "types": "dist/vue-aui-jira-extras.d.ts",
   "scripts": {
-    "build": "./node_modules/rollup/bin/rollup -c --environment 'NODE_ENV:production'",
-    "dev": "./node_modules/rollup/bin/rollup -c -w --environment 'NODE_ENV:dev'",
-    "release": "./node_modules/np/cli.js",
+    "build": "rollup -c --environment 'NODE_ENV:production'",
+    "dev": "rollup -c -w --environment 'NODE_ENV:dev'",
+    "release": "np",
     "version": "rm -fr dist/ && npm run build && git add ./dist"
   },
   "repository": {
