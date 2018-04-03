@@ -1128,12 +1128,12 @@ var JiraApi = function () {
     }, {
         key: 'getUser',
         value: function getUser$$1(userKey) {
-            return this.api.isMock ? getUser(userKey) : this.api.get('/rest/api/2/user?key=' + userKey);
+            return this.api.isMock ? getUser(userKey) : this.api.get('/rest/api/2/user?key=' + encodeURIComponent(userKey));
         }
     }, {
         key: 'getUsers',
         value: function getUsers$$1(username) {
-            return this.api.isMock ? getUsers(username) : this.api.get('/rest/api/2/user/search?username=' + username);
+            return this.api.isMock ? getUsers(username) : this.api.get('/rest/api/2/user/search?username=' + encodeURIComponent(username));
         }
     }, {
         key: 'getGroupsForPicker',
