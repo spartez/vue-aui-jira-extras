@@ -94,7 +94,9 @@ export default class JiraApi {
 
 
     getCurrentUser(query?: { expand: string }): Promise<Jira.User> {
-        return this.api.del(`/rest/api/2/myself?${stringify(query)}`)
+        return this.api.isMock
+            ? JiraMocksApi.getUser('admin')
+            : this.api.get(`/rest/api/2/myself?${stringify(query)}`);
     }
 
 

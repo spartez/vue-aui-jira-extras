@@ -38,6 +38,14 @@
             value: [String, Array]
         },
 
+        data() {
+            return {myself: undefined}
+        },
+
+        async created() {
+            this.myself = await this.$jira.getCurrentUser();
+        },
+
         methods: {
             mapUserToOption(user) {
                 return {
@@ -49,8 +57,18 @@
             queryValues(query) {
                 if (query.term === undefined) {
                 } else {
+                    const showMyselfOnTop = this.myself && query.term === '';
+
+                    if (showMyselfOnTop) {
+                        query.callback({results: [this.mapUserToOption(this.myself)]});
+                    }
+
                     this.$jira.getUsers(query.term).then(users => {
-                        const userItems = users.map(user => this.mapUserToOption(user));
+                        const usersForPicker = showMyselfOnTop
+                            ? [this.myself, ...users.filter(user => user.key !== this.myself.key)]
+                            : users;
+
+                        const userItems = usersForPicker.map(user => this.mapUserToOption(user));
                         query.callback({results: userItems})
                     })
                 }
