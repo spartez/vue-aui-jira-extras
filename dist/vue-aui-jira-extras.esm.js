@@ -118,6 +118,35 @@ var querystring_2 = querystring.parse;
 var querystring_3 = querystring.encode;
 var querystring_4 = querystring.stringify;
 
+var asyncToGenerator = function (fn) {
+  return function () {
+    var gen = fn.apply(this, arguments);
+    return new Promise(function (resolve, reject) {
+      function step(key, arg) {
+        try {
+          var info = gen[key](arg);
+          var value = info.value;
+        } catch (error) {
+          reject(error);
+          return;
+        }
+
+        if (info.done) {
+          resolve(value);
+        } else {
+          return Promise.resolve(value).then(function (value) {
+            step("next", value);
+          }, function (err) {
+            step("throw", err);
+          });
+        }
+      }
+
+      return step("next");
+    });
+  };
+};
+
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -141,6 +170,16 @@ var createClass = function () {
     return Constructor;
   };
 }();
+
+var toConsumableArray = function (arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  } else {
+    return Array.from(arr);
+  }
+};
 
 var JiraCloudApi = function () {
     function JiraCloudApi() {
@@ -930,7 +969,7 @@ var getIssueCreateMeta = function getIssueCreateMeta() {
     return response(issueCreateMeta);
 };
 
-var JiraMocksApi = Object.freeze({
+var JiraMocksApi = /*#__PURE__*/Object.freeze({
 	isMock: isMock,
 	get: get$1,
 	del: del,
@@ -953,7 +992,7 @@ function detectApi() {
     }
     return JiraMocksApi;
 }
-// Ultimately, move to jira-api-client npm package or similar
+// Ultimately, move to jira-js-client npm package or similar
 
 var JiraApi = function () {
     function JiraApi() {
@@ -1034,7 +1073,7 @@ var JiraApi = function () {
     }, {
         key: 'getCurrentUser',
         value: function getCurrentUser(query) {
-            return this.api.del('/rest/api/2/myself?' + querystring_4(query));
+            return this.api.isMock ? getUser('admin') : this.api.get('/rest/api/2/myself?' + querystring_4(query));
         }
     }, {
         key: 'getProject',
@@ -4365,6 +4404,37 @@ var UserPicker = { render: function render() {
         value: [String, Array]
     },
 
+    data: function data() {
+        return { myself: undefined };
+    },
+    created: function () {
+        var _ref = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+            return regeneratorRuntime.wrap(function _callee$(_context) {
+                while (1) {
+                    switch (_context.prev = _context.next) {
+                        case 0:
+                            _context.next = 2;
+                            return this.$jira.getCurrentUser();
+
+                        case 2:
+                            this.myself = _context.sent;
+
+                        case 3:
+                        case 'end':
+                            return _context.stop();
+                    }
+                }
+            }, _callee, this);
+        }));
+
+        function created() {
+            return _ref.apply(this, arguments);
+        }
+
+        return created;
+    }(),
+
+
     methods: {
         mapUserToOption: function mapUserToOption(user) {
             return {
@@ -4376,8 +4446,18 @@ var UserPicker = { render: function render() {
             var _this = this;
 
             if (query.term === undefined) {} else {
+                var showMyselfOnTop = this.myself && query.term === '';
+
+                if (showMyselfOnTop) {
+                    query.callback({ results: [this.mapUserToOption(this.myself)] });
+                }
+
                 this.$jira.getUsers(query.term).then(function (users) {
-                    var userItems = users.map(function (user) {
+                    var usersForPicker = showMyselfOnTop ? [_this.myself].concat(toConsumableArray(users.filter(function (user) {
+                        return user.key !== _this.myself.key;
+                    }))) : users;
+
+                    var userItems = usersForPicker.map(function (user) {
                         return _this.mapUserToOption(user);
                     });
                     query.callback({ results: userItems });
@@ -4428,7 +4508,7 @@ var UserPicker = { render: function render() {
 })();
 
 var IssueTypePicker = { render: function render() {
-        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('va-select2', { ref: "select", attrs: { "multiple": _vm.multiple, "allow-clear": _vm.allowClear, "disabled": _vm.disabled, "init-selection": _vm.initSelection, "locked": _vm.locked, "placeholder": _vm.placeholder, "query": _vm.query, "value": _vm.value }, on: { "input": function input($event) {
+        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('va-select2', { ref: "select", attrs: { "multiple": _vm.multiple, "allow-clear": _vm.allowClear, "disabled": _vm.disabled, "init-selection": _vm.initSelection, "locked": _vm.locked, "minimum-results-for-search": 5, "placeholder": _vm.placeholder, "query": _vm.query, "value": _vm.value }, on: { "input": function input($event) {
                     _vm.$emit('input', $event);
                 } }, scopedSlots: _vm._u([{ key: "formatSelection", fn: function fn(option) {
                     return _c('span', {}, [_c('aui-avatar', { attrs: { "squared": "", "size": "xsmall", "src": option.data.iconUrl } }), _vm._v(" " + _vm._s(option.data.name) + " ")], 1);
@@ -4493,7 +4573,9 @@ var IssueTypePicker = { render: function render() {
             if (_query.term === undefined) {} else {
                 this.getIssueTypes.then(function (issueTypes) {
                     _query.callback({
-                        results: issueTypes.map(function (issueType) {
+                        results: issueTypes.filter(function (issueType) {
+                            return issueType.name.toUpperCase().indexOf(_query.term.toUpperCase()) >= 0;
+                        }).map(function (issueType) {
                             return _this.mapIssueTypeToOption(issueType);
                         })
                     });
@@ -4527,7 +4609,9 @@ var IssueTypePicker = { render: function render() {
                         var issueType = issueTypes.find(function (issueType) {
                             return issueType.id === element.val();
                         });
-                        callback(_this2.mapIssueTypeToOption(issueType));
+                        if (issueType) {
+                            callback(_this2.mapIssueTypeToOption(issueType));
+                        }
                     });
                 }
             }
@@ -4539,9 +4623,18 @@ var IssueTypePicker = { render: function render() {
                 var projectIssueTypes = issueCreateMeta.projects.find(function (project) {
                     return project.id === _this3.projectId;
                 });
-                return projectIssueTypes ? projectIssueTypes.issuetypes.filter(function (issueType) {
+                var filteredIssueTypes = projectIssueTypes ? projectIssueTypes.issuetypes.filter(function (issueType) {
                     return issueType.subtask && _this3.subtasks || !issueType.subtask && _this3.nonSubtasks;
                 }) : [];
+
+                var firstIssueTypeId = filteredIssueTypes[0] && filteredIssueTypes[0].id;
+
+                // Autoselect first value in single select
+                if (!_this3.value && !_this3.multiple) {
+                    _this3.$emit('input', firstIssueTypeId);
+                }
+
+                return filteredIssueTypes;
             });
         }
     }

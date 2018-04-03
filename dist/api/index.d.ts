@@ -1,3 +1,7 @@
+export declare type UserKeyOrUsername = {
+    userKey?: string;
+    username?: string;
+};
 export default class JiraApi {
     private api;
     getAppProperties(addonKey: string): Promise<Jira.EntityPropertiesKeys>;
@@ -15,7 +19,7 @@ export default class JiraApi {
     }): Promise<Array<Jira.ApplicationProperty>>;
     getAdvancedSettings(): Promise<Array<Jira.ApplicationProperty>>;
     getFields(): Promise<Array<Jira.Field>>;
-    getIssue(issueIdOrKey: string, query: {
+    getIssue(issueIdOrKey: string, query?: {
         expand: string;
         fields: string;
         fieldsByKeys: boolean;
@@ -26,13 +30,13 @@ export default class JiraApi {
     getIssueProperty(issueIdOrKey: string, propertyKey: string): Promise<Jira.EntityProperty>;
     setIssueProperty(issueIdOrKey: string, propertyKey: string, body: any): Promise<void>;
     deleteIssueProperty(issueIdOrKey: string, propertyKey: string): Promise<void>;
-    getCurrentUser(query: {
+    getCurrentUser(query?: {
         expand: string;
     }): Promise<Jira.User>;
-    getProject(projectKeyOrId: string, query: {
+    getProject(projectKeyOrId: string, query?: {
         expand: string;
     }): Promise<Jira.Project>;
-    getProjects(query: {
+    getProjects(query?: {
         expand: string;
         recent: number;
     }): Promise<Array<Jira.Project>>;
@@ -40,26 +44,10 @@ export default class JiraApi {
     getProjectProperty(projectIdOrKey: string, propertyKey: string): Promise<Jira.EntityProperty>;
     setProjectProperty(projectIdOrKey: string, propertyKey: string, body: any): Promise<void>;
     deleteProjectProperty(projectIdOrKey: string, propertyKey: string): Promise<void>;
-    getUserPropertyKeys(query: {
-        userKey: string;
-    } | {
-        username: string;
-    }): Promise<Jira.EntityPropertiesKeys>;
-    getUserProperty(propertyKey: string, query: {
-        userKey: string;
-    } | {
-        username: string;
-    }): Promise<Jira.EntityProperty>;
-    setUserProperty(propertyKey: string, query: {
-        userKey: string;
-    } | {
-        username: string;
-    }, body: any): Promise<void>;
-    deleteUserProperty(propertyKey: string, query: {
-        userKey: string;
-    } | {
-        username: string;
-    }): Promise<void>;
+    getUserPropertyKeys(query: UserKeyOrUsername): Promise<Jira.EntityPropertiesKeys>;
+    getUserProperty(propertyKey: string, query: UserKeyOrUsername): Promise<Jira.EntityProperty>;
+    setUserProperty(propertyKey: string, query: UserKeyOrUsername, body: any): Promise<void>;
+    deleteUserProperty(propertyKey: string, query: UserKeyOrUsername): Promise<void>;
     getUser(userKey: string): Promise<Jira.User>;
     getUsers(username: string): Promise<Array<Jira.User>>;
     getGroupsForPicker(query: {
