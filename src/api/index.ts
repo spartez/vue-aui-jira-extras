@@ -27,6 +27,8 @@ export type UserKeyOrUsername = {
 export default class JiraApi {
     private api = detectApi();
 
+    /// JIRA CORE
+
     // App properties API
 
     getAppProperties(addonKey: string): Promise<Jira.EntityPropertiesKeys> {
@@ -129,6 +131,20 @@ export default class JiraApi {
     }
 
 
+    searchIssues(query?: {
+        expand?: string,
+        fields?: string,
+        fieldsByKeys?: boolean,
+        jql?: string,
+        maxResults?: number,
+        properties?: string,
+        startAt?: number,
+        validateQuery?: boolean
+    }): Promise<Array<Jira.Issue>> {
+        return this.api.get(`/rest/api/2/search?${stringify(query)}`)
+    }
+
+
     getUserPropertyKeys(query: UserKeyOrUsername): Promise<Jira.EntityPropertiesKeys> {
         return this.api.get(`/rest/api/2/user/properties?${stringify(query)}`)
     }
@@ -168,5 +184,19 @@ export default class JiraApi {
         return this.api.isMock
             ? JiraMocksApi.getIssueCreateMeta()
             : this.api.get(`/rest/api/2/issue/createmeta`);
+    }
+
+
+    /// JIRA SOFTWARE
+
+    getIssuesForBoard(boardId: number, query?: {
+        expand?: string,
+        fields?: string,
+        jql?: string,
+        maxResults?: number,
+        startAt?: number,
+        validateQuery?: boolean
+    }): Promise<Array<Jira.Issue>> {
+        return this.api.get(`/rest/agile/1.0/board/${boardId}/issue?${stringify(query)}`)
     }
 }
