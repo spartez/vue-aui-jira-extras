@@ -44,6 +44,16 @@ export default class JiraApi {
     getProjectProperty(projectIdOrKey: string, propertyKey: string): Promise<Jira.EntityProperty>;
     setProjectProperty(projectIdOrKey: string, propertyKey: string, body: any): Promise<void>;
     deleteProjectProperty(projectIdOrKey: string, propertyKey: string): Promise<void>;
+    searchIssues(query?: {
+        expand?: string;
+        fields?: string;
+        fieldsByKeys?: boolean;
+        jql?: string;
+        maxResults?: number;
+        properties?: string;
+        startAt?: number;
+        validateQuery?: boolean;
+    }): Promise<Array<Jira.Issue>>;
     getUserPropertyKeys(query: UserKeyOrUsername): Promise<Jira.EntityPropertiesKeys>;
     getUserProperty(propertyKey: string, query: UserKeyOrUsername): Promise<Jira.EntityProperty>;
     setUserProperty(propertyKey: string, query: UserKeyOrUsername, body: any): Promise<void>;
@@ -54,4 +64,12 @@ export default class JiraApi {
         query: string;
     }): Promise<any>;
     getIssueCreateMeta(): Promise<object>;
+    getIssuesForBoard(boardId: number, query?: {
+        expand?: string;
+        fields?: string;
+        jql?: string;
+        maxResults?: number;
+        startAt?: number;
+        validateQuery?: boolean;
+    }): Promise<Array<Jira.Issue>>;
 }

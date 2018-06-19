@@ -1000,6 +1000,7 @@ var JiraApi = function () {
 
         this.api = detectApi();
     }
+    /// JIRA CORE
     // App properties API
 
 
@@ -1106,6 +1107,11 @@ var JiraApi = function () {
             return this.api.del('/rest/api/2/project/' + projectIdOrKey + '/properties/' + propertyKey);
         }
     }, {
+        key: 'searchIssues',
+        value: function searchIssues(query) {
+            return this.api.get('/rest/api/2/search?' + querystring_4(query));
+        }
+    }, {
         key: 'getUserPropertyKeys',
         value: function getUserPropertyKeys(query) {
             return this.api.get('/rest/api/2/user/properties?' + querystring_4(query));
@@ -1144,6 +1150,13 @@ var JiraApi = function () {
         key: 'getIssueCreateMeta',
         value: function getIssueCreateMeta$$1() {
             return this.api.isMock ? getIssueCreateMeta() : this.api.get('/rest/api/2/issue/createmeta');
+        }
+        /// JIRA SOFTWARE
+
+    }, {
+        key: 'getIssuesForBoard',
+        value: function getIssuesForBoard(boardId, query) {
+            return this.api.get('/rest/agile/1.0/board/' + boardId + '/issue?' + querystring_4(query));
         }
     }]);
     return JiraApi;
@@ -2822,6 +2835,14 @@ var freeProcess = moduleExports && _freeGlobal.process;
 /** Used to access faster Node.js helpers. */
 var nodeUtil = (function() {
   try {
+    // Use `util.types` for Node.js 10+.
+    var types = freeModule && freeModule.require && freeModule.require('util').types;
+
+    if (types) {
+      return types;
+    }
+
+    // Legacy `process.binding('util')` for Node.js < 10.
     return freeProcess && freeProcess.binding && freeProcess.binding('util');
   } catch (e) {}
 }());

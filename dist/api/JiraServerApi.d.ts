@@ -3,7 +3,7 @@ export default class JiraServerApi implements JiraApiBase {
     isMock: boolean;
     private contextPath;
     private baseUrl;
-    private ajax(options);
+    private ajax;
     get(url: any): Promise<{}>;
     del(url: any): Promise<{}>;
     post(url: any, body: any): Promise<{}>;
