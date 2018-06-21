@@ -1,6 +1,6 @@
 {
   "name": "vue-aui-jira-extras",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "description": "vue-aui companion library with Jira related components.",
   "main": "dist/vue-aui-jira-extras.js",
   "module": "dist/vue-aui-jira-extras.esm.js",
