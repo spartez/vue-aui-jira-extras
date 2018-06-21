@@ -64,6 +64,7 @@ export default class JiraApi {
         query: string;
     }): Promise<any>;
     getIssueCreateMeta(): Promise<object>;
+    getBoardConfiguration(boardId: number): Promise<Jira.BoardConfiguration>;
     getIssuesForBoard(boardId: number, query?: {
         expand?: string;
         fields?: string;
@@ -72,4 +73,9 @@ export default class JiraApi {
         startAt?: number;
         validateQuery?: boolean;
     }): Promise<Array<Jira.Issue>>;
+    getBoardSprints(boardId: number, query?: {
+        maxResults?: number;
+        startAt?: number;
+        state?: string;
+    }): Promise<Jira.SprintQuery>;
 }

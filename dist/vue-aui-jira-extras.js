@@ -1158,9 +1158,19 @@ var JiraApi = function () {
         /// JIRA SOFTWARE
 
     }, {
+        key: 'getBoardConfiguration',
+        value: function getBoardConfiguration(boardId) {
+            return this.api.get('/rest/agile/1.0/board/' + boardId + '/configuration');
+        }
+    }, {
         key: 'getIssuesForBoard',
         value: function getIssuesForBoard(boardId, query) {
             return this.api.get('/rest/agile/1.0/board/' + boardId + '/issue?' + querystring_4(query));
+        }
+    }, {
+        key: 'getBoardSprints',
+        value: function getBoardSprints(boardId, query) {
+            return this.api.get('/rest/agile/1.0/board/' + boardId + '/sprint?' + querystring_4(query));
         }
     }]);
     return JiraApi;
