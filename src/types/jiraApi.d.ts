@@ -240,4 +240,54 @@ declare namespace Jira {
             [key: string]: object;
         }
     }
+
+    // Jira Software
+
+    interface BoardConfiguration {
+        id: number;
+        name: string;
+        type: 'scrum' | 'kanban';
+        columnConfig?: {
+            columns: Array<BoardConfigurationColumn>;
+            constraintType: String;
+        };
+        estimation?: {
+            type: string;
+            field: {
+                fieldId: string;
+                displayName: string;
+            }
+        };
+        ranking: {
+            rankCustomFieldId: number
+        };
+    }
+
+    interface BoardConfigurationColumn {
+        name: string;
+        statuses: Array<{
+            id: string;
+            self: string
+        }>
+    }
+
+    interface Sprint {
+        id: number,
+        self: string,
+        state: string,
+        name: string,
+        startDate: string,
+        endDate: string,
+        completeDate: string,
+        originBoardId: number,
+        goal: string,
+    }
+
+    interface SprintQuery {
+        startAt: number,
+        maxResults: number,
+        total: number,
+        is: boolean,
+        histories: Array<Sprint>,
+    }
 }

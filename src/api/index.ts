@@ -189,6 +189,10 @@ export default class JiraApi {
 
     /// JIRA SOFTWARE
 
+    getBoardConfiguration(boardId: number): Promise<Jira.BoardConfiguration> {
+        return this.api.get(`/rest/agile/1.0/board/${boardId}/configuration`)
+    }
+
     getIssuesForBoard(boardId: number, query?: {
         expand?: string,
         fields?: string,
@@ -198,5 +202,13 @@ export default class JiraApi {
         validateQuery?: boolean
     }): Promise<Array<Jira.Issue>> {
         return this.api.get(`/rest/agile/1.0/board/${boardId}/issue?${stringify(query)}`)
+    }
+
+    getBoardSprints(boardId: number, query?: {
+        maxResults?: number,
+        startAt?: number,
+        state?: string,
+    }): Promise<Jira.SprintQuery> {
+        return this.api.get(`/rest/agile/1.0/board/${boardId}/sprint?${stringify(query)}`)
     }
 }
