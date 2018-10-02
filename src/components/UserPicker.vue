@@ -8,26 +8,30 @@
                 :placeholder="placeholder"
                 :query="queryValues"
                 :value="value"
-                @input="$emit('input', $event)"
+                @input="onValueChanged($event)"
     >
         <span slot="formatSelection" slot-scope="option">
-            <aui-avatar squared size="xsmall" :src="option.data.avatarUrls['48x48']"/>
+            <aui-avatar v-if="option.data.avatarUrls" squared size="xsmall" :src="option.data.avatarUrls['48x48']"/>
             {{option.data.displayName}}
         </span>
         <span slot="formatResult" slot-scope="option" class="result-user">
-            <aui-avatar size="medium" :src="option.data.avatarUrls['48x48']" class="result-user-avatar"/>
+            <aui-avatar v-if="option.data.avatarUrls" size="medium" :src="option.data.avatarUrls['48x48']" class="result-user-avatar"/>
+            <aui-avatar v-else-if="option.data.avatarUrl" size="medium" :src="option.data.avatarUrl" class="result-user-avatar"/>
             <div class="result-user-text">
                 <span class="result-user-fullname">{{option.data.displayName}}</span>
-                <span class="result-user-name">@{{option.data.name}}</span>
+                <span class="result-user-name">{{`${!option.data.isGroup ? '@' :''}${option.data.name}`}}</span>
             </div>
         </span>
     </va-select2>
 </template>
 
 <script>
+    const GROUP_PREFIX = "group\t";
+
     export default {
         props: {
             allowClear: Boolean,
+            allowGroups: Boolean,
             disabled: Boolean,
             locked: {
                 type: Array,
@@ -54,6 +58,22 @@
                 }
             },
 
+            onValueChanged: function (values) {
+                const group = values.find(value => value.indexOf(GROUP_PREFIX) === 0);
+
+                if (!group) {
+                    return this.$emit('input', values);
+                }
+
+                this.$jira.getUsersFromGroup(group.substring(GROUP_PREFIX.length)).then(result => {
+                    const expandedValues = values
+                        .filter(value => value.indexOf(GROUP_PREFIX) === -1)
+                        .concat(result.values.map(v => v.key))
+                        .filter((value, index, array) => index === array.indexOf(value)); //unique() equivalent
+                    this.$emit('input', expandedValues);
+                });
+            },
+
             queryValues(query) {
                 if (query.term === undefined) {
                 } else {
@@ -63,14 +83,33 @@
                         query.callback({results: [this.mapUserToOption(this.myself)]});
                     }
 
-                    this.$jira.getUsers(query.term).then(users => {
-                        const usersForPicker = showMyselfOnTop
-                            ? [this.myself, ...users.filter(user => user.key !== this.myself.key)]
-                            : users;
+                    if (this.allowGroups && this.multiple) {
+                        this.$jira.findUsersAndGroups(query.term).then(results => {
+                            const groupItems = results.groups.groups.map(group => ({
+                                id: GROUP_PREFIX + group.name,
+                                data: {
+                                    displayName: `${group.name}`,
+                                    name: '(user group)',
+                                    isGroup: true,
+                                },
+                            }));
+                            const userItems = results.users.users.map(user => this.mapUserToOption(user));
+                            if (query.term) {
+                                query.callback({results: [...userItems, ...groupItems]});
+                            } else {
+                                query.callback({results: userItems});
+                            }
+                        });
+                    } else {
+                        this.$jira.getUsers(query.term).then(users => {
+                            const usersForPicker = showMyselfOnTop
+                                ? [this.myself, ...users.filter(user => user.key !== this.myself.key)]
+                                : users;
 
-                        const userItems = usersForPicker.map(user => this.mapUserToOption(user));
-                        query.callback({results: userItems})
-                    })
+                            const userItems = usersForPicker.map(user => this.mapUserToOption(user));
+                            query.callback({results: userItems})
+                        });
+                    }
                 }
             },
 
