@@ -63,6 +63,8 @@ export default class JiraApi {
     getGroupsForPicker(query: {
         query: string;
     }): Promise<any>;
+    findUsersAndGroups(query: string): Promise<any>;
+    getUsersFromGroup(groupname: string): Promise<any>;
     getIssueCreateMeta(): Promise<object>;
     getBoardConfiguration(boardId: number): Promise<Jira.BoardConfiguration>;
     getIssuesForBoard(boardId: number, query?: {

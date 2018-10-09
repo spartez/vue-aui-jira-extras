@@ -4,6 +4,8 @@ export declare function del(url: any): Promise<{}>;
 export declare function put(url: any): Promise<{}>;
 export declare function post(url: any): Promise<{}>;
 export declare const getGroupsForPicker: (query: any) => Promise<{}>;
+export declare const findUsersAndGroups: (query: any) => Promise<{}>;
+export declare const getUsersFromGroup: (groupname: any) => Promise<{}>;
 export declare const getProject: (projectKeyOrId: any) => Promise<{}>;
 export declare const getProjects: () => Promise<{}>;
 export declare const getUser: (userKey: any) => Promise<{}>;

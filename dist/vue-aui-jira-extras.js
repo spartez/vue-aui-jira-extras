@@ -948,6 +948,38 @@ var getGroupsForPicker = function getGroupsForPicker(query) {
             return group.name.indexOf(query) >= 0;
         }) }));
 };
+var findUsersAndGroups = function findUsersAndGroups(query) {
+    return response({
+        groups: {
+            groups: groups.groups.filter(function (group) {
+                return group.name.indexOf(query) >= 0;
+            })
+        },
+        users: {
+            users: users.filter(function (user) {
+                return queryMatchesUser(query, user);
+            }).map(function (user) {
+                return {
+                    key: user.key,
+                    displayName: user.displayName,
+                    name: user.name,
+                    avatarUrl: user.avatarUrls['24x24']
+                };
+            })
+        }
+    });
+};
+var getUsersFromGroup = function getUsersFromGroup(groupname) {
+    return response({
+        values: users.filter(function (user) {
+            if (user.key === 'admin') {
+                return groupname.indexOf('admin') !== -1;
+            } else {
+                return groupname === 'jira-servicedesk-users';
+            }
+        })
+    });
+};
 var getProject = function getProject(projectKeyOrId) {
     return response(projects.filter(function (project) {
         return project.id === projectKeyOrId;
@@ -980,6 +1012,8 @@ var JiraMocksApi = /*#__PURE__*/Object.freeze({
 	put: put,
 	post: post,
 	getGroupsForPicker: getGroupsForPicker,
+	findUsersAndGroups: findUsersAndGroups,
+	getUsersFromGroup: getUsersFromGroup,
 	getProject: getProject,
 	getProjects: getProjects,
 	getUser: getUser,
@@ -1149,6 +1183,16 @@ var JiraApi = function () {
         key: 'getGroupsForPicker',
         value: function getGroupsForPicker$$1(query) {
             return this.api.isMock ? getGroupsForPicker(query.query) : this.api.get('/rest/api/2/groups/picker?' + querystring_4(query));
+        }
+    }, {
+        key: 'findUsersAndGroups',
+        value: function findUsersAndGroups$$1(query) {
+            return this.api.isMock ? findUsersAndGroups(query) : this.api.get('/rest/api/2/groupuserpicker?query=' + encodeURIComponent(query) + '&showAvatar=true');
+        }
+    }, {
+        key: 'getUsersFromGroup',
+        value: function getUsersFromGroup$$1(groupname) {
+            return this.api.isMock ? getUsersFromGroup(groupname) : this.api.get('/rest/api/2/group/member?groupname=' + encodeURIComponent(groupname));
         }
     }, {
         key: 'getIssueCreateMeta',
@@ -4416,17 +4460,20 @@ var ProjectPicker = { render: function render() {
     }
 })();
 
+var GROUP_PREFIX = "group\t";
+
 var UserPicker = { render: function render() {
         var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('va-select2', { ref: "select", attrs: { "allow-clear": _vm.allowClear, "disabled": _vm.disabled, "init-selection": _vm.initialValue, "locked": _vm.locked, "multiple": _vm.multiple, "placeholder": _vm.placeholder, "query": _vm.queryValues, "value": _vm.value }, on: { "input": function input($event) {
-                    _vm.$emit('input', $event);
+                    _vm.onValueChanged($event);
                 } }, scopedSlots: _vm._u([{ key: "formatSelection", fn: function fn(option) {
-                    return _c('span', {}, [_c('aui-avatar', { attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" " + _vm._s(option.data.displayName) + " ")], 1);
+                    return _c('span', {}, [option.data.avatarUrls ? _c('aui-avatar', { attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }) : _vm._e(), _vm._v(" " + _vm._s(option.data.displayName) + " ")], 1);
                 } }, { key: "formatResult", fn: function fn(option) {
-                    return _c('span', { staticClass: "result-user" }, [_c('aui-avatar', { staticClass: "result-user-avatar", attrs: { "size": "medium", "src": option.data.avatarUrls['48x48'] } }), _vm._v(" "), _c('div', { staticClass: "result-user-text" }, [_c('span', { staticClass: "result-user-fullname" }, [_vm._v(_vm._s(option.data.displayName))]), _vm._v(" "), _c('span', { staticClass: "result-user-name" }, [_vm._v("@" + _vm._s(option.data.name))])])], 1);
+                    return _c('span', { staticClass: "result-user" }, [option.data.avatarUrls ? _c('aui-avatar', { staticClass: "result-user-avatar", attrs: { "size": "medium", "src": option.data.avatarUrls['48x48'] } }) : option.data.avatarUrl ? _c('aui-avatar', { staticClass: "result-user-avatar", attrs: { "size": "medium", "src": option.data.avatarUrl } }) : _vm._e(), _vm._v(" "), _c('div', { staticClass: "result-user-text" }, [_c('span', { staticClass: "result-user-fullname" }, [_vm._v(_vm._s(option.data.displayName))]), _vm._v(" "), _c('span', { staticClass: "result-user-name" }, [_vm._v(_vm._s('' + (!option.data.isGroup ? '@' : '') + option.data.name))])])], 1);
                 } }]) });
     }, staticRenderFns: [], _scopeId: 'data-v-e5241c2e',
     props: {
         allowClear: Boolean,
+        allowGroups: Boolean,
         disabled: Boolean,
         locked: {
             type: Array,
@@ -4477,8 +4524,33 @@ var UserPicker = { render: function render() {
                 data: user
             };
         },
-        queryValues: function queryValues(query) {
+
+
+        onValueChanged: function onValueChanged(values) {
             var _this = this;
+
+            var group = values.find(function (value) {
+                return value.indexOf(GROUP_PREFIX) === 0;
+            });
+
+            if (!group) {
+                return this.$emit('input', values);
+            }
+
+            this.$jira.getUsersFromGroup(group.substring(GROUP_PREFIX.length)).then(function (result) {
+                var expandedValues = values.filter(function (value) {
+                    return value.indexOf(GROUP_PREFIX) === -1;
+                }).concat(result.values.map(function (v) {
+                    return v.key;
+                })).filter(function (value, index, array) {
+                    return index === array.indexOf(value);
+                }); //unique() equivalent
+                _this.$emit('input', expandedValues);
+            });
+        },
+
+        queryValues: function queryValues(query) {
+            var _this2 = this;
 
             if (query.term === undefined) {} else {
                 var showMyselfOnTop = this.myself && query.term === '';
@@ -4487,32 +4559,55 @@ var UserPicker = { render: function render() {
                     query.callback({ results: [this.mapUserToOption(this.myself)] });
                 }
 
-                this.$jira.getUsers(query.term).then(function (users) {
-                    var usersForPicker = showMyselfOnTop ? [_this.myself].concat(toConsumableArray(users.filter(function (user) {
-                        return user.key !== _this.myself.key;
-                    }))) : users;
-
-                    var userItems = usersForPicker.map(function (user) {
-                        return _this.mapUserToOption(user);
+                if (this.allowGroups && this.multiple) {
+                    this.$jira.findUsersAndGroups(query.term).then(function (results) {
+                        var groupItems = results.groups.groups.map(function (group) {
+                            return {
+                                id: GROUP_PREFIX + group.name,
+                                data: {
+                                    displayName: '' + group.name,
+                                    name: '(user group)',
+                                    isGroup: true
+                                }
+                            };
+                        });
+                        var userItems = results.users.users.map(function (user) {
+                            return _this2.mapUserToOption(user);
+                        });
+                        if (query.term) {
+                            query.callback({ results: [].concat(toConsumableArray(userItems), toConsumableArray(groupItems)) });
+                        } else {
+                            query.callback({ results: userItems });
+                        }
                     });
-                    query.callback({ results: userItems });
-                });
+                } else {
+                    this.$jira.getUsers(query.term).then(function (users) {
+                        var usersForPicker = showMyselfOnTop ? [_this2.myself].concat(toConsumableArray(users.filter(function (user) {
+                            return user.key !== _this2.myself.key;
+                        }))) : users;
+
+                        var userItems = usersForPicker.map(function (user) {
+                            return _this2.mapUserToOption(user);
+                        });
+                        query.callback({ results: userItems });
+                    });
+                }
             }
         },
         initialValue: function initialValue(element, callback) {
-            var _this2 = this;
+            var _this3 = this;
 
             if (this.multiple) {
                 if (element.val()) {
                     var userKeys = element.val().split(',');
 
                     Promise.all(userKeys.map(function (userKey) {
-                        return _this2.$jira.getUser(userKey);
+                        return _this3.$jira.getUser(userKey);
                     })).then(function (users) {
                         var userItems = users.filter(function (user) {
                             return user;
                         }).map(function (user) {
-                            return _this2.mapUserToOption(user);
+                            return _this3.mapUserToOption(user);
                         });
                         callback(userItems);
                     });
@@ -4522,7 +4617,7 @@ var UserPicker = { render: function render() {
             } else {
                 if (element.val()) {
                     this.$jira.getUser(element.val()).then(function (user) {
-                        return callback(_this2.mapUserToOption(user));
+                        return callback(_this3.mapUserToOption(user));
                     });
                 }
             }
