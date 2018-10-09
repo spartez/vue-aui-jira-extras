@@ -180,6 +180,18 @@ export default class JiraApi {
             : this.api.get(`/rest/api/2/groups/picker?${stringify(query)}`);
     }
 
+    findUsersAndGroups(query: string) {
+        return this.api.isMock
+            ? JiraMocksApi.findUsersAndGroups(query)
+            : this.api.get(`/rest/api/2/groupuserpicker?query=${encodeURIComponent(query)}&showAvatar=true`);
+    }
+
+    getUsersFromGroup(groupname: string) {
+        return this.api.isMock
+            ? JiraMocksApi.getUsersFromGroup(groupname)
+            : this.api.get(`/rest/api/2/group/member?groupname=${encodeURIComponent(groupname)}`)
+    }
+
     getIssueCreateMeta(): Promise<object> {
         return this.api.isMock
             ? JiraMocksApi.getIssueCreateMeta()

@@ -9,7 +9,7 @@ storiesOf('UserPicker', module)
             <va-button type="link" @click="userKey = undefined">Clear</va-button>
             
             <form class="aui">
-                <va-user-picker multiple v-model="userKeys" :locked="locked" placeholder="Select some users"/>
+                <va-user-picker multiple allow-groups v-model="userKeys" :locked="locked" placeholder="Select some users"/>
             </form>
             <va-button type="link" @click="locked = []">Clear locks</va-button>
             <va-button type="link" @click="userKeys = []">Clear</va-button>

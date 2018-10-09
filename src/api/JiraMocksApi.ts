@@ -36,6 +36,32 @@ export const getGroupsForPicker = query => response({
     groups: groups.groups.filter(group => group.name.indexOf(query) >= 0)
 });
 
+export const findUsersAndGroups = query => response( {
+    groups: {
+        groups: groups.groups.filter(group => group.name.indexOf(query) >= 0)
+    },
+    users: {
+        users: users
+            .filter(user => queryMatchesUser(query, user))
+            .map(user => ({
+                key: user.key,
+                displayName: user.displayName,
+                name: user.name,
+                avatarUrl: user.avatarUrls['24x24']
+            }))
+    },
+});
+
+export const getUsersFromGroup = groupname => response({
+    values: users.filter(user => {
+        if (user.key === 'admin') {
+            return (groupname.indexOf('admin') !== -1);
+        } else {
+            return (groupname === 'jira-servicedesk-users');
+        }
+    })
+});
+
 export const getProject = projectKeyOrId => response(projects.filter(project => project.id === projectKeyOrId)[0]);
 export const getProjects = () => response(projects);
 
