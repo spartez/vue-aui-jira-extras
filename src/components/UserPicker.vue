@@ -59,8 +59,11 @@
             },
 
             onValueChanged: function (values) {
-                const group = values.find(value => value.indexOf(GROUP_PREFIX) === 0);
+                if (!this.allowGroups || !this.multiple) {
+                    return this.$emit('input', values);
+                }
 
+                const group = values.find(value => value.indexOf(GROUP_PREFIX) === 0);
                 if (!group) {
                     return this.$emit('input', values);
                 }
