@@ -4525,10 +4525,13 @@ var UserPicker = { render: function render() {
         onValueChanged: function onValueChanged(values) {
             var _this = this;
 
+            if (!this.allowGroups || !this.multiple) {
+                return this.$emit('input', values);
+            }
+
             var group = values.find(function (value) {
                 return value.indexOf(GROUP_PREFIX) === 0;
             });
-
             if (!group) {
                 return this.$emit('input', values);
             }
