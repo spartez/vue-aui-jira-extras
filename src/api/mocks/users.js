@@ -2,6 +2,7 @@ export default [
     {
         "self": "http://squad75:8075/rest/api/2/user?username=jevans-sd-demo",
         "key": "jevans-sd-demo",
+        "accountId": "jevansId",
         "name": "jevans-sd-demo",
         "emailAddress": "jevans-sd-demo@example.com",
         "avatarUrls": {
@@ -17,6 +18,7 @@ export default [
     {
         "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=mdavis-sd-demo",
         "key": "mdavis-sd-demo",
+        "accountId": "mdavisId",
         "name": "mdavis-sd-demo",
         "emailAddress": "davis@example.com",
         "avatarUrls": {
@@ -33,6 +35,7 @@ export default [
     {
         "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=admin1",
         "key": "admin",
+        "accountId": "adminId",
         "name": "admin1",
         "emailAddress": "admin@example.com",
         "avatarUrls": {
@@ -49,6 +52,7 @@ export default [
     {
         "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=agrant-sd-demo",
         "key": "agrant-sd-demo",
+        "accountId": "agrantId",
         "name": "agrant-sd-demo",
         "emailAddress": "agrant-sd-demo@example.com",
         "avatarUrls": {

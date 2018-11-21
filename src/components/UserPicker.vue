@@ -53,7 +53,7 @@
         methods: {
             mapUserToOption(user) {
                 return {
-                    id: user.key,
+                    id: user.accountId,
                     data: user,
                 }
             },
@@ -71,7 +71,7 @@
                 this.$jira.getUsersFromGroup(group.substring(GROUP_PREFIX.length)).then(result => {
                     const expandedValues = values
                         .filter(value => value.indexOf(GROUP_PREFIX) === -1)
-                        .concat(result.values.map(v => v.key))
+                        .concat(result.values.map(user => user.accountId))
                         .filter((value, index, array) => index === array.indexOf(value)); //unique() equivalent
                     this.$emit('input', expandedValues);
                 });
@@ -106,7 +106,7 @@
                     } else {
                         this.$jira.getUsers(query.term).then(users => {
                             const usersForPicker = showMyselfOnTop
-                                ? [this.myself, ...users.filter(user => user.key !== this.myself.key)]
+                                ? [this.myself, ...users.filter(user => user.accountId !== this.myself.accountId)]
                                 : users;
 
                             const userItems = usersForPicker.map(user => this.mapUserToOption(user));
@@ -119,9 +119,9 @@
             initialValue(element, callback) {
                 if (this.multiple) {
                     if (element.val()) {
-                        const userKeys = element.val().split(',');
+                        const userIds = element.val().split(',');
 
-                        Promise.all(userKeys.map(userKey => this.$jira.getUser(userKey)))
+                        Promise.all(userIds.map(userId => this.$jira.getUser(userId)))
                             .then(users => {
                                 const userItems = users.filter(user => user).map(user => this.mapUserToOption(user));
                                 callback(userItems);

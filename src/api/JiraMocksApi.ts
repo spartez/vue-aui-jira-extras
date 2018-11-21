@@ -45,6 +45,7 @@ export const findUsersAndGroups = query => response( {
             .filter(user => queryMatchesUser(query, user))
             .map(user => ({
                 key: user.key,
+                accountId: user.accountId,
                 displayName: user.displayName,
                 name: user.name,
                 avatarUrl: user.avatarUrls['24x24']
@@ -65,7 +66,7 @@ export const getUsersFromGroup = groupname => response({
 export const getProject = projectKeyOrId => response(projects.filter(project => project.id === projectKeyOrId)[0]);
 export const getProjects = () => response(projects);
 
-export const getUser = userKey => response(users.filter(user => user.key === userKey)[0]);
+export const getUser = accountId => response(users.filter(user => user.accountId === accountId)[0]);
 export const getUsers = userQuery => response(users.filter(user => queryMatchesUser(userQuery, user)));
 
 function queryMatchesUser(query, user) {

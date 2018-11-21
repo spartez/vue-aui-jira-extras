@@ -97,8 +97,8 @@ export default class JiraApi {
 
     getCurrentUser(query?: { expand: string }): Promise<Jira.User> {
         return this.api.isMock
-            ? JiraMocksApi.getUser('admin')
-            : this.api.get(`/rest/api/2/myself?${stringify(query)}`);
+            ? JiraMocksApi.getUser('adminId')
+            : this.api.get(`/rest/api/3/myself?${stringify(query)}`);
     }
 
 
@@ -162,10 +162,10 @@ export default class JiraApi {
     }
 
 
-    getUser(userKey: string): Promise<Jira.User> {
+    getUser(accountId: string): Promise<Jira.User> {
         return this.api.isMock
-            ? JiraMocksApi.getUser(userKey)
-            : this.api.get(`/rest/api/2/user?key=${encodeURIComponent(userKey)}`);
+            ? JiraMocksApi.getUser(accountId)
+            : this.api.get(`/rest/api/3/user?accountId=${encodeURIComponent(accountId)}`);
     }
 
     getUsers(username: string): Promise<Array<Jira.User>> {
