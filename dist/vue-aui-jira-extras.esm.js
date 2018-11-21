@@ -848,6 +848,7 @@ var projects = [{
 var users = [{
     "self": "http://squad75:8075/rest/api/2/user?username=jevans-sd-demo",
     "key": "jevans-sd-demo",
+    "accountId": "jevansId",
     "name": "jevans-sd-demo",
     "emailAddress": "jevans-sd-demo@example.com",
     "avatarUrls": {
@@ -862,6 +863,7 @@ var users = [{
 }, {
     "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=mdavis-sd-demo",
     "key": "mdavis-sd-demo",
+    "accountId": "mdavisId",
     "name": "mdavis-sd-demo",
     "emailAddress": "davis@example.com",
     "avatarUrls": {
@@ -877,6 +879,7 @@ var users = [{
 }, {
     "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=admin1",
     "key": "admin",
+    "accountId": "adminId",
     "name": "admin1",
     "emailAddress": "admin@example.com",
     "avatarUrls": {
@@ -892,6 +895,7 @@ var users = [{
 }, {
     "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=agrant-sd-demo",
     "key": "agrant-sd-demo",
+    "accountId": "agrantId",
     "name": "agrant-sd-demo",
     "emailAddress": "agrant-sd-demo@example.com",
     "avatarUrls": {
@@ -957,6 +961,7 @@ var findUsersAndGroups = function findUsersAndGroups(query) {
             }).map(function (user) {
                 return {
                     key: user.key,
+                    accountId: user.accountId,
                     displayName: user.displayName,
                     name: user.name,
                     avatarUrl: user.avatarUrls['24x24']
@@ -984,9 +989,9 @@ var getProject = function getProject(projectKeyOrId) {
 var getProjects = function getProjects() {
     return response(projects);
 };
-var getUser = function getUser(userKey) {
+var getUser = function getUser(accountId) {
     return response(users.filter(function (user) {
-        return user.key === userKey;
+        return user.accountId === accountId;
     })[0]);
 };
 var getUsers = function getUsers(userQuery) {
@@ -1108,7 +1113,7 @@ var JiraApi = function () {
     }, {
         key: 'getCurrentUser',
         value: function getCurrentUser(query) {
-            return this.api.isMock ? getUser('admin') : this.api.get('/rest/api/2/myself?' + querystring_4(query));
+            return this.api.isMock ? getUser('adminId') : this.api.get('/rest/api/3/myself?' + querystring_4(query));
         }
     }, {
         key: 'getProject',
@@ -1167,8 +1172,8 @@ var JiraApi = function () {
         }
     }, {
         key: 'getUser',
-        value: function getUser$$1(userKey) {
-            return this.api.isMock ? getUser(userKey) : this.api.get('/rest/api/2/user?key=' + encodeURIComponent(userKey));
+        value: function getUser$$1(accountId) {
+            return this.api.isMock ? getUser(accountId) : this.api.get('/rest/api/3/user?accountId=' + encodeURIComponent(accountId));
         }
     }, {
         key: 'getUsers',
@@ -4516,7 +4521,7 @@ var UserPicker = { render: function render() {
     methods: {
         mapUserToOption: function mapUserToOption(user) {
             return {
-                id: user.key,
+                id: user.accountId,
                 data: user
             };
         },
@@ -4539,8 +4544,8 @@ var UserPicker = { render: function render() {
             this.$jira.getUsersFromGroup(group.substring(GROUP_PREFIX.length)).then(function (result) {
                 var expandedValues = values.filter(function (value) {
                     return value.indexOf(GROUP_PREFIX) === -1;
-                }).concat(result.values.map(function (v) {
-                    return v.key;
+                }).concat(result.values.map(function (user) {
+                    return user.accountId;
                 })).filter(function (value, index, array) {
                     return index === array.indexOf(value);
                 }); //unique() equivalent
@@ -4582,7 +4587,7 @@ var UserPicker = { render: function render() {
                 } else {
                     this.$jira.getUsers(query.term).then(function (users) {
                         var usersForPicker = showMyselfOnTop ? [_this2.myself].concat(toConsumableArray(users.filter(function (user) {
-                            return user.key !== _this2.myself.key;
+                            return user.accountId !== _this2.myself.accountId;
                         }))) : users;
 
                         var userItems = usersForPicker.map(function (user) {
@@ -4598,10 +4603,10 @@ var UserPicker = { render: function render() {
 
             if (this.multiple) {
                 if (element.val()) {
-                    var userKeys = element.val().split(',');
+                    var userIds = element.val().split(',');
 
-                    Promise.all(userKeys.map(function (userKey) {
-                        return _this3.$jira.getUser(userKey);
+                    Promise.all(userIds.map(function (userId) {
+                        return _this3.$jira.getUser(userId);
                     })).then(function (users) {
                         var userItems = users.filter(function (user) {
                             return user;

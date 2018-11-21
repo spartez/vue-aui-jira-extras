@@ -8,6 +8,6 @@ export declare const findUsersAndGroups: (query: any) => Promise<{}>;
 export declare const getUsersFromGroup: (groupname: any) => Promise<{}>;
 export declare const getProject: (projectKeyOrId: any) => Promise<{}>;
 export declare const getProjects: () => Promise<{}>;
-export declare const getUser: (userKey: any) => Promise<{}>;
+export declare const getUser: (accountId: any) => Promise<{}>;
 export declare const getUsers: (userQuery: any) => Promise<{}>;
 export declare const getIssueCreateMeta: () => Promise<{}>;

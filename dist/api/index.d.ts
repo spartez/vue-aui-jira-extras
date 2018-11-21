@@ -58,7 +58,7 @@ export default class JiraApi {
     getUserProperty(propertyKey: string, query: UserKeyOrUsername): Promise<Jira.EntityProperty>;
     setUserProperty(propertyKey: string, query: UserKeyOrUsername, body: any): Promise<void>;
     deleteUserProperty(propertyKey: string, query: UserKeyOrUsername): Promise<void>;
-    getUser(userKey: string): Promise<Jira.User>;
+    getUser(accountId: string): Promise<Jira.User>;
     getUsers(username: string): Promise<Array<Jira.User>>;
     getGroupsForPicker(query: {
         query: string;
