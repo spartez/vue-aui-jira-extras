@@ -66,7 +66,8 @@ export const getUsersFromGroup = groupname => response({
 export const getProject = projectKeyOrId => response(projects.filter(project => project.id === projectKeyOrId)[0]);
 export const getProjects = () => response(projects);
 
-export const getUser = accountId => response(users.filter(user => user.accountId === accountId)[0]);
+export const getUserByUserKey = userKey => response(users.filter(user => user.key === userKey)[0]);
+export const getUserByAccountId = accountId => response(users.filter(user => user.accountId === accountId)[0]);
 export const getUsers = userQuery => response(users.filter(user => queryMatchesUser(userQuery, user)));
 
 function queryMatchesUser(query, user) {

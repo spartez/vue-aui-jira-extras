@@ -5,16 +5,29 @@ import JiraCloudApi from './JiraCloudApi'
 import JiraServerApi from './JiraServerApi'
 import * as JiraMocksApi from './JiraMocksApi'
 
-function detectApi(): JiraApiBase {
+export type Platform = 'development' | 'cloud' | 'server';
+
+export function getPlatform(): Platform {
     if (process.env.NODE_ENV === 'dev') {
-        return JiraMocksApi;
+        return 'development';
     } else if (window.AP && window.AP.jira && window.AP.user) {
-        return new JiraCloudApi();
+        return 'cloud';
     } else if (window.top.JIRA && window.top.JIRA.Ajax) {
         // It's important that window.top line above is not executed on Cloud as it throws cross domain error there.
-        return new JiraServerApi();
+        return 'server';
     }
-    return JiraMocksApi;
+    return 'development';
+}
+
+function makeApi(): JiraApiBase {
+    switch (getPlatform()) {
+        case 'development':
+            return JiraMocksApi;
+        case 'server':
+            return new JiraServerApi();
+        case 'cloud':
+            return new JiraCloudApi();
+    }
 }
 
 export type UserKeyOrUsername = {
@@ -25,7 +38,7 @@ export type UserKeyOrUsername = {
 
 // Ultimately, move to jira-js-client npm package or similar
 export default class JiraApi {
-    private api = detectApi();
+    private api = makeApi();
 
     /// JIRA CORE
 
@@ -97,7 +110,7 @@ export default class JiraApi {
 
     getCurrentUser(query?: { expand: string }): Promise<Jira.User> {
         return this.api.isMock
-            ? JiraMocksApi.getUser('adminId')
+            ? JiraMocksApi.getUserByAccountId('adminId')
             : this.api.get(`/rest/api/3/myself?${stringify(query)}`);
     }
 
@@ -161,11 +174,13 @@ export default class JiraApi {
         return this.api.del(`/rest/api/2/user/properties/${propertyKey}?${stringify(query)}`)
     }
 
-
-    getUser(accountId: string): Promise<Jira.User> {
+    getUser(userIdentifier: { accountId?: string, username?: string, key?: string }): Promise<Jira.User> {
+        const mockQuery = userIdentifier.accountId
+            ? JiraMocksApi.getUserByAccountId(userIdentifier.accountId)
+            : JiraMocksApi.getUserByUserKey(userIdentifier.key);
         return this.api.isMock
-            ? JiraMocksApi.getUser(accountId)
-            : this.api.get(`/rest/api/3/user?accountId=${encodeURIComponent(accountId)}`);
+            ? mockQuery
+            : this.api.get(`/rest/api/3/user?${stringify(userIdentifier)}`);
     }
 
     getUsers(username: string): Promise<Array<Jira.User>> {
