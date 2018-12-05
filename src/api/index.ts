@@ -180,7 +180,7 @@ export default class JiraApi {
             : JiraMocksApi.getUserByUserKey(userIdentifier.key);
         return this.api.isMock
             ? mockQuery
-            : this.api.get(`/rest/api/3/user?${stringify(userIdentifier)}`);
+            : this.api.get(`/rest/api/2/user?${stringify(userIdentifier)}`);
     }
 
     getUsers(username: string): Promise<Array<Jira.User>> {
