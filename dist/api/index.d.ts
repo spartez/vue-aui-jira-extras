@@ -1,3 +1,5 @@
+export declare type Platform = 'development' | 'cloud' | 'server';
+export declare function getPlatform(): Platform;
 export declare type UserKeyOrUsername = {
     userKey?: string;
     username?: string;
@@ -58,7 +60,11 @@ export default class JiraApi {
     getUserProperty(propertyKey: string, query: UserKeyOrUsername): Promise<Jira.EntityProperty>;
     setUserProperty(propertyKey: string, query: UserKeyOrUsername, body: any): Promise<void>;
     deleteUserProperty(propertyKey: string, query: UserKeyOrUsername): Promise<void>;
-    getUser(accountId: string): Promise<Jira.User>;
+    getUser(userIdentifier: {
+        accountId?: string;
+        username?: string;
+        key?: string;
+    }): Promise<Jira.User>;
     getUsers(username: string): Promise<Array<Jira.User>>;
     getGroupsForPicker(query: {
         query: string;

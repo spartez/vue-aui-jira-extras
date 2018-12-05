@@ -993,7 +993,12 @@ var getProject = function getProject(projectKeyOrId) {
 var getProjects = function getProjects() {
     return response(projects);
 };
-var getUser = function getUser(accountId) {
+var getUserByUserKey = function getUserByUserKey(userKey) {
+    return response(users.filter(function (user) {
+        return user.key === userKey;
+    })[0]);
+};
+var getUserByAccountId = function getUserByAccountId(accountId) {
     return response(users.filter(function (user) {
         return user.accountId === accountId;
     })[0]);
@@ -1021,19 +1026,30 @@ var JiraMocksApi = /*#__PURE__*/Object.freeze({
 	getUsersFromGroup: getUsersFromGroup,
 	getProject: getProject,
 	getProjects: getProjects,
-	getUser: getUser,
+	getUserByUserKey: getUserByUserKey,
+	getUserByAccountId: getUserByAccountId,
 	getUsers: getUsers,
 	getIssueCreateMeta: getIssueCreateMeta
 });
 
-function detectApi() {
+function getPlatform() {
     if (window.AP && window.AP.jira && window.AP.user) {
-        return new JiraCloudApi();
+        return 'cloud';
     } else if (window.top.JIRA && window.top.JIRA.Ajax) {
         // It's important that window.top line above is not executed on Cloud as it throws cross domain error there.
-        return new JiraServerApi();
+        return 'server';
     }
-    return JiraMocksApi;
+    return 'development';
+}
+function makeApi() {
+    switch (getPlatform()) {
+        case 'development':
+            return JiraMocksApi;
+        case 'server':
+            return new JiraServerApi();
+        case 'cloud':
+            return new JiraCloudApi();
+    }
 }
 // Ultimately, move to jira-js-client npm package or similar
 
@@ -1041,7 +1057,7 @@ var JiraApi = function () {
     function JiraApi() {
         classCallCheck(this, JiraApi);
 
-        this.api = detectApi();
+        this.api = makeApi();
     }
     /// JIRA CORE
     // App properties API
@@ -1117,7 +1133,7 @@ var JiraApi = function () {
     }, {
         key: 'getCurrentUser',
         value: function getCurrentUser(query) {
-            return this.api.isMock ? getUser('adminId') : this.api.get('/rest/api/3/myself?' + querystring_4(query));
+            return this.api.isMock ? getUserByAccountId('adminId') : this.api.get('/rest/api/3/myself?' + querystring_4(query));
         }
     }, {
         key: 'getProject',
@@ -1176,8 +1192,9 @@ var JiraApi = function () {
         }
     }, {
         key: 'getUser',
-        value: function getUser$$1(accountId) {
-            return this.api.isMock ? getUser(accountId) : this.api.get('/rest/api/3/user?accountId=' + encodeURIComponent(accountId));
+        value: function getUser(userIdentifier) {
+            var mockQuery = userIdentifier.accountId ? getUserByAccountId(userIdentifier.accountId) : getUserByUserKey(userIdentifier.key);
+            return this.api.isMock ? mockQuery : this.api.get('/rest/api/3/user?' + querystring_4(userIdentifier));
         }
     }, {
         key: 'getUsers',
@@ -4610,7 +4627,7 @@ var UserPicker = { render: function render() {
                     var userIds = element.val().split(',');
 
                     Promise.all(userIds.map(function (userId) {
-                        return _this3.$jira.getUser(userId);
+                        return _this3.$jira.getUser({ accountId: userId });
                     })).then(function (users) {
                         var userItems = users.filter(function (user) {
                             return user;
@@ -4624,7 +4641,187 @@ var UserPicker = { render: function render() {
                 }
             } else {
                 if (element.val()) {
-                    this.$jira.getUser(element.val()).then(function (user) {
+                    this.$jira.getUser({ accountId: element.val() }).then(function (user) {
+                        return callback(_this3.mapUserToOption(user));
+                    });
+                }
+            }
+        }
+    }
+};
+
+(function () {
+    if (typeof document !== 'undefined') {
+        var head = document.head || document.getElementsByTagName('head')[0],
+            style = document.createElement('style'),
+            css = " .result-user[data-v-7bd2a69b] { align-items: center; display: flex; padding: 3px 2px; } .result-user-avatar[data-v-7bd2a69b] { margin-right: 15px; } .result-user-text[data-v-7bd2a69b] { display: flex; flex-direction: column; overflow: hidden; } .result-user-name[data-v-7bd2a69b], .result-user-fullname[data-v-7bd2a69b] { overflow: hidden; text-overflow: ellipsis; } .result-user-name[data-v-7bd2a69b] { font-size: 12px; font-weight: 600; color: #8993A4; } ";style.type = 'text/css';if (style.styleSheet) {
+            style.styleSheet.cssText = css;
+        } else {
+            style.appendChild(document.createTextNode(css));
+        }head.appendChild(style);
+    }
+})();
+
+var GROUP_PREFIX$1 = "group\t";
+
+var UserPickerUserKey = { render: function render() {
+        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('va-select2', { ref: "select", attrs: { "allow-clear": _vm.allowClear, "disabled": _vm.disabled, "init-selection": _vm.initialValue, "locked": _vm.locked, "multiple": _vm.multiple, "placeholder": _vm.placeholder, "query": _vm.queryValues, "value": _vm.value }, on: { "input": function input($event) {
+                    _vm.onValueChanged($event);
+                } }, scopedSlots: _vm._u([{ key: "formatSelection", fn: function fn(option) {
+                    return _c('span', {}, [option.data.avatarUrls ? _c('aui-avatar', { attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }) : _vm._e(), _vm._v(" " + _vm._s(option.data.displayName) + " ")], 1);
+                } }, { key: "formatResult", fn: function fn(option) {
+                    return _c('span', { staticClass: "result-user" }, [option.data.avatarUrls ? _c('aui-avatar', { staticClass: "result-user-avatar", attrs: { "size": "medium", "src": option.data.avatarUrls['48x48'] } }) : option.data.avatarUrl ? _c('aui-avatar', { staticClass: "result-user-avatar", attrs: { "size": "medium", "src": option.data.avatarUrl } }) : _vm._e(), _vm._v(" "), _c('div', { staticClass: "result-user-text" }, [_c('span', { staticClass: "result-user-fullname" }, [_vm._v(_vm._s(option.data.displayName))]), _vm._v(" "), _c('span', { staticClass: "result-user-name" }, [_vm._v(_vm._s('' + (!option.data.isGroup ? '@' : '') + option.data.name))])])], 1);
+                } }]) });
+    }, staticRenderFns: [], _scopeId: 'data-v-7bd2a69b',
+    props: {
+        allowClear: Boolean,
+        allowGroups: Boolean,
+        disabled: Boolean,
+        locked: {
+            type: Array,
+            default: function _default() {
+                return [];
+            }
+        },
+        multiple: Boolean,
+        placeholder: String,
+        value: [String, Array]
+    },
+
+    data: function data() {
+        return { myself: undefined };
+    },
+    created: function () {
+        var _ref = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+            return regeneratorRuntime.wrap(function _callee$(_context) {
+                while (1) {
+                    switch (_context.prev = _context.next) {
+                        case 0:
+                            _context.next = 2;
+                            return this.$jira.getCurrentUser();
+
+                        case 2:
+                            this.myself = _context.sent;
+
+                        case 3:
+                        case 'end':
+                            return _context.stop();
+                    }
+                }
+            }, _callee, this);
+        }));
+
+        function created() {
+            return _ref.apply(this, arguments);
+        }
+
+        return created;
+    }(),
+
+
+    methods: {
+        mapUserToOption: function mapUserToOption(user) {
+            return {
+                id: user.key,
+                data: user
+            };
+        },
+
+
+        onValueChanged: function onValueChanged(values) {
+            var _this = this;
+
+            if (!this.allowGroups || !this.multiple) {
+                return this.$emit('input', values);
+            }
+
+            var group = values.find(function (value) {
+                return value.indexOf(GROUP_PREFIX$1) === 0;
+            });
+            if (!group) {
+                return this.$emit('input', values);
+            }
+
+            this.$jira.getUsersFromGroup(group.substring(GROUP_PREFIX$1.length)).then(function (result) {
+                var expandedValues = values.filter(function (value) {
+                    return value.indexOf(GROUP_PREFIX$1) === -1;
+                }).concat(result.values.map(function (v) {
+                    return v.key;
+                })).filter(function (value, index, array) {
+                    return index === array.indexOf(value);
+                }); //unique() equivalent
+                _this.$emit('input', expandedValues);
+            });
+        },
+
+        queryValues: function queryValues(query) {
+            var _this2 = this;
+
+            if (query.term === undefined) {} else {
+                var showMyselfOnTop = this.myself && query.term === '';
+
+                if (showMyselfOnTop) {
+                    query.callback({ results: [this.mapUserToOption(this.myself)] });
+                }
+
+                if (this.allowGroups && this.multiple) {
+                    this.$jira.findUsersAndGroups(query.term).then(function (results) {
+                        var groupItems = results.groups.groups.map(function (group) {
+                            return {
+                                id: GROUP_PREFIX$1 + group.name,
+                                data: {
+                                    displayName: '' + group.name,
+                                    name: '(user group)',
+                                    isGroup: true
+                                }
+                            };
+                        });
+                        var userItems = results.users.users.map(function (user) {
+                            return _this2.mapUserToOption(user);
+                        });
+                        if (query.term) {
+                            query.callback({ results: [].concat(toConsumableArray(userItems), toConsumableArray(groupItems)) });
+                        } else {
+                            query.callback({ results: userItems });
+                        }
+                    });
+                } else {
+                    this.$jira.getUsers(query.term).then(function (users) {
+                        var usersForPicker = showMyselfOnTop ? [_this2.myself].concat(toConsumableArray(users.filter(function (user) {
+                            return user.key !== _this2.myself.key;
+                        }))) : users;
+
+                        var userItems = usersForPicker.map(function (user) {
+                            return _this2.mapUserToOption(user);
+                        });
+                        query.callback({ results: userItems });
+                    });
+                }
+            }
+        },
+        initialValue: function initialValue(element, callback) {
+            var _this3 = this;
+
+            if (this.multiple) {
+                if (element.val()) {
+                    var userKeys = element.val().split(',');
+
+                    Promise.all(userKeys.map(function (userKey) {
+                        return _this3.$jira.getUser({ key: userKey });
+                    })).then(function (users) {
+                        var userItems = users.filter(function (user) {
+                            return user;
+                        }).map(function (user) {
+                            return _this3.mapUserToOption(user);
+                        });
+                        callback(userItems);
+                    });
+                } else {
+                    callback([]);
+                }
+            } else {
+                if (element.val()) {
+                    this.$jira.getUser({ key: element.val() }).then(function (user) {
                         return callback(_this3.mapUserToOption(user));
                     });
                 }
@@ -4843,7 +5040,10 @@ var GroupsPicker = { render: function render() {
 
 function registerAll(Vue) {
     Vue.component('va-project-picker', ProjectPicker);
-    Vue.component('va-user-picker', UserPicker);
+    Vue.component('va-user-picker', getPlatform() === 'server' ? UserPickerUserKey : UserPicker);
+    Vue.component('va-user-picker-server', UserPickerUserKey);
+    Vue.component('va-user-picker-cloud', UserPicker);
+
     Vue.component('va-issue-type-picker', IssueTypePicker);
     Vue.component('va-group-picker', GroupsPicker);
 }
