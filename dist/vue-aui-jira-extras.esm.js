@@ -1190,7 +1190,7 @@ var JiraApi = function () {
         key: 'getUser',
         value: function getUser(userIdentifier) {
             var mockQuery = userIdentifier.accountId ? getUserByAccountId(userIdentifier.accountId) : getUserByUserKey(userIdentifier.key);
-            return this.api.isMock ? mockQuery : this.api.get('/rest/api/3/user?' + querystring_4(userIdentifier));
+            return this.api.isMock ? mockQuery : this.api.get('/rest/api/2/user?' + querystring_4(userIdentifier));
         }
     }, {
         key: 'getUsers',
