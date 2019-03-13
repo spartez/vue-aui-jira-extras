@@ -1230,6 +1230,11 @@ var JiraApi = function () {
             return this.api.get('/rest/agile/1.0/board/' + boardId + '/issue?' + querystring_4(query));
         }
     }, {
+        key: 'getBacklogIssuesForBoard',
+        value: function getBacklogIssuesForBoard(boardId, query) {
+            return this.api.get('/rest/agile/1.0/board/' + boardId + '/backlog?' + querystring_4(query));
+        }
+    }, {
         key: 'getBoardSprints',
         value: function getBoardSprints(boardId, query) {
             return this.api.get('/rest/agile/1.0/board/' + boardId + '/sprint?' + querystring_4(query));

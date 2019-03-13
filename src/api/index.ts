@@ -231,6 +231,17 @@ export default class JiraApi {
         return this.api.get(`/rest/agile/1.0/board/${boardId}/issue?${stringify(query)}`)
     }
 
+    getBacklogIssuesForBoard(boardId: number, query?: {
+        expand?: string,
+        fields?: string,
+        jql?: string,
+        maxResults?: number,
+        startAt?: number,
+        validateQuery?: boolean
+    }): Promise<Array<Jira.Issue>> {
+        return this.api.get(`/rest/agile/1.0/board/${boardId}/backlog?${stringify(query)}`)
+    }
+
     getBoardSprints(boardId: number, query?: {
         maxResults?: number,
         startAt?: number,
