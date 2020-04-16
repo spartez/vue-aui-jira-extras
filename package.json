@@ -41,7 +41,7 @@
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "jquery": "^2.2.4",
+    "jquery": "^3.4.0",
     "np": "^2.20.1",
     "process": "latest",
     "querystring": "^0.2.0",
