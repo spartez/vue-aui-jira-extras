@@ -81,6 +81,14 @@ export default class JiraApi {
         startAt?: number;
         validateQuery?: boolean;
     }): Promise<Array<Jira.Issue>>;
+    getBacklogIssuesForBoard(boardId: number, query?: {
+        expand?: string;
+        fields?: string;
+        jql?: string;
+        maxResults?: number;
+        startAt?: number;
+        validateQuery?: boolean;
+    }): Promise<Array<Jira.Issue>>;
     getBoardSprints(boardId: number, query?: {
         maxResults?: number;
         startAt?: number;

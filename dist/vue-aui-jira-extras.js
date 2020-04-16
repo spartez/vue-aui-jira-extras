@@ -1199,7 +1199,7 @@ var JiraApi = function () {
     }, {
         key: 'getUsers',
         value: function getUsers$$1(username) {
-            return this.api.isMock ? getUsers(username) : this.api.get('/rest/api/2/user/search?username=' + encodeURIComponent(username));
+            return this.api.isMock ? getUsers(username) : this.api.get('/rest/api/2/user/search?query=' + encodeURIComponent(username));
         }
     }, {
         key: 'getGroupsForPicker',
