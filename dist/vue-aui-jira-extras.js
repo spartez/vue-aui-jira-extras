@@ -5020,6 +5020,9 @@ var GroupsPicker = { render: function render() {
                 callback = _ref.callback;
 
             this.$jira.getGroupsForPicker({ query: term }).then(function (groupsResults) {
+                groupsResults.groups.map(function (group) {
+                    return group.name = group.html;
+                });
                 callback({ results: groupsResults.groups.map(function (group) {
                         return _this.mapGroupToGroupOption(group.name);
                     }) });
