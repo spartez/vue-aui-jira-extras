@@ -31,6 +31,7 @@
 
             queryGroups({term, callback}) {
                 this.$jira.getGroupsForPicker({query: term}).then(groupsResults => {
+                    groupsResults.groups.map(group => group.name = group.html)
                     callback({results: groupsResults.groups.map(group => this.mapGroupToGroupOption(group.name))});
                 })
             },
