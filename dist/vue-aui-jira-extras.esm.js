@@ -4673,7 +4673,7 @@ var UserPickerUserKey = { render: function render() {
                     return _c('span', {}, [option.data.avatarUrls ? _c('aui-avatar', { attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }) : _vm._e(), _vm._v(" " + _vm._s(option.data.displayName) + " ")], 1);
                 } }, { key: "formatResult", fn: function fn(option) {
                     return _c('span', { staticClass: "result-user" }, [option.data.avatarUrls ? _c('aui-avatar', { staticClass: "result-user-avatar", attrs: { "size": "medium", "src": option.data.avatarUrls['48x48'] } }) : option.data.avatarUrl ? _c('aui-avatar', { staticClass: "result-user-avatar", attrs: { "size": "medium", "src": option.data.avatarUrl } }) : _vm._e(), _vm._v(" "), _c('div', { staticClass: "result-user-text" }, [_c('span', { staticClass: "result-user-fullname" }, [_vm._v(_vm._s(option.data.displayName))]), _vm._v(" "), _c('span', { staticClass: "result-user-name" }, [_vm._v(_vm._s('' + (!option.data.isGroup ? '@' : '') + option.data.name))])])], 1);
-                } }]) }, [_c('p', [_vm._v("EXTRA")])]);
+                } }]) });
     }, staticRenderFns: [], _scopeId: 'data-v-7bd2a69b',
     props: {
         allowClear: Boolean,
