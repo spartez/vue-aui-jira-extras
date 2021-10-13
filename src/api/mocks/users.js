@@ -17,7 +17,7 @@ export default [
     },
     {
         "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=mdavis-sd-demo",
-        "key": "mdavis-sd-demo",
+        "key": "mdavis,sd-demo",
         "accountId": "mdavisId",
         "name": "mdavis-sd-demo",
         "emailAddress": "davis@example.com",

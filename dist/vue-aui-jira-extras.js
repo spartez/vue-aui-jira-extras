@@ -866,7 +866,7 @@ var users = [{
     "timeZone": "Etc/UTC"
 }, {
     "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=mdavis-sd-demo",
-    "key": "mdavis-sd-demo",
+    "key": "mdavis,sd-demo",
     "accountId": "mdavisId",
     "name": "mdavis-sd-demo",
     "emailAddress": "davis@example.com",
@@ -4676,7 +4676,7 @@ var UserPickerUserKey = { render: function render() {
                     return _c('span', {}, [option.data.avatarUrls ? _c('aui-avatar', { attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }) : _vm._e(), _vm._v(" " + _vm._s(option.data.displayName) + " ")], 1);
                 } }, { key: "formatResult", fn: function fn(option) {
                     return _c('span', { staticClass: "result-user" }, [option.data.avatarUrls ? _c('aui-avatar', { staticClass: "result-user-avatar", attrs: { "size": "medium", "src": option.data.avatarUrls['48x48'] } }) : option.data.avatarUrl ? _c('aui-avatar', { staticClass: "result-user-avatar", attrs: { "size": "medium", "src": option.data.avatarUrl } }) : _vm._e(), _vm._v(" "), _c('div', { staticClass: "result-user-text" }, [_c('span', { staticClass: "result-user-fullname" }, [_vm._v(_vm._s(option.data.displayName))]), _vm._v(" "), _c('span', { staticClass: "result-user-name" }, [_vm._v(_vm._s('' + (!option.data.isGroup ? '@' : '') + option.data.name))])])], 1);
-                } }]) });
+                } }]) }, [_c('p', [_vm._v("VALUE: " + _vm._s(_vm.value))])]);
     }, staticRenderFns: [], _scopeId: 'data-v-7bd2a69b',
     props: {
         allowClear: Boolean,
@@ -4809,7 +4809,7 @@ var UserPickerUserKey = { render: function render() {
 
             if (this.multiple) {
                 if (element.val()) {
-                    var userKeys = element.val().split(',');
+                    var userKeys = element.val().split('|');
 
                     Promise.all(userKeys.map(function (userKey) {
                         return _this3.$jira.getUser({ key: userKey });
