@@ -18,7 +18,7 @@ storiesOf('UserPicker', module)
             return {
                 locked: ['admin'],
                 lockedIssueTypes: ['10101'],
-                userKeys: ["admin", "mdavis-sd-demo"],
+                userKeys: ["admin", "mdavis,sd-demo"],
                 userKey: "admin",
 
             }

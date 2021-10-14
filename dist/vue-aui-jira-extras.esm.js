@@ -862,7 +862,7 @@ var users = [{
     "timeZone": "Etc/UTC"
 }, {
     "self": "https://dskrodzki.atlassian.net/rest/api/2/user?username=mdavis-sd-demo",
-    "key": "mdavis-sd-demo",
+    "key": "mdavis,sd-demo",
     "accountId": "mdavisId",
     "name": "mdavis-sd-demo",
     "emailAddress": "davis@example.com",
@@ -1129,7 +1129,7 @@ var JiraApi = function () {
     }, {
         key: 'getCurrentUser',
         value: function getCurrentUser(query) {
-            return this.api.isMock ? getUserByAccountId('adminId') : this.api.get('/rest/api/3/myself?' + querystring_4(query));
+            return this.api.isMock ? getUserByAccountId('adminId') : this.api.get('/rest/api/2/myself?' + querystring_4(query));
         }
     }, {
         key: 'getProject',
@@ -4664,6 +4664,7 @@ var UserPicker = { render: function render() {
 })();
 
 var GROUP_PREFIX$1 = "group\t";
+var SEPARATOR = '\0';
 
 var UserPickerUserKey = { render: function render() {
         var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('va-select2', { ref: "select", attrs: { "allow-clear": _vm.allowClear, "disabled": _vm.disabled, "init-selection": _vm.initialValue, "locked": _vm.locked, "multiple": _vm.multiple, "placeholder": _vm.placeholder, "query": _vm.queryValues, "value": _vm.value }, on: { "input": function input($event) {
@@ -4805,7 +4806,7 @@ var UserPickerUserKey = { render: function render() {
 
             if (this.multiple) {
                 if (element.val()) {
-                    var userKeys = element.val().split(',');
+                    var userKeys = element.val().split(SEPARATOR);
 
                     Promise.all(userKeys.map(function (userKey) {
                         return _this3.$jira.getUser({ key: userKey });

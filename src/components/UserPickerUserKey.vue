@@ -29,6 +29,7 @@
 
 <script>
     const GROUP_PREFIX = "group\t";
+    const SEPARATOR = '\u0000';
 
     export default {
         props: {
@@ -121,7 +122,7 @@
             initialValue(element, callback) {
                 if (this.multiple) {
                     if (element.val()) {
-                        const userKeys = element.val().split(',');
+                        const userKeys = element.val().split(SEPARATOR);
 
                         Promise.all(userKeys.map(userKey => this.$jira.getUser({key: userKey})))
                             .then(users => {
