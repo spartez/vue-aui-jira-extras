@@ -4664,7 +4664,7 @@ var UserPicker = { render: function render() {
 })();
 
 var GROUP_PREFIX$1 = "group\t";
-var SEPARATOR = '|';
+var SEPARATOR = '\0';
 
 var UserPickerUserKey = { render: function render() {
         var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('va-select2', { ref: "select", attrs: { "allow-clear": _vm.allowClear, "disabled": _vm.disabled, "init-selection": _vm.initialValue, "locked": _vm.locked, "multiple": _vm.multiple, "placeholder": _vm.placeholder, "query": _vm.queryValues, "value": _vm.value }, on: { "input": function input($event) {

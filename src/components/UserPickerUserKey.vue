@@ -29,7 +29,7 @@
 
 <script>
     const GROUP_PREFIX = "group\t";
-    const SEPARATOR = '|';
+    const SEPARATOR = '\u0000';
 
     export default {
         props: {
