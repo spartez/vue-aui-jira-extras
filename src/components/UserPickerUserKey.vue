@@ -8,6 +8,7 @@
                 :placeholder="placeholder"
                 :query="queryValues"
                 :value="value"
+                :separator="separator"
                 @input="onValueChanged($event)"
     >
         <span slot="formatSelection" slot-scope="option">
@@ -42,7 +43,11 @@
             },
             multiple: Boolean,
             placeholder: String,
-            value: [String, Array]
+            value: [String, Array],
+            separator: {
+                type: String,
+                default: SEPARATOR
+            }
         },
 
         data() {
@@ -122,7 +127,7 @@
             initialValue(element, callback) {
                 if (this.multiple) {
                     if (element.val()) {
-                        const userKeys = element.val().split(SEPARATOR);
+                        const userKeys = element.val().split(this.separator);
 
                         Promise.all(userKeys.map(userKey => this.$jira.getUser({key: userKey})))
                             .then(users => {

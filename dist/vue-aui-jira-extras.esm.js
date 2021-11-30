@@ -1195,7 +1195,8 @@ var JiraApi = function () {
     }, {
         key: 'getUsers',
         value: function getUsers$$1(username) {
-            return this.api.isMock ? getUsers(username) : this.api.get('/rest/api/2/user/search?query=' + encodeURIComponent(username));
+            var query = getPlatform() === 'server' ? 'username' : 'query';
+            return this.api.isMock ? getUsers(username) : this.api.get('/rest/api/2/user/search?' + query + '=' + encodeURIComponent(username));
         }
     }, {
         key: 'getGroupsForPicker',
@@ -4667,7 +4668,7 @@ var GROUP_PREFIX$1 = "group\t";
 var SEPARATOR = '\0';
 
 var UserPickerUserKey = { render: function render() {
-        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('va-select2', { ref: "select", attrs: { "allow-clear": _vm.allowClear, "disabled": _vm.disabled, "init-selection": _vm.initialValue, "locked": _vm.locked, "multiple": _vm.multiple, "placeholder": _vm.placeholder, "query": _vm.queryValues, "value": _vm.value }, on: { "input": function input($event) {
+        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('va-select2', { ref: "select", attrs: { "allow-clear": _vm.allowClear, "disabled": _vm.disabled, "init-selection": _vm.initialValue, "locked": _vm.locked, "multiple": _vm.multiple, "placeholder": _vm.placeholder, "query": _vm.queryValues, "value": _vm.value, "separator": _vm.separator }, on: { "input": function input($event) {
                     _vm.onValueChanged($event);
                 } }, scopedSlots: _vm._u([{ key: "formatSelection", fn: function fn(option) {
                     return _c('span', {}, [option.data.avatarUrls ? _c('aui-avatar', { attrs: { "squared": "", "size": "xsmall", "src": option.data.avatarUrls['48x48'] } }) : _vm._e(), _vm._v(" " + _vm._s(option.data.displayName) + " ")], 1);
@@ -4687,7 +4688,11 @@ var UserPickerUserKey = { render: function render() {
         },
         multiple: Boolean,
         placeholder: String,
-        value: [String, Array]
+        value: [String, Array],
+        separator: {
+            type: String,
+            default: SEPARATOR
+        }
     },
 
     data: function data() {
@@ -4806,7 +4811,7 @@ var UserPickerUserKey = { render: function render() {
 
             if (this.multiple) {
                 if (element.val()) {
-                    var userKeys = element.val().split(SEPARATOR);
+                    var userKeys = element.val().split(this.separator);
 
                     Promise.all(userKeys.map(function (userKey) {
                         return _this3.$jira.getUser({ key: userKey });
