@@ -184,9 +184,10 @@ export default class JiraApi {
     }
 
     getUsers(username: string): Promise<Array<Jira.User>> {
+        const query = getPlatform() === 'server' ? 'username' : 'query';
         return this.api.isMock
             ? JiraMocksApi.getUsers(username)
-            : this.api.get(`/rest/api/2/user/search?query=${encodeURIComponent(username)}`);
+            : this.api.get(`/rest/api/2/user/search?${query}=${encodeURIComponent(username)}`);
     }
 
     getGroupsForPicker(query: { query: string }) {
