@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/spartez/vue-aui-jira-extras#readme",
   "dependencies": {
-    "vue-aui": "^1.1.1"
+    "vue-aui": "^1.1.2"
   },
   "devDependencies": {
     "@atlassian/aui": "^7.8.0",
