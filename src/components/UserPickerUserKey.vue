@@ -12,14 +12,18 @@
                 @input="onValueChanged($event)"
     >
         <span slot="formatSelection" slot-scope="option">
-            <aui-avatar v-if="option.data.avatarUrls" squared size="xsmall" :src="option.data.avatarUrls['48x48']"/>
+              <span v-if="option.data.avatarUrls" class="aui-avatar aui-avatar-xsmall aui-avatar-squared">
+                <span class="aui-avatar-inner"><img :src="option.data.avatarUrls['48x48']"></span>
+              </span>
             {{option.data.displayName}}
         </span>
         <span slot="formatResult" slot-scope="option" class="result-user">
-            <aui-avatar v-if="option.data.avatarUrls" size="medium" :src="option.data.avatarUrls['48x48']"
-                        class="result-user-avatar"/>
-            <aui-avatar v-else-if="option.data.avatarUrl" size="medium" :src="option.data.avatarUrl"
-                        class="result-user-avatar"/>
+              <span v-if="option.data.avatarUrls" class="aui-avatar aui-avatar-medium">
+                <span class="aui-avatar-inner"><img :src="option.data.avatarUrls['48x48']"></span>
+              </span>
+              <span v-else-if="option.data.avatarUrl" class="aui-avatar aui-avatar-medium">
+                <span class="aui-avatar-inner"><img :src="option.data.avatarUrl"></span>
+              </span>
             <div class="result-user-text">
                 <span class="result-user-fullname">{{option.data.displayName}}</span>
                 <span class="result-user-name">{{`${!option.data.isGroup ? '@' :''}${option.data.name}`}}</span>
